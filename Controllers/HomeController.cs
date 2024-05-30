@@ -10,10 +10,7 @@ namespace prjLookday.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        public IActionResult test2()
-        {
-            return View();
-        }
+        
 
         public HomeController(ILogger<HomeController> logger)
         {
