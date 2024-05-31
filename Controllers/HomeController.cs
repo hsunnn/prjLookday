@@ -19,8 +19,6 @@ namespace prjLookday.Controllers
 
         public IActionResult Index()
         {
-            //var user = _context.Users.Where(p => p.UserId == 27);
-            //return View(user);
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGIN_MEMBER))
                 return View();
             return RedirectToAction("Login");
@@ -42,6 +40,11 @@ namespace prjLookday.Controllers
             HttpContext.Session.Remove(CDictionary.SK_LOGIN_MEMBER);
             return RedirectToAction("Login");
         }
+
+        //public IActionResult ForgetPassword(CForgetPwdViewModels vm)
+        //{
+        //    return View(ForgetPassword);
+        //}
 
 
         [HttpPost]
