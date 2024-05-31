@@ -1,0 +1,67 @@
+﻿@model IEnumerable<prjLookday.Models.User>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>編輯會員檔案</h1>
+@using (Html.BeginForm())
+{
+    @:關鍵字 @Html.TextBox("txtKeyword")
+    <input type="submit" value="查詢" />
+}
+<p>
+    <a asp-action="Create">新增用戶帳號</a>
+</p>
+<table border="1" class="table table-hover table-bordered">
+    <thead>
+        <tr style="color:white; background-color:lightskyblue; text-align:center">
+            <th>
+                序號
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model) 
+            {
+                count++;
+                <tr style="text-align:center">
+        <td>
+            @count
+        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role.RoleId)
+            </td>
+            <td>
+                    @Html.ActionLink("修改", "Edit", "User", new {id = item.UserId},  new { @class = "btn btn-success" })
+                    @Html.ActionLink("刪除", "Delete", "User", new{id = item.UserId}, new { onclick = "return confirm('確定要刪除沒錯嗎?')", @class = "btn btn-danger" })
+            </td>
+        </tr>
+}
+}
+    </tbody>
+</table>

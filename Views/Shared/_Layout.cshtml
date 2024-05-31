@@ -63,8 +63,6 @@
                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    @*                     <li><a class="dropdown-item" href="#!">Logout</a></li>
-                    *@
                     <li>
                         <form method="post" asp-controller="Home" asp-action="Logout">
                             <button type="submit" class="dropdown-item">Log Out</button>
@@ -93,7 +91,7 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-sidenav-light.html">編輯會員檔案</a>
+                                <a class="nav-link" asp-controller="User" asp-action="List">編輯會員檔案</a>
                                 <a class="nav-link" href="layout-sidenav-light.html">黑名單會員</a>
                                 <a class="nav-link" href="layout-sidenav-light.html">會員訊息</a>
                             </nav>
