@@ -37,7 +37,7 @@ namespace prjLookday.Controllers
             return View();
         }
 
-        public IActionResult Logout()
+        public IActionResult Logout(CLoginViewModel vm)
         {
             HttpContext.Session.Remove(CDictionary.SK_LOGIN_MEMBER);
             return RedirectToAction("Login");
