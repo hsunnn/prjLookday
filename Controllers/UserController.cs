@@ -16,8 +16,8 @@ namespace prjLookday.Controllers
                 datas = from user in db.Users
                         select user;
             else
-                datas = db.Users.Where(r => r.Username.Contains(vm.txtKeyword)||
-                    r.Email.Contains(vm.txtKeyword ));
+                datas = db.Users.Where(r => r.Username.Contains(vm.txtKeyword) ||
+                    r.Email.Contains(vm.txtKeyword));
             return View(datas);
         }
 
@@ -42,6 +42,7 @@ namespace prjLookday.Controllers
                 return RedirectToAction("List");
             lookdaysContext db = new lookdaysContext();
             User u = db.Users.FirstOrDefault(x => x.UserId == id);
+
             if (u == null)
                 return RedirectToAction("List");
             return View(u);
