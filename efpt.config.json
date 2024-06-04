@@ -31,6 +31,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ActivitiesModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Bookings]",
          "ObjectType": 0
       },
@@ -63,6 +67,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ModelTagJoint]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ModelTags]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Payments]",
          "ObjectType": 0
       },
@@ -72,10 +84,6 @@
       },
       {
          "Name": "[dbo].[Role]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Tags]",
          "ObjectType": 0
       },
       {

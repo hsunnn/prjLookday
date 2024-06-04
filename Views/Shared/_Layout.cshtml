@@ -28,7 +28,7 @@
 
             .background-image::before {
                 content: "";
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -40,6 +40,12 @@
                 opacity: 0.5; /* 調整透明度 */
                 z-index: -1; /* 確保背景圖片在內容之下 */
             }
+
+        .content{
+            position:relative;
+            z-index:2;
+        }
+
     </style>
 </head>
 <body class="sb-nav-fixed background-image">
@@ -91,9 +97,9 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" asp-controller="User" asp-action="List">編輯會員檔案</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">黑名單會員</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">會員訊息</a>
+                                <a class="nav-link" asp-controller="User" asp-action="List"> -編輯會員檔案</a>
+                                <a class="nav-link" href="layout-sidenav-light.html"> -黑名單會員</a>
+                                <a class="nav-link" href="layout-sidenav-light.html"> -會員訊息</a>
                             </nav>
                         </div>
                         <hr class="sidebar-divider my-0"> @* 分隔線 *@
@@ -111,9 +117,9 @@
                                 </a>
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">已上架行程</a> @* 做刪減、編輯、搜尋 *@
-                                        <a class="nav-link" href="register.html">上架新行程</a>@* 做上架 *@
-                                        <a class="nav-link" href="register.html">評論管理</a>
+                                        <a class="nav-link" href="login.html"> -已上架行程</a> @* 做刪減、編輯、搜尋 *@
+                                        <a class="nav-link" href="register.html"> -上架新行程</a>@* 做上架 *@
+                                        <a class="nav-link" href="register.html"> -評論管理</a>
                                     </nav>
                                 </div>
                                 <hr class="sidebar-divider my-0">
@@ -123,9 +129,9 @@
                                 </a>
                                 <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="401.html">已付款訂單</a>
-                                        <a class="nav-link" href="404.html">已取消訂單</a>
-                                        <a class="nav-link" href="500.html">????</a>
+                                        <a class="nav-link" href="401.html"> -已付款訂單</a>
+                                        <a class="nav-link" href="404.html"> -已取消訂單</a>
+                                        <a class="nav-link" href="500.html"> -????</a>
                                     </nav>
                                 </div>
                                 <hr class="sidebar-divider my-0">
@@ -150,7 +156,7 @@
                 </div>
             </nav>
         </div>
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" class="content">
             <main>
                 <div class="container-fluid px-4">
                     @RenderBody()

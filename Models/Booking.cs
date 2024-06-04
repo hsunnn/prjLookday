@@ -21,9 +21,13 @@ public partial class Booking
 
     public int? Member { get; set; }
 
+    public int? ModelId { get; set; }
+
     public virtual Activity Activity { get; set; }
 
     public virtual BookingState BookingStates { get; set; }
+
+    public virtual ActivitiesModel Model { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
