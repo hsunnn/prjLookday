@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace prjLookday.Models;
 
@@ -9,16 +10,20 @@ public partial class User
 {
     public int UserId { get; set; }
 
+    [DisplayName("姓名")]
     public string Username { get; set; }
 
+    [DisplayName("帳號")]
     public string Email { get; set; }
 
+    [DisplayName("密碼")]
     public string Password { get; set; }
 
     public int? Preferences { get; set; }
 
     public int RoleId { get; set; }
 
+    [DisplayName("圖片")]
     public string UserPic { get; set; }
 
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();

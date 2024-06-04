@@ -1,0 +1,60 @@
+﻿@model prjLookday.Models.User
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="text-center mb-3">新增會員帳號</h1>
+
+
+<div class="row">
+    <div class="d-flex justify-content-center mb-3">
+    <div class="col-md-3">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" required />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" type="email" required/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" required/>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleId" class="control-label"></label>
+                <input asp-for="RoleId" class="form-control" id="roleId" />
+                <span asp-validation-for="RoleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserPic" class="control-label"></label>
+                <input asp-for="UserPic" class="form-control" type="file" id="userPic" name="userpic" />
+                <span asp-validation-for="UserPic" class="text-danger"></span>
+            </div>
+            <p>
+                <br />
+            </p>
+            <div class="form-group">
+                <input type="submit" value="建立" class="btn btn-warning" />
+                    <a asp-action="List">返回</a>
+            </div>
+        </form>
+            <div>
+                
+            </div>
+    </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        document.getElementById('roleId').value = '1';
+    </script>
+}
