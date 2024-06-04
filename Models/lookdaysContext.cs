@@ -23,6 +23,8 @@ public partial class lookdaysContext : DbContext
 
     public virtual DbSet<ActivitiesAlbum> ActivitiesAlbums { get; set; }
 
+    public virtual DbSet<ActivitiesModel> ActivitiesModels { get; set; }
+
     public virtual DbSet<Activity> Activities { get; set; }
 
     public virtual DbSet<Booking> Bookings { get; set; }
@@ -41,19 +43,21 @@ public partial class lookdaysContext : DbContext
 
     public virtual DbSet<Hotel> Hotels { get; set; }
 
+    public virtual DbSet<ModelTag> ModelTags { get; set; }
+
+    public virtual DbSet<ModelTagJoint> ModelTagJoints { get; set; }
+
     public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
-    public virtual DbSet<Tag> Tags { get; set; }
-
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=lookdays;Integrated Security=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=lookdays;Integrated Security=True; Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -112,6 +116,19 @@ public partial class lookdaysContext : DbContext
                 .HasConstraintName("FK_ActivitiesAlbum_Activities");
         });
 
+        modelBuilder.Entity<ActivitiesModel>(entity =>
+        {
+            entity.HasKey(e => e.ModelId).HasName("PK_Tags");
+
+            entity.ToTable("ActivitiesModel");
+
+            entity.Property(e => e.ModelId).HasColumnName("ModelID");
+            entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
+            entity.Property(e => e.ModelContent).HasMaxLength(50);
+            entity.Property(e => e.ModelName).HasMaxLength(50);
+            entity.Property(e => e.ModelPrice).HasColumnType("money");
+        });
+
         modelBuilder.Entity<Activity>(entity =>
         {
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
@@ -138,6 +155,7 @@ public partial class lookdaysContext : DbContext
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
             entity.Property(e => e.BookingDate).HasColumnType("datetime");
             entity.Property(e => e.BookingStatesId).HasColumnName("BookingStatesID");
+            entity.Property(e => e.ModelId).HasColumnName("ModelID");
             entity.Property(e => e.Price).HasColumnType("money");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -150,6 +168,10 @@ public partial class lookdaysContext : DbContext
                 .HasForeignKey(d => d.BookingStatesId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Bookings_BookingStates");
+
+            entity.HasOne(d => d.Model).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.ModelId)
+                .HasConstraintName("FK_Bookings_ActivitiesModel");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserId)
@@ -254,6 +276,33 @@ public partial class lookdaysContext : DbContext
                 .HasMaxLength(60);
         });
 
+        modelBuilder.Entity<ModelTag>(entity =>
+        {
+            entity.Property(e => e.ModelTagId).HasColumnName("ModelTagID");
+            entity.Property(e => e.Tags).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<ModelTagJoint>(entity =>
+        {
+            entity.HasKey(e => e.TagJointId);
+
+            entity.ToTable("ModelTagJoint");
+
+            entity.Property(e => e.TagJointId).HasColumnName("TagJointID");
+            entity.Property(e => e.ModelId).HasColumnName("ModelID");
+            entity.Property(e => e.ModelTagId).HasColumnName("ModelTagID");
+
+            entity.HasOne(d => d.Model).WithMany(p => p.ModelTagJoints)
+                .HasForeignKey(d => d.ModelId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ModelTagJoint_ActivitiesModel");
+
+            entity.HasOne(d => d.ModelTag).WithMany(p => p.ModelTagJoints)
+                .HasForeignKey(d => d.ModelTagId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ModelTagJoint_ModelTags");
+        });
+
         modelBuilder.Entity<Payment>(entity =>
         {
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
@@ -299,14 +348,6 @@ public partial class lookdaysContext : DbContext
             entity.Property(e => e.Role1)
                 .HasMaxLength(50)
                 .HasColumnName("Role");
-        });
-
-        modelBuilder.Entity<Tag>(entity =>
-        {
-            entity.Property(e => e.TagId).HasColumnName("TagID");
-            entity.Property(e => e.TagName)
-                .IsRequired()
-                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<User>(entity =>

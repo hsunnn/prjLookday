@@ -7,8 +7,7 @@
 <h1 class="text-center mb-3">編輯會員檔案</h1>
 @using (Html.BeginForm())
 {
-    @:關鍵字 @Html.TextBox("txtKeyword")
-    <input class="text-end mb-3" type="submit" value="查詢" />
+    <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
 }
 <p class="text-end mb-3">
     <a asp-action="Create">新增用戶帳號</a>
@@ -16,9 +15,12 @@
 
 <table border="1" class="table table-hover table-bordered">
     <thead>
-        <tr style="color:white; background-color:lightskyblue; text-align:center">
+        <tr style="color:white; background-color:darkorange; text-align:center">
             <th>
                 序號
+            </th>
+            <th>
+                頭貼
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Username)
@@ -43,6 +45,9 @@
                 <tr style="text-align:center">
         <td>
             @count
+        </td>
+        <td>
+
         </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
