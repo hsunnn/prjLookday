@@ -47,5 +47,24 @@ namespace prjLookday.Controllers
                 return RedirectToAction("List");
             return View(u);
         }
+
+        //[HttpPost]
+        //public ActionResult Edit(User userIn)
+        //{
+        //    lookdaysContext db = new lookdaysContext();
+        //    User userDb = db.Users.FirstOrDefault(x => x.UserId == userIn.UserId);
+        //    if (userDb != null)
+        //    {
+        //        if (userDb.UserPic != null)
+        //        {
+        //            string userPicName = Guid.NewGuid().ToString() + ".jpg";
+                    
+        //        }
+        //        userDb.Username = userIn.Username;
+        //        userDb.Email = userIn.Email;
+        //        userDb.Password = userIn.Password;
+        //        userDb.RoleId = userIn.RoleId;
+        //    }
+        //}
     }
 }
