@@ -3,11 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Web;
 
 namespace prjLookday.Models;
 
 public partial class User
 {
+    [DisplayName("會員ID")]
     public int UserId { get; set; }
 
     [DisplayName("姓名")]
@@ -36,4 +38,5 @@ public partial class User
 
     [DisplayName("角色")]
     public virtual Role Role { get; set; }
+
 }

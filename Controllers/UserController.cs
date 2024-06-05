@@ -1,11 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjLookday.Models;
 using prjLookday.ViewModels;
+using System.Security.Permissions;
 
 namespace prjLookday.Controllers
 {
     public class UserController : SuperController
     {
+        private readonly IWebHostEnvironment _enviro;
+
+        public UserController(IWebHostEnvironment enviro)
+        {
+            _enviro = enviro;
+        }
 
         public IActionResult List(CKeywordViewModel vm)
         {
@@ -36,7 +43,7 @@ namespace prjLookday.Controllers
         }
 
 
-        public ActionResult Edit(int? id) 
+        public IActionResult Edit(int? id)
         {
             if (id == null)
                 return RedirectToAction("List");
@@ -48,23 +55,52 @@ namespace prjLookday.Controllers
             return View(u);
         }
 
-        //[HttpPost]
-        //public ActionResult Edit(User userIn)
-        //{
-        //    lookdaysContext db = new lookdaysContext();
-        //    User userDb = db.Users.FirstOrDefault(x => x.UserId == userIn.UserId);
-        //    if (userDb != null)
-        //    {
-        //        if (userDb.UserPic != null)
-        //        {
-        //            string userPicName = Guid.NewGuid().ToString() + ".jpg";
-                    
-        //        }
-        //        userDb.Username = userIn.Username;
-        //        userDb.Email = userIn.Email;
-        //        userDb.Password = userIn.Password;
-        //        userDb.RoleId = userIn.RoleId;
-        //    }
-        //}
+        [HttpPost]
+        public IActionResult Edit(CUserWrap userIn)
+        {
+            lookdaysContext db = new lookdaysContext();
+            User userDb = db.Users.FirstOrDefault(x => x.UserId == userIn.UserId);
+            if(userDb != null)
+            {
+                if (userIn.photo != null)
+                {
+                    string picName = Guid.NewGuid().ToString() + ".jpg";
+                    userDb.UserPic = picName;
+                    userIn.photo.CopyTo(new FileStream(_enviro.WebRootPath + "/images/" + picName, FileMode.Create));
+                }
+
+                userDb.Username = userIn.UserName;
+                userDb.Email = userIn.Email;
+                userDb.Password = userIn.Password;
+                userDb.RoleId = userIn.RoleId;
+                userDb.UserPic = userIn.UserPic;
+
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("List");
+           
+        }
+
+
+
+        public IActionResult Delete (int id)
+        {
+            if (id != null)
+            {
+                lookdaysContext db = new lookdaysContext();
+                User u = db.Users.FirstOrDefault(x => x.UserId == id);
+                if (u != null)
+                {
+                    db.Users.Remove(u);
+                    db.SaveChanges();
+                }
+
+            }
+
+            return RedirectToAction("List");
+        }
+
     }
+
 }
