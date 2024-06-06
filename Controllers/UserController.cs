@@ -7,7 +7,7 @@ namespace prjLookday.Controllers
 {
     public class UserController : SuperController
     {
-        private readonly IWebHostEnvironment _enviro;
+        private IWebHostEnvironment _enviro = null;
 
         public UserController(IWebHostEnvironment enviro)
         {
@@ -34,10 +34,28 @@ namespace prjLookday.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(User u)
+        public IActionResult Create(CUserWrap userIn)
         {
             lookdaysContext db = new lookdaysContext();
-            db.Users.Add(u);
+
+            User userDb = new User();
+
+            if (userIn.userpic != null)
+            {
+                string picName = Guid.NewGuid().ToString() + ".jpg";
+                userDb.UserPic = picName;
+                userIn.userpic.CopyTo(new FileStream(_enviro.WebRootPath + "/Images/" + picName, FileMode.Create));
+
+            }
+
+            userDb.Username = userIn.UserName;
+            userDb.Email = userIn.Email;
+            userDb.Password = userIn.Password;
+            userDb.RoleId = userIn.RoleId;
+            //userDb.UserPic = userIn.UserPic;
+
+
+            db.Users.Add(userDb);
             db.SaveChanges();
             return RedirectToAction("List");
         }
@@ -60,31 +78,32 @@ namespace prjLookday.Controllers
         {
             lookdaysContext db = new lookdaysContext();
             User userDb = db.Users.FirstOrDefault(x => x.UserId == userIn.UserId);
-            if(userDb != null)
+            if (userDb != null)
             {
-                if (userIn.photo != null)
+                if (userIn.userpic != null)
                 {
                     string picName = Guid.NewGuid().ToString() + ".jpg";
                     userDb.UserPic = picName;
-                    userIn.photo.CopyTo(new FileStream(_enviro.WebRootPath + "/images/" + picName, FileMode.Create));
+                    userIn.userpic.CopyTo(new FileStream(_enviro.WebRootPath + "/Images/" + picName, FileMode.Create));
+
                 }
 
                 userDb.Username = userIn.UserName;
                 userDb.Email = userIn.Email;
                 userDb.Password = userIn.Password;
                 userDb.RoleId = userIn.RoleId;
-                userDb.UserPic = userIn.UserPic;
+                //userDb.UserPic = userIn.userpic;
 
                 db.SaveChanges();
             }
 
             return RedirectToAction("List");
-           
+
         }
 
 
 
-        public IActionResult Delete (int id)
+        public IActionResult Delete(int id)
         {
             if (id != null)
             {
