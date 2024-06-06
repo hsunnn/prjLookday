@@ -52,13 +52,13 @@
             set { _user.RoleId = value; }
         }
 
-        public string? UserPic
+        public string? Userpic
         {
             get { return _user.UserPic; }
             set { _user.UserPic = value; }
         }
 
-        public IFormFile photo { get; set; }
+        public IFormFile userpic { get; set; }
     }
 
 }
