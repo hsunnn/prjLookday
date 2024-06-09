@@ -1,164 +1,59 @@
-﻿<!--@{
-    ViewData["Title"] = "Get Order";
-
-}
-
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
+    <title>訂單資料</title>
 </head>
 <body>
-    <h1>@ViewData["Title"]</h1>
-    <div id="data-display"></div>
-</body>
-</html>
-
-
-
-@section Styles{
-<style>
-
-
-</style>
-}
-
-
-@section Scripts{
-<script>
-            const bookingDTO = {
-                BookingId: 7  // Ensure this matches the ID in the URL
-                BookingDate: '2024-06-07',
-                Price: 100,
-                UserID: 1,
-                userName: "",
-                ActivityID: 2,
-                activityName: "",
-                bookingStatus: '1',
-                member: 3
-            };
-
-            // Use the same ID in the URL
-            const id = bookingDTO.BookingId;
-
-            fetch(`/api/BookingOrder/${id}`, {
-                method: 'Post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(bookingDTO)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => { throw new Error(text) });
-                    }
-                    return response.json();
-                })
-                .then(data => console.log('Booking updated successfully'))
-                .catch(error => console.error('Error:', error));
-
-</script>
-}-->
-<!--@{
-    ViewData["Title"] = "JSONTest";
-}
-
-<h1>JSONTest</h1>
-<script>
-    const bookingDTO = {
-        BookingId: 7  // Ensure this matches the ID in the URL
-     BookingDate: '2024-06-07',
-        Price: 100,
-        UserID: 1,
-        userName: "",
-        ActivityID: 2,
-        activityName: "",
-        bookingStatus: '1',
-        member: 3
-    };
-
-    // Use the same ID in the URL
-    const id = bookingDTO.BookingId;
-
-    fetch(`/api/BookingOrder/${id}`, {
-        method: 'Post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bookingDTO)
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
-            }
-            return response.json();
-        })
-        .then(data => console.log('Booking updated successfully'))
-        .catch(error => console.error('Error:', error));
-
-</script>-->
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookings</title>
-</head>
-<body>
-    <h1>Bookings</h1>
+    <h1>訂單資料</h1>
     <table id="bookingsTable" border="1">
         <thead>
             <tr>
-                <th>No.</th>
-                <th>Booking ID</th>
-                <th>Booking Date</th>
-                <th>Price</th>
-                <th>User ID</th>
-                <th>User Name</th>
-                <th>Activity ID</th>
-                <th>Activity Name</th>
-                <th>Booking Status</th>
-                <th>Member</th>
-                <!-- Add more headers if needed -->
+                <th>序號</th>
+                <th>訂單編號</th>
+                <th>訂單日期</th>
+                <th>價錢</th>
+                <th>客戶編號</th>
+                <th>客戶姓名</th>
+                <th>活動編號</th>
+                <th>活動名稱</th>
+                <th>訂單狀態</th>
+                <th>總參與人數</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Rows will be inserted here by JavaScript -->
+            <!-- 添加JavaScript的資料 -->
         </tbody>
     </table>
 
     <script>
         async function loadBookings() {
             const response = await fetch('/api/BookingOrder'); // Adjust the URL to match your endpoint
-            const bookings = await response.json();
+            const data = await response.json();
 
+            //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
             const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = ''; // Clear existing rows
+            tableBody.innerHTML = ''; // 清空原先資料
 
-            
 
-            bookings.forEach((booking,index) => {
+
+            data.forEach((data, index) => {
                 const row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = index + 1;
-                row.insertCell(1).innerText = booking.bookingId;
-                row.insertCell(2).innerText = new Date(booking.bookingDate).toLocaleDateString();
-                row.insertCell(3).innerText = booking.price;
-                row.insertCell(4).innerText = booking.userID;
-                row.insertCell(5).innerText = booking.userName;
-                row.insertCell(6).innerText = booking.activityID;
-                row.insertCell(7).innerText = booking.activityName;
-                row.insertCell(8).innerText = booking.bookingStatus;
-                row.insertCell(9).innerText = booking.member;
-                // Add more cells if needed
+                row.insertCell(1).innerText = data.bookingId;
+                row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                row.insertCell(3).innerText = data.price;
+                row.insertCell(4).innerText = data.userID;
+                row.insertCell(5).innerText = data.userName;
+                row.insertCell(6).innerText = data.activityID;
+                row.insertCell(7).innerText = data.activityName;
+                row.insertCell(8).innerText = data.bookingStatus;
+                row.insertCell(9).innerText = data.member;
             });
         }
 
-        // Load bookings when the page loads
+        // 一載入頁面 就顯示資料
         window.onload = loadBookings;
     </script>
 </body>
