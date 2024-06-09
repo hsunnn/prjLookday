@@ -39,7 +39,7 @@ namespace prjLookdayOrder.Controllers
             UserName = b.User.Username,
             ActivityID = b.ActivityId,
             ActivityName = b.Activity.Name,
-            bookingStatus = b.BookingStatesId.ToString(),
+            bookingStatus = b.BookingStates.States.ToString(),
             member = b.Member,
             //PaymentDate = b.Payments.ToString(),
         })
@@ -72,7 +72,7 @@ namespace prjLookdayOrder.Controllers
                     UserName = b.User.Username,
                     ActivityID = b.ActivityId,
                     ActivityName = b.Activity.Name,
-                    bookingStatus= b.BookingStatesId.ToString(),
+                    bookingStatus= b.BookingStates.States.ToString(),
                     member = b.Member,
                 })
             //通过指定条件查找第一个符合条件的元素，如果没有找到符合条件的元素，则返回默认值（例如 null）

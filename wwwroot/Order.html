@@ -1,15 +1,21 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂單資料</title>
 </head>
 <body>
-    <h1>訂單資料</h1>
+    <h1>訂單資訊</h1>
+    <!--<form id="search<!--Form" style="text-align:right">
+    </form>-->
+    <div style="margin-left:800px;">
+        <input type="text" id="inputsearch" placeholder="搜尋訂單編號或是用戶編號/名稱">
+        <button type="submit" onclick="getBookingById()">搜尋</button>
+        <button type="submit" id="allorders" onclick="allbookings()">全部訂單</button>
+    </div>
     <table id="bookingsTable" border="1">
         <thead>
-            <tr>
+            <tr style="width:250px">
                 <th>序號</th>
                 <th>訂單編號</th>
                 <th>訂單日期</th>
@@ -20,24 +26,38 @@
                 <th>活動名稱</th>
                 <th>訂單狀態</th>
                 <th>總參與人數</th>
+                <th>訂單編輯</th>
             </tr>
         </thead>
         <tbody>
+            <tr id="loading-indicator">
+                <td colspan="12"> loading........</td>
+            </tr>
             <!-- 添加JavaScript的資料 -->
         </tbody>
     </table>
 
     <script>
-        async function loadBookings() {
-            const response = await fetch('/api/BookingOrder'); // Adjust the URL to match your endpoint
-            const data = await response.json();
+        let bookingData = [];
 
+        async function loadBookings() {
+            const response = await fetch('/api/BookingOrder');
+            const data = await response.json();
+            bookingData = data;
+            populateTable(bookingData);
+            document.getElementById('loading-indicator').style.display = 'none';
+        }
+
+        function populateTable(data) {
             //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
             const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // 清空原先資料
+            const btncell = document.createElement("button");
 
-
-
+            //console.log("dataaaaa", data)
+            //if (!data.length) {
+            //    tableBody.insertRow().insertCell = "dsdfdsafasd"
+            //} else {
             data.forEach((data, index) => {
                 const row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = index + 1;
@@ -50,11 +70,51 @@
                 row.insertCell(7).innerText = data.activityName;
                 row.insertCell(8).innerText = data.bookingStatus;
                 row.insertCell(9).innerText = data.member;
+                row.insertCell(10).innerHTML = button;
             });
+
+
+            //const btncell = document.createElement("button");
+            //btncell.innerHTML = '修改';
+            //const cell = row.insertCell(10);
+            //cell.appenChild(btncell);
+
+         };
+
+
+
+        async function getBookingById() {
+            const bookingId = document.getElementById('inputsearch').value;
+            if (!bookingId) {
+                alert("請輸入訂單編號");
+                //populateTable(bookingData);
+                return (populateTable(bookingData));
+            }
+
+            const response = await fetch(`/api/BookingOrder/${bookingId}`);
+            if (!response.ok) {
+                alert("找不到該訂單");
+                return;
+            }
+
+            const data = await response.json();
+            populateTable([data]);
         }
 
-        // 一載入頁面 就顯示資料
+        //顯示全部訂單資料
+        document.getElementById("allorders").addEventListener('click', () => {
+
+            populateTable(bookingData);
+        });
+  
+
+        //一載入頁面 就顯示資料
         window.onload = loadBookings;
+
+
+
+
+
     </script>
 </body>
 </html>
