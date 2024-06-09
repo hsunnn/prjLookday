@@ -1,17 +1,22 @@
-﻿
+﻿<!--@{
+    ViewData["Title"] = "Get Order";
+
+}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[HttpGet]API Data Display</title>
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
-    <h1>Get Order</h1>
+    <h1>@ViewData["Title"]</h1>
     <div id="data-display"></div>
 </body>
 </html>
- @*    <script src="app.js"></script> *@
+
 
 
 @section Styles{
@@ -31,7 +36,7 @@
                 UserID: 1,
                 userName: "",
                 ActivityID: 2,
-                activityName: "",           
+                activityName: "",
                 bookingStatus: '1',
                 member: 3
             };
@@ -56,9 +61,105 @@
                 .catch(error => console.error('Error:', error));
 
 </script>
+}-->
+<!--@{
+    ViewData["Title"] = "JSONTest";
 }
 
+<h1>JSONTest</h1>
+<script>
+    const bookingDTO = {
+        BookingId: 7  // Ensure this matches the ID in the URL
+     BookingDate: '2024-06-07',
+        Price: 100,
+        UserID: 1,
+        userName: "",
+        ActivityID: 2,
+        activityName: "",
+        bookingStatus: '1',
+        member: 3
+    };
 
+    // Use the same ID in the URL
+    const id = bookingDTO.BookingId;
+
+    fetch(`/api/BookingOrder/${id}`, {
+        method: 'Post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bookingDTO)
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.json();
+        })
+        .then(data => console.log('Booking updated successfully'))
+        .catch(error => console.error('Error:', error));
+
+</script>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings</title>
+</head>
+<body>
+    <h1>Bookings</h1>
+    <table id="bookingsTable" border="1">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Booking ID</th>
+                <th>Booking Date</th>
+                <th>Price</th>
+                <th>User ID</th>
+                <th>User Name</th>
+                <th>Activity ID</th>
+                <th>Activity Name</th>
+                <th>Booking Status</th>
+                <th>Member</th>
+                <!-- Add more headers if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        async function loadBookings() {
+            const response = await fetch('/api/BookingOrder'); // Adjust the URL to match your endpoint
+            const bookings = await response.json();
+
+            const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            
+
+            bookings.forEach((booking,index) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerHTML = index + 1;
+                row.insertCell(1).innerText = booking.bookingId;
+                row.insertCell(2).innerText = new Date(booking.bookingDate).toLocaleDateString();
+                row.insertCell(3).innerText = booking.price;
+                row.insertCell(4).innerText = booking.userID;
+                row.insertCell(5).innerText = booking.userName;
+                row.insertCell(6).innerText = booking.activityID;
+                row.insertCell(7).innerText = booking.activityName;
+                row.insertCell(8).innerText = booking.bookingStatus;
+                row.insertCell(9).innerText = booking.member;
+                // Add more cells if needed
+            });
+        }
+
+        // Load bookings when the page loads
+        window.onload = loadBookings;
+    </script>
 </body>
 </html>
-
