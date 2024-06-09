@@ -2,9 +2,7 @@
 {
     public class BookingDTO
     {
-        /// <summary>
-        /// 
-        /// </summary>
+       
         //很多參數打包再一起叫做DTO(Data Transfer Object)
         //WEB API 沒有 VIEW 所以寫成DTO 取代 VIEW MODEL 　
 
