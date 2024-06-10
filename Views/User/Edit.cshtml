@@ -46,7 +46,7 @@
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label"></label>
+                <label class="control-label">圖片</label>
                 <input class="form-control" type="file" name="userpic" id="UserPicInput" />
             </div>
             <p>
@@ -54,7 +54,7 @@
             </p>
                 <div class="form-group">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <input type="submit" value="建立" class="btn btn-warning btn-sm" />
+                        <input type="submit" value="儲存" class="btn btn-primary btn-sm" />
                         <form method="post" asp-controller="Home" asp-action="List">
                             <input type="submit" value="返回" class="btn btn-warning btn-sm" />
                         </form>
@@ -82,7 +82,7 @@
                     var img = document.createElement('img');
                     img.src = e.target.result;
                     img.style.maxWidth = '100%';
-                    img.style.maxHeight = '200px';
+                    img.style.maxHeight = '150px';
                     preview.appendChild(img);
                 };
                 reader.readAsDataURL(input.files[0]);

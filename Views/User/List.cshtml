@@ -1,4 +1,5 @@
-﻿@model IEnumerable<prjLookday.Models.User>
+﻿@model X.PagedList.IPagedList<prjLookday.Models.User>
+@using X.PagedList.Mvc.Core;
 
 @{
     ViewData["Title"] = "List";
@@ -7,7 +8,7 @@
 <h1 class="text-center mb-3">編輯會員檔案</h1>
 @using (Html.BeginForm())
 {
-    <div class="d-flex justify-content-end mb-3">
+    <div class="d-flex justify-content-start mb-3">
         <div class="col-md-3">
             <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
         </div>
@@ -15,60 +16,40 @@
 }
 <p>
     <div class="d-flex justify-content-end mb-3">
-    <form asp-action="Create" method="get" style="display:inline;">
-            <button type="submit" class="btn btn-outline-warning "  name="btnCreate" style="display:flex; align-items:center;">
+        <form asp-action="Create" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-outline-warning" name="btnCreate" style="display:flex; align-items:center;">
                 <?xml version="1.0" ?>
-                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 L19,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" /></svg>新增會員帳號
+                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 L19,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
+                </svg>新增會員帳號
             </button>
-    </form>
+        </form>
     </div>
 </p>
 
 <table border="1" class="table table-hover table-sm table-bordered" style="background-color:white; color:dimgray">
     <thead>
         <tr style="color:white; background-color:darkorange; text-align:center">
-            <th>
-                序號
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserPic)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                功能
-            </th>
+            <th>序號</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().UserPic)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Username)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Email)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Password)</th>
+            <th>功能</th>
         </tr>
     </thead>
     <tbody>
         @{
-            int count = 0;
+            int count = (Model.PageNumber - 1) * Model.PageSize;
             foreach (var item in Model)
             {
                 count++;
                 <tr style="text-align:center">
-                    <td>
-                        @count
-                    </td>
-                    <td>
-                        <img src="~/Images/@item.UserPic" style="width:50px; height:50px; object-fit:cover;" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Username)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Password)
-                    </td>
+                    <td>@count</td>
+                    <td><img src="~/Images/@item.UserPic" style="width:50px; height:50px; object-fit:cover;" /></td>
+                    <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Password)</td>
                     <td>
                         @Html.ActionLink("修改", "Edit", "User", new { id = item.UserId }, new { @class = "btn btn-success" }) |
                         @Html.ActionLink("刪除", "Delete", "User", new { id = item.UserId }, new { onclick = "return confirm('確定刪除此會員嗎?')", @class = "btn btn-danger" })
@@ -79,3 +60,6 @@
     </tbody>
 </table>
 
+<div class="d-flex justify-content-center">
+    @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+</div>
