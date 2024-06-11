@@ -1,8 +1,15 @@
-﻿namespace prjLookdayOrder.DTO
+﻿namespace prjLookday.DTO
 {
     public class BookingFilterDTO
     {
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public int BookingId { get; set; }
+
+        public DateTime? BookingDate { get; set; }
+       
+        public string? ActivityName { get; set; }
+        public DateTime? ActivityDate { get; set; }
+        public string? bookingStatus { get; set; }
+
+  
     }
 }

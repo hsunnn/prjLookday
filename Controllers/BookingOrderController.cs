@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using prjLookday.DTO;
 using prjLookday.Models;
 using prjLookdayOrder.DTO;
 
@@ -23,7 +24,7 @@ namespace prjLookdayOrder.Controllers
         {
             //return await _context.Bookings.ToListAsync();
             var bookings = await _context.Bookings
-        .Include(x => x.User)
+            .Include(x => x.User)
             .Include(x => x.Activity)
             //.Include 和資料表有直接的關聯
             .Include(x => x.BookingStates)
@@ -177,16 +178,16 @@ namespace prjLookdayOrder.Controllers
 
 
             // 如果 StartDate 過濾條件有值，則添加條件從該日期開始過濾預訂
-            if (filter.StartDate.HasValue)
+            if (filter.BookingDate.HasValue)
             {
                 //"大於或等於"
-                query = query.Where(b => b.BookingDate >= filter.StartDate.Value);
+                query = query.Where(b => b.BookingDate >= filter.BookingDate.Value);
             }
-            // 如果 EndDate 過濾條件有值，則添加條件到該日期結束過濾預訂
-            if (filter.EndDate.HasValue)
+            // 如果 ActivityDate 過濾條件有值，則添加條件到該日期結束過濾預訂
+            if (filter.ActivityDate.HasValue)
             {
                 //"小於或等於"
-                query = query.Where(b => b.BookingDate <= filter.EndDate.Value);
+                query = query.Where(b => b.BookingDate <= filter.ActivityDate.Value);
             }
 
 
