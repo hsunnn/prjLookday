@@ -19,7 +19,7 @@ public partial class ActivitiesModel
 
     public string ModelContent { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public virtual Activity Activity { get; set; }
 
     public virtual ICollection<ModelTagJoint> ModelTagJoints { get; set; } = new List<ModelTagJoint>();
 }

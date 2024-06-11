@@ -41,6 +41,8 @@ public partial class lookdaysContext : DbContext
 
     public virtual DbSet<CreditCardInfo> CreditCardInfos { get; set; }
 
+    public virtual DbSet<ForumPost> ForumPosts { get; set; }
+
     public virtual DbSet<Hotel> Hotels { get; set; }
 
     public virtual DbSet<ModelTag> ModelTags { get; set; }
@@ -57,7 +59,7 @@ public partial class lookdaysContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=lookdays;Integrated Security=True; Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=lookdays;Integrated Security=True;Trust Server Certificate=True;Encrypt=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -127,6 +129,10 @@ public partial class lookdaysContext : DbContext
             entity.Property(e => e.ModelContent).HasMaxLength(50);
             entity.Property(e => e.ModelName).HasMaxLength(50);
             entity.Property(e => e.ModelPrice).HasColumnType("money");
+
+            entity.HasOne(d => d.Activity).WithMany(p => p.ActivitiesModels)
+                .HasForeignKey(d => d.ActivityId)
+                .HasConstraintName("FK_ActivitiesModel_Activities");
         });
 
         modelBuilder.Entity<Activity>(entity =>
@@ -141,7 +147,6 @@ public partial class lookdaysContext : DbContext
 
             entity.HasOne(d => d.City).WithMany(p => p.Activities)
                 .HasForeignKey(d => d.CityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Activities_City");
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.Activities)
@@ -168,10 +173,6 @@ public partial class lookdaysContext : DbContext
                 .HasForeignKey(d => d.BookingStatesId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Bookings_BookingStates");
-
-            entity.HasOne(d => d.Model).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.ModelId)
-                .HasConstraintName("FK_Bookings_ActivitiesModel");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserId)
@@ -267,6 +268,27 @@ public partial class lookdaysContext : DbContext
                 .HasConstraintName("FK_CreditCardInfo_User");
         });
 
+        modelBuilder.Entity<ForumPost>(entity =>
+        {
+            entity.HasKey(e => e.PostId);
+
+            entity.ToTable("ForumPost");
+
+            entity.Property(e => e.PostId).HasColumnName("PostID");
+            entity.Property(e => e.PostContent)
+                .HasMaxLength(5000)
+                .IsUnicode(false);
+            entity.Property(e => e.PostTime).HasColumnType("datetime");
+            entity.Property(e => e.PostTitle)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ForumPosts)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_ForumPost_User");
+        });
+
         modelBuilder.Entity<Hotel>(entity =>
         {
             entity.Property(e => e.HotelId).HasColumnName("HotelID");
@@ -324,7 +346,6 @@ public partial class lookdaysContext : DbContext
             entity.Property(e => e.Comment)
                 .IsRequired()
                 .HasMaxLength(500);
-            entity.Property(e => e.Rating).HasMaxLength(50);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Activity).WithMany(p => p.Reviews)
