@@ -5,7 +5,6 @@
        
         //很多參數打包再一起叫做DTO(Data Transfer Object)
         //WEB API 沒有 VIEW 所以寫成DTO 取代 VIEW MODEL 　
-
         public int BookingId { get; set; }
         //允許DATATIME可以是 null。也允許該屬性值為空
         public DateTime? BookingDate { get; set; } 

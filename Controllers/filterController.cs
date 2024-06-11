@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using prjLookday.DTO;
 using prjLookday.Models;
 using prjLookdayOrder.DTO;
@@ -20,10 +21,31 @@ namespace prjLookday.Controllers
 
         // GET: api/<filterController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookingFilterDTO>>> Getfilterbookings(DateTime? BookingDate, DateOnly? ActivityDate)
+        public async Task<ActionResult<IEnumerable<BookingFilterDTO>>> Getfilterbookings(DateTime BookingDate, DateOnly ActivityDate)
         {
+            //DateTime dateTime = DateTime.Now;
 
-            if (!BookingDate.HasValue || !ActivityDate.HasValue) //|| BookingDate > ActivityDate
+            // 將DateTime轉換為DateTimeOffset
+            DateTimeOffset dateTimeOffset = new DateTimeOffset(BookingDate);
+
+            // 獲取Unix時間戳
+            long unixTimeSeconds = dateTimeOffset.ToUnixTimeSeconds();
+            //-------------
+            // 假設有一個DateOnly對象
+            //DateOnly dateOnly = DateOnly.FromDateTime(DateTime.Now);
+
+            // 將DateOnly轉換為DateTime（假設時間為午夜）
+            DateTime dateTime = ActivityDate.ToDateTime(TimeOnly.MinValue);
+
+            // 將DateTime轉換為DateTimeOffset
+            DateTimeOffset dateTimeOffset2 = new DateTimeOffset(dateTime);
+
+            // 獲取Unix時間戳
+            long unixTimeSeconds2 = dateTimeOffset.ToUnixTimeSeconds();
+
+            //---------------------------------------------------------------------------
+
+            if (string.IsNullOrEmpty(BookingDate.ToString()) || string.IsNullOrEmpty(ActivityDate.ToString()) || unixTimeSeconds < unixTimeSeconds2) 
             {
                 return BadRequest("查無此日期區間資料");
             }
@@ -38,7 +60,7 @@ namespace prjLookday.Controllers
                 {
                     BookingId = b.BookingId,
                     BookingDate = b.BookingDate,
-                   //ActivityName = b.Activity.ActivityName,
+                    //ActivityName = b.Activity.ActivityName,
                    //ActivityDate = b.Activity.Date,   //b.Activity.Date
                     bookingStatus = b.BookingStates.ToString()
                 })

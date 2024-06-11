@@ -63,7 +63,7 @@ namespace prjLookdayOrder.Controllers
                 .Include(x=>x.Activity)
                 .Include(x=>x.BookingStates)
                 .Include(x=>x.Payments)
-                .Where(b => b.BookingId == id)
+                .Where(b => b.BookingId == id) //訂單標號客戶編號
                 .Select(b=> new BookingDTO
                 {
                     BookingId = b.BookingId,
