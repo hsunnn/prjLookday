@@ -2,30 +2,23 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Web;
 
 namespace prjLookday.Models;
 
 public partial class User
 {
-    [DisplayName("會員ID")]
     public int UserId { get; set; }
 
-    [DisplayName("姓名")]
     public string Username { get; set; }
 
-    [DisplayName("帳號")]
     public string Email { get; set; }
 
-    [DisplayName("密碼")]
     public string Password { get; set; }
 
     public int? Preferences { get; set; }
 
     public int RoleId { get; set; }
 
-    [DisplayName("圖片")]
     public string UserPic { get; set; }
 
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
@@ -34,9 +27,9 @@ public partial class User
 
     public virtual ICollection<CreditCardInfo> CreditCardInfos { get; set; } = new List<CreditCardInfo>();
 
+    public virtual ICollection<ForumPost> ForumPosts { get; set; } = new List<ForumPost>();
+
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    [DisplayName("角色")]
     public virtual Role Role { get; set; }
-
 }

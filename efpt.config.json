@@ -63,6 +63,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ForumPost]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Hotels]",
          "ObjectType": 0
       },

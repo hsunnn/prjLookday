@@ -13,11 +13,11 @@ public partial class Activity
 
     public string Description { get; set; }
 
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     public DateOnly? Date { get; set; }
 
-    public int CityId { get; set; }
+    public int? CityId { get; set; }
 
     public int? Remaining { get; set; }
 
@@ -26,6 +26,8 @@ public partial class Activity
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
 
     public virtual ICollection<ActivitiesAlbum> ActivitiesAlbums { get; set; } = new List<ActivitiesAlbum>();
+
+    public virtual ICollection<ActivitiesModel> ActivitiesModels { get; set; } = new List<ActivitiesModel>();
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
