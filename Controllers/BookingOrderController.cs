@@ -201,51 +201,51 @@ namespace prjLookdayOrder.Controllers
 
         // POST: api/BookingOrder   // 創建新的訂單
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<IEnumerable<BookingDTO>>> PostBooking([FromBody] BookingFilterDTO filter)     //[FromBody] 不能有key
-        {
-            // 初始化查詢，包括相關的實體
-            var query = _context.Bookings
-         .Include(x => x.User)           // 包括與預訂相關的 User 實體
-         .Include(x => x.Activity)       // 包括與預訂相關的 Activity 實體
-         .Include(x => x.BookingStates)  // 包括與預訂相關的 BookingStates 實體
-         .Include(x => x.Payments)       // 包括與預訂相關的 Payments 實體
-         .AsQueryable();                 // 轉換為 IQueryable 以便進一步過濾
+        //[HttpPost]
+        //public async Task<ActionResult<IEnumerable<BookingDTO>>> PostBooking([FromBody] BookingFilterDTO filter)     //[FromBody] 不能有key
+        //{
+        //    // 初始化查詢，包括相關的實體
+        //    var query = _context.Bookings
+        // .Include(x => x.User)           // 包括與預訂相關的 User 實體
+        // .Include(x => x.Activity)       // 包括與預訂相關的 Activity 實體
+        // .Include(x => x.BookingStates)  // 包括與預訂相關的 BookingStates 實體
+        // .Include(x => x.Payments)       // 包括與預訂相關的 Payments 實體
+        // .AsQueryable();                 // 轉換為 IQueryable 以便進一步過濾
 
 
-            // 如果 StartDate 過濾條件有值，則添加條件從該日期開始過濾預訂
-            if (filter.BookingDate.HasValue)
-            {
-                //"大於或等於"
-                query = query.Where(b => b.BookingDate >= filter.BookingDate.Value);
-            }
-            // 如果 ActivityDate 過濾條件有值，則添加條件到該日期結束過濾預訂
-            if (filter.ActivityDate.HasValue)
-            {
-                //"小於或等於"
-                query = query.Where(b => b.BookingDate <= filter.ActivityDate.Value);
-            }
+        //    // 如果 StartDate 過濾條件有值，則添加條件從該日期開始過濾預訂
+        //    if (filter.BookingDate.HasValue)
+        //    {
+        //        //"大於或等於"
+        //        query = query.Where(b => b.BookingDate >= filter.BookingDate.Value);
+        //    }
+        //    // 如果 ActivityDate 過濾條件有值，則添加條件到該日期結束過濾預訂
+        //    if (filter.ActivityDate.HasValue)
+        //    {
+        //        //"小於或等於"
+        //       // query = query.Where(b => b.BookingDate <= filter.ActivityDate.Value);
+        //    }
 
 
-            // 將過濾後的預訂投影為 BookingDTO 對象並異步執行查詢
-            var bookings = await query
-                .Select(b => new BookingDTO
-                {
-                    BookingId = b.BookingId,                         // 映射 BookingId
-                    BookingDate = b.BookingDate,                     // 映射 BookingDate  (DateTime)(b.BookingDate)
-                    Price = b.Price,                                 // 映射 Price
-                    UserID = b.UserId,                               // 映射 UserID
-                    UserName = b.User.Username,                      // 映射 UserName
-                    ActivityID = b.ActivityId,                       // 映射 ActivityID
-                    ActivityName = b.Activity.Name,                  // 映射 ActivityName
-                    bookingStatus = b.BookingStatesId.ToString(),    // 映射 bookingStatus
-                    member = b.Member,                               // 映射 member
-                    // PaymentDate = b.Payments.ToString(),
-                })
-                .ToListAsync();    // 異步檢索 BookingDTO 列表                              
+        //    // 將過濾後的預訂投影為 BookingDTO 對象並異步執行查詢
+        //    var bookings = await query
+        //        .Select(b => new BookingDTO
+        //        {
+        //            BookingId = b.BookingId,                         // 映射 BookingId
+        //            BookingDate = b.BookingDate,                     // 映射 BookingDate  (DateTime)(b.BookingDate)
+        //            Price = b.Price,                                 // 映射 Price
+        //            UserID = b.UserId,                               // 映射 UserID
+        //            UserName = b.User.Username,                      // 映射 UserName
+        //            ActivityID = b.ActivityId,                       // 映射 ActivityID
+        //            ActivityName = b.Activity.Name,                  // 映射 ActivityName
+        //            bookingStatus = b.BookingStatesId.ToString(),    // 映射 bookingStatus
+        //            member = b.Member,                               // 映射 member
+        //            // PaymentDate = b.Payments.ToString(),
+        //        })
+        //        .ToListAsync();    // 異步檢索 BookingDTO 列表                              
                                    
-            return Ok(bookings);   // 返回包含預訂列表的 OK 響應
-        }
+        //    return Ok(bookings);   // 返回包含預訂列表的 OK 響應
+        //}
 
         // DELETE: api/BookingOrder/5  // 刪除特定ID的訂單
         [HttpDelete("{id}")]

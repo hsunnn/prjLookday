@@ -14,40 +14,19 @@ namespace prjLookday.Controllers
     public class filterController : ControllerBase
     {
         private readonly LookdaysContext _context;
-        public filterController(LookdaysContext context) 
+        public filterController(LookdaysContext context)
         {
-            _context = context; 
+            _context = context;
         }
 
         // GET: api/<filterController>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookingFilterDTO>>> Getfilterbookings(DateTime BookingDate, DateOnly ActivityDate)
+        [HttpGet("activitydate")]
+        public async Task<ActionResult<IEnumerable<BookingFilterDTO>>> Getfilterbookings([FromQuery]DateTime startDate, [FromQuery]DateTime endDate)
         {
-            //DateTime dateTime = DateTime.Now;
-
-            // 將DateTime轉換為DateTimeOffset
-            DateTimeOffset dateTimeOffset = new DateTimeOffset(BookingDate);
-
-            // 獲取Unix時間戳
-            long unixTimeSeconds = dateTimeOffset.ToUnixTimeSeconds();
-            //-------------
-            // 假設有一個DateOnly對象
-            //DateOnly dateOnly = DateOnly.FromDateTime(DateTime.Now);
-
-            // 將DateOnly轉換為DateTime（假設時間為午夜）
-            DateTime dateTime = ActivityDate.ToDateTime(TimeOnly.MinValue);
-
-            // 將DateTime轉換為DateTimeOffset
-            DateTimeOffset dateTimeOffset2 = new DateTimeOffset(dateTime);
-
-            // 獲取Unix時間戳
-            long unixTimeSeconds2 = dateTimeOffset.ToUnixTimeSeconds();
-
-            //---------------------------------------------------------------------------
-
-            if (string.IsNullOrEmpty(BookingDate.ToString()) || string.IsNullOrEmpty(ActivityDate.ToString()) || unixTimeSeconds < unixTimeSeconds2) 
+            
+            if (startDate == default || endDate == default || startDate>endDate)
             {
-                return BadRequest("查無此日期區間資料");
+                return BadRequest("無效的日期區間");
             }
 
             var bookings = await _context.Bookings
@@ -55,22 +34,74 @@ namespace prjLookday.Controllers
                 .Include(x => x.Activity)
                 .Include(x => x.BookingStates)
                 .Include(x => x.Payments)
-                 .Where(b => b.BookingDate >= BookingDate) //&& b.BookingDate <= ActivityDate
+                 .Where(b => b.BookingDate >= startDate && b.BookingDate <= endDate) 
                 .Select(b => new BookingFilterDTO
                 {
                     BookingId = b.BookingId,
                     BookingDate = b.BookingDate,
-                    //ActivityName = b.Activity.ActivityName,
-                   //ActivityDate = b.Activity.Date,   //b.Activity.Date
-                    bookingStatus = b.BookingStates.ToString()
+                    ActivityName = b.Activity.Name,
+                    ActivityDate = (DateOnly)b.Activity.Date,   //b.Activity.Date
+                    bookingStatus = b.BookingStates.States
                 })
                 .ToListAsync();
-            return Ok(bookings);
-        }
 
-         //return new string[] { "value1", "value2" };
+                return Ok(bookings);
+        }
     }
 
+
+
+    // GET: api/<filterController>
+    ////[HttpGet("activitydate/{activitystart}")]
+    ////    public async Task<ActionResult<IEnumerable<BookingFilterDTO>>> Getfilterbookings(DateTime BookingDate, DateOnly ActivityDate)
+    ////    {
+    ////        //DateTime dateTime = DateTime.Now;
+
+    ////        // 將DateTime轉換為DateTimeOffset
+    ////        DateTimeOffset dateTimeOffset = new DateTimeOffset(BookingDate);
+
+    ////        // 獲取Unix時間戳 ToUnixTimeSeconds() 方法，該方法返回從 1970 年 1 月 1 日的午夜（UTC）到指定時間的秒數。
+    ////        long unixTimeSeconds = dateTimeOffset.ToUnixTimeSeconds();
+    ////        //-------------
+    ////        // 假設有一個DateOnly對象
+    ////        //DateOnly dateOnly = DateOnly.FromDateTime(DateTime.Now);
+
+    ////        // 將DateOnly轉換為DateTime（假設時間為午夜）//ToDateTime(TimeOnly.MinValue) 方法將 ActivityDate 與指定的時間部分（這裡是午夜）組合成完整的 DateTime 物件。
+    ////        DateTime dateTime = ActivityDate.ToDateTime(TimeOnly.MinValue);
+
+    ////        // 將DateTime轉換為DateTimeOffset
+    ////        DateTimeOffset dateTimeOffset2 = new DateTimeOffset(dateTime, TimeSpan.Zero);
+
+    ////        // 獲取Unix時間戳
+    ////        long unixTimeSeconds2 = dateTimeOffset.ToUnixTimeSeconds();
+
+    ////        //---------------------------------------------------------------------------
+
+    ////        if (string.IsNullOrEmpty(BookingDate.ToString()) || string.IsNullOrEmpty(ActivityDate.ToString()) || unixTimeSeconds < unixTimeSeconds2)
+    ////        {
+    ////            return BadRequest("查無此日期區間資料");
+    ////        }
+
+    ////        var bookings = await _context.Bookings
+    ////            .Include(x => x.User)
+    ////            .Include(x => x.Activity)
+    ////            .Include(x => x.BookingStates)
+    ////            .Include(x => x.Payments)
+    ////             .Where(b => b.BookingDate >= BookingDate && unixTimeSeconds <= unixTimeSeconds2) //&& b.BookingDate <= ActivityDate
+    ////            .Select(b => new BookingFilterDTO
+    ////            {
+    ////                BookingId = b.BookingId,
+    ////                BookingDate = b.BookingDate,
+    ////                ActivityName = b.Activity.Name,
+    ////                ActivityDate = (DateOnly)b.Activity.Date,   //b.Activity.Date
+    ////                bookingStatus = b.BookingStates.States
+    ////            })
+    ////            .ToListAsync();
+    ////        return Ok(bookings);
+    ////    }
+
+    ////    // return new string[] { "value1", "value2" };
+    ////}
     // GET api/<filterController>/5
     //[HttpGet("{id}")]
     //public string Get(int id)
