@@ -10,9 +10,9 @@ namespace prjLookdayOrder.Controllers
     [ApiController]
     public class BookingOrderController : ControllerBase
     {
-        private readonly lookdaysContext _context;
+        private readonly LookdaysContext _context;
 
-        public BookingOrderController(lookdaysContext context)
+        public BookingOrderController(LookdaysContext context)
         {
             _context = context;
         }
@@ -52,7 +52,7 @@ namespace prjLookdayOrder.Controllers
 
         // GET: api/BookingOrder/5
         // 根據ID獲取特定訂單
-        [HttpGet("{id}")]
+        [HttpGet("ById/{id}")]
         public async Task<ActionResult<BookingDTO>> GetBooking(int id)
         {
             //FindAsync 是用于异步检索数据源中实体的方法
@@ -63,7 +63,7 @@ namespace prjLookdayOrder.Controllers
                 .Include(x=>x.Activity)
                 .Include(x=>x.BookingStates)
                 .Include(x=>x.Payments)
-                .Where(b => b.BookingId == id) //訂單標號客戶編號
+                .Where(b => b.BookingId == id ) 
                 .Select(b=> new BookingDTO
                 {
                     BookingId = b.BookingId,
@@ -86,6 +86,42 @@ namespace prjLookdayOrder.Controllers
 
             return Ok(booking);
         }
+        //透過用戶姓名搜尋
+        [HttpGet("ByUsername/{username}")]
+        public async Task<ActionResult<BookingDTO>> GetBookingName(string username)
+        {
+            //FindAsync 是用于异步检索数据源中实体的方法
+            //var booking = await _context.Bookings.FindAsync(id);
+
+            var booking = await _context.Bookings
+                .Include(x => x.User)
+                .Include(x => x.Activity)
+                .Include(x => x.BookingStates)
+                .Include(x => x.Payments)
+                .Where(b => b.User.Username == username)
+                .Select(b => new BookingDTO
+                {
+                    BookingId = b.BookingId,
+                    BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
+                    Price = b.Price,
+                    UserID = b.UserId,
+                    UserName = b.User.Username,
+                    ActivityID = b.ActivityId,
+                    ActivityName = b.Activity.Name,
+                    bookingStatus = b.BookingStates.States.ToString(),
+                    member = b.Member,
+                })
+            //通过指定条件查找第一个符合条件的元素，如果没有找到符合条件的元素，则返回默认值（例如 null）
+            .FirstOrDefaultAsync();
+
+            if (booking == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(booking);
+        }
+
 
         // PUT: api/BookingOrder/5    // 更新特定ID的訂單
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

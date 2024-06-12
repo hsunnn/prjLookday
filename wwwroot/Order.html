@@ -9,7 +9,7 @@
     <meta name="author" content="" />
     <title>Dashboard - SB Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="~/css/styles.css" rel="stylesheet" />
+    <!--<link href="~/css/styles.css" rel="stylesheet" />-->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
     <style>
@@ -44,12 +44,12 @@
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="~/js/scripts.js"></script>
+    <!--<script src="~/js/scripts.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="~/assets/demo/chart-area-demo.js"></script>
-    <script src="~/assets/demo/chart-bar-demo.js"></script>
+    <!--<script src="~/assets/demo/chart-area-demo.js"></script>
+    <script src="~/assets/demo/chart-bar-demo.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script src="~/js/datatables-simple-demo.js"></script>
+    <!--<script src="~/js/datatables-simple-demo.js"></script>-->
 
 
 </head>
@@ -166,8 +166,8 @@
                     <!--<form id="search<!--Form" style="text-align:right">
     </form>-->
                     <div style="margin-left:800px;">
-                        <input type="text" id="inputsearch" placeholder="搜尋訂單編號或是用戶編號/名稱">
-                        <button type="submit" onclick="getBookingById()">搜尋</button>
+                        <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱">
+                        <button type="submit" onclick="getBooking()">搜尋</button>
                         <button type="submit" id="allorders" onclick="allbookings()">全部訂單</button>
                     </div>
                     <div style="margin-left:800px;">
@@ -176,8 +176,8 @@
                         <button id="searchdate">搜尋</button>
                     </div>
 
-                    <div>當月總銷售行程數量</div>
-                    <div>當月總銷售金額</div>
+                    <!--<div>當月總銷售行程數量</div>
+                    <div>當月總銷售金額</div>-->
 
                     <table id="bookingsTable" border="1">
                         <thead>
@@ -271,17 +271,27 @@
             });
         };
 
-        async function getBookingById() {
-            const bookingId = document.getElementById('inputsearch').value;
-            if (!bookingId) {
-                alert("請輸入訂單編號");
+        async function getBooking() {
+            const search = document.getElementById('inputsearch').value.trim();
+            if (!search ) {
+                alert("請輸入訂單編號或用戶名稱");
                 //populateTable(bookingData);
-                return (populateTable(bookingData));
+                return; //populateTable(bookingData)
             }
 
-            const response = await fetch(`/api/BookingOrder/${bookingId}`);
+            let url;
+            if (isNaN(search)) {
+                //如果不是數字 就會判定為用戶名
+                url = `/api/BookingOrder/ByUsername/${encodeURIComponent(search)}`;
+            } else {
+                //如果是數字就判定是訂單編號
+                url = `api/BookingOrder/ById/${search}`;
+            }
+
+
+            const response = await fetch(url);
             if (!response.ok) {
-                alert("找不到該訂單");
+                alert("找不到該訂單或用戶");
                 return;
             }
 
@@ -345,17 +355,17 @@
         //一載入頁面 就顯示資料
         window.onload = loadBookings;
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="~/js/scripts.js"></script>
+        //<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <!--<script src="~/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="~/assets/demo/chart-area-demo.js"></script>
-    <script src="~/assets/demo/chart-bar-demo.js"></script>
+    <!--<script src="~/assets/demo/chart-area-demo.js"></script>-->
+    <!--<script src="~/assets/demo/chart-bar-demo.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script src="~/js/datatables-simple-demo.js"></script>
+    <!--<script src="~/js/datatables-simple-demo.js"></script>-->
     @await RenderSectionAsync("Scripts", required: false)
 
 
 
-    </script>
+    
 </body>
 </html>
