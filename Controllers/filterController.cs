@@ -43,6 +43,7 @@ namespace prjLookday.Controllers
                     ActivityDate = (DateOnly)b.Activity.Date,   //b.Activity.Date
                     bookingStatus = b.BookingStates.States
                 })
+              
                 .ToListAsync();
 
                 return Ok(bookings);

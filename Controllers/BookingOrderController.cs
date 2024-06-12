@@ -76,7 +76,7 @@ namespace prjLookdayOrder.Controllers
                     bookingStatus= b.BookingStates.States.ToString(),
                     member = b.Member,
                 })
-            //通过指定条件查找第一个符合条件的元素，如果没有找到符合条件的元素，则返回默认值（例如 null）
+            //找出所有相關的值
             .FirstOrDefaultAsync();
 
             if (booking == null)
