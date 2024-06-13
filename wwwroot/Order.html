@@ -180,23 +180,23 @@
                     </div>
 
 
-                    <table id="bookingsTable" border="1" ><!--style="text-align: center;-->"
+                    <table id="bookingsTable" class="table table-striped" ><!--style="text-align: center;-->
                         <thead>
                             <tr style="width:250px;">
-                                <th>序號</th>
-                                <th>訂單編號</th>
-                                <th>訂單日期</th>
-                                <th>總金額</th>
-                                <th>客戶資訊</th>
-                                <th>活動資訊</th>
-                                <th>訂單狀態</th>
-                                <th>總參與人數</th>
+                                <th scope="col">序號</th>
+                                <th scope="col">訂單編號</th>
+                                <th scope="col">訂單日期</th>
+                                <th scope="col">客戶資訊</th>
+                                <th scope="col">活動資訊</th>
+                                <th scope="col">金額</th>
+                                <th scope="col">訂單狀態</th>
+                                <th scope="col">參與人數</th>
                                 <!-- <th>訂單編輯</th>-->
                             </tr>
                         </thead>
                         <tbody>
                             <tr id="loading-indicator">
-                                <td colspan="12"> loading........</td>
+                                <td colspan="12" scope="row"> loading........</td>
                             </tr>
                             <!-- 添加JavaScript的資料 -->
                         </tbody>
@@ -258,27 +258,18 @@
 
          
             data.forEach((data, index) => {
+                if (data.bookingStatus == "已完成付款") {
                 const row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = index + 1;
                 row.insertCell(1).innerText = data.bookingId;
                 row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-                row.insertCell(3).innerText = data.price;
-                row.insertCell(4).innerHTML = data.userDisplay;
-                row.insertCell(5).innerHTML = data.activityDisplay;
-                //row.insertCell(4).innerText = data.userID;
-                //row.insertCell(5).innerText = data.userName;
-
-                //row.insertCell(6).innerText = data.activityID;
-                //row.insertCell(7).innerText = data.activityName;
+                //row.insertCell(3).innerHTML = data.UserName;
+                row.insertCell(3).innerHTML = data.userDisplay;
+                row.insertCell(4).innerHTML = data.activityDisplay;
+                row.insertCell(5).innerText = data.price;
                 row.insertCell(6).innerText = data.bookingStatus;
-                row.insertCell(7).innerText = data.member;
-
-                //const editcell = row.insertCell(10);
-
-                //const editlink = document.createElement('a');
-                //editlink.href = `/api/BookingOrder/${data.bookingId}`;
-                //editlink.innerHTML = '修改';
-                //editcell.appendChild(editlink);
+                row.insertCell(7).innerText = data.remaining;
+                }
             });
         };
 
@@ -307,10 +298,14 @@
             }
 
             const data = await response.json();
+            if (Array.isArray(data)) {
+                populateTable(data);  // For username search
+            }
+            else {
+                populateTable([data]);  // For ID search
+            }
 
             
-
-            populateTable([data]);
         }
 
         //顯示全部訂單資料
@@ -344,24 +339,38 @@
 
             //顯示table
             //document.getElementById('bookingTable').style.display = 'none';
-            document.getElementById('activitytable').style.display = 'table';
+            document.getElementById('bookingsTable').style.display = 'table';
 
             datetable(data);
 
         }
 
         function datetable(data) {
-            const tablebody = document.getElementById('activitytable').getElementsByTagName('tbody')[0];
+            const tablebody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
             tablebody.innerHTML = '';     //清空原始數據
 
             data.forEach((data, index) => {
                 const row = tablebody.insertRow();
+                //row.insertCell(0).innerHTML = index + 1;
+                //row.insertCell(1).innerHTML = data.bookingId;
+                //row.insertCell(2).innerHTML = new Date(data.bookingDate).toLocaleDateString();
+                //row.insertCell(3).innerHTML = data.activityName;
+                //row.insertCell(4).innerHTML = new Date(data.activityDate).toLocaleDateString();
+                //row.insertCell(5).innerHTML = data.bookingStatus;
+
+
                 row.insertCell(0).innerHTML = index + 1;
-                row.insertCell(1).innerHTML = data.bookingId;
-                row.insertCell(2).innerHTML = new Date(data.bookingDate).toLocaleDateString();
-                row.insertCell(3).innerHTML = data.activityName;
-                row.insertCell(4).innerHTML = new Date(data.activityDate).toLocaleDateString();
-                row.insertCell(5).innerHTML = data.bookingStatus;
+                row.insertCell(1).innerText = data.bookingId;
+                row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                //row.insertCell(3).innerHTML = data.UserName;
+                row.insertCell(3).innerHTML = data.userDisplay;
+                row.insertCell(4).innerHTML = data.activityDisplay;
+                row.insertCell(5).innerText = data.price;
+                row.insertCell(6).innerText = data.bookingStatus;
+                row.insertCell(7).innerText = data.member;
+
+
+
             });
         }
 

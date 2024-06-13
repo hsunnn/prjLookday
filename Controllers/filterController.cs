@@ -35,13 +35,25 @@ namespace prjLookday.Controllers
                 .Include(x => x.BookingStates)
                 .Include(x => x.Payments)
                  .Where(b => b.BookingDate >= startDate && b.BookingDate <= endDate) 
-                .Select(b => new BookingFilterDTO
+                .Select(b => new BookingDTO
                 {
+                    //BookingId = b.BookingId,
+                    //BookingDate = b.BookingDate,
+                    //ActivityName = b.Activity.Name,
+                    //ActivityDate = (DateOnly)b.Activity.Date,   //b.Activity.Date
+                    //bookingStatus = b.BookingStates.States
                     BookingId = b.BookingId,
-                    BookingDate = b.BookingDate,
-                    ActivityName = b.Activity.Name,
-                    ActivityDate = (DateOnly)b.Activity.Date,   //b.Activity.Date
-                    bookingStatus = b.BookingStates.States
+                    BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
+                    Price = b.Price,
+                    userDisplay = b.User.Username,
+                    //UserID = b.UserId,
+                    //UserName = b.User.Username,
+                    activityDisplay = b.Activity.Name,
+                    //ActivityID = b.ActivityId,
+                    //ActivityName = b.Activity.Name,
+                    bookingStatus = b.BookingStates.States.ToString(),
+                    //remaining = $"{b.Member}/{b.Activity.Remaining}"
+                    member = b.Member,
                 })
               
                 .ToListAsync();

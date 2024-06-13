@@ -22,10 +22,11 @@
         public string activityDisplay { get; set; }
 
         public int ActivityID { get; set; }
-       // public int ActivityID { get; set; }
-        //public string ActivityName { get; set; } = null!;
+     
         public string? ActivityName { get; set; } 
         public string? bookingStatus { get; set; }
         public int? member { get; set; }
+
+        public string? remaining { get; set; }
     }
 }

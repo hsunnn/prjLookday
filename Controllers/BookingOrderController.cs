@@ -35,15 +35,13 @@ namespace prjLookdayOrder.Controllers
         {
             BookingId = b.BookingId,
             BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
+            //UserName= b.User.Username,
+            userDisplay =b.User.Username,  //$"編號:{b.UserId}|姓名:{b.User.Username}"
+            activityDisplay = b.Activity.Name,  //$"編號:{b.ActivityId}{b.Activity.Name}"
             Price = b.Price,
-            userDisplay = $"{b.UserId}--{b.User.Username}",
-            //UserID = b.UserId,
-            //UserName = b.User.Username,
-            activityDisplay = $"{b.ActivityId}--{b.BookingStates.States.ToString()}",
-            //ActivityID = b.ActivityId,
-            //ActivityName = b.Activity.Name,
             bookingStatus = b.BookingStates.States.ToString(),
-            member = b.Member,
+            remaining = $"{b.Member}/{b.Activity.Remaining}",
+            
             //PaymentDate = b.Payments.ToString(),
         })
         //用于异步地从可查询的数据源中检索所有元素并将它们转换为 List<T>。在需要执行数据库操作而不阻塞主线程的情况下，它特别有用，从而提高应用程序的性能和响应速度。
@@ -71,12 +69,15 @@ namespace prjLookdayOrder.Controllers
                     BookingId = b.BookingId,
                     BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
                     Price = b.Price,
-                    UserID = b.UserId,
-                    UserName = b.User.Username,
-                    ActivityID = b.ActivityId,
-                    ActivityName = b.Activity.Name,
+                    userDisplay = b.User.Username,
+                    activityDisplay = b.Activity.Name,
+                    //UserID = b.UserId,
+                    //UserName = b.User.Username,
+                    //ActivityID = b.ActivityId,
+                    //ActivityName = b.Activity.Name,
                     bookingStatus= b.BookingStates.States.ToString(),
-                    member = b.Member,
+                    //member = b.Member,
+                    remaining = $"{b.Member}/{b.Activity.Remaining}"
                 })
             //找出所有相關的值
             .FirstOrDefaultAsync();
@@ -106,12 +107,15 @@ namespace prjLookdayOrder.Controllers
                     BookingId = b.BookingId,
                     BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
                     Price = b.Price,
-                    UserID = b.UserId,
-                    UserName = b.User.Username,
-                    ActivityID = b.ActivityId,
-                    ActivityName = b.Activity.Name,
+                    userDisplay = b.User.Username,
+                    //UserID = b.UserId,
+                    //UserName = b.User.Username,
+                    activityDisplay= b.Activity.Name,
+                    //ActivityID = b.ActivityId,
+                    //ActivityName = b.Activity.Name,
                     bookingStatus = b.BookingStates.States.ToString(),
-                    member = b.Member,
+                    remaining = $"{b.Member}/{b.Activity.Remaining}"
+                    //member = b.Member,
                 })
             //通过指定条件查找第一个符合条件的元素，如果没有找到符合条件的元素，则返回默认值（例如 null）
             .FirstOrDefaultAsync();
