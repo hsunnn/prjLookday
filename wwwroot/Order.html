@@ -168,19 +168,25 @@
                 <div class="container-fluid px-4">
 
                     <h1>訂單管理</h1>
-                    <div class="input-group">
-                        <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                        <div class="input-group-append">
-                            <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
-                        </div>
-                        <div class="input-group-append">
-                            <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
+                    <div >
+                    <div class="input-group" style="justify-content:flex-end">
+                        <div style="display: flex">
+                            <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            <div class="input-group-append">
+                                <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
+                            </div>
                         </div>
                     </div>
-                    <div style="margin-left:800px;">
-                        <input type="date" id="startdate" />
-                        <input type="date" id="enddate" />
-                        <button id="searchdate" onclick="getdurationbookings()">搜尋</button>
+
+                    <div class="input-group" style="justify-content:flex-end">
+                         <div style="display: flex">
+                            <input type="date" id="startdate" />
+                            <input type="date" id="enddate" />
+                            <button id="searchdate" onclick="getdurationbookings()">搜尋</button>
+                         </div>
                     </div>
 
                     <div class="dropdown">

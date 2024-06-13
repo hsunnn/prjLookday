@@ -5,18 +5,17 @@ using prjLookday.ViewModels;
 
 namespace prjLookday.Controllers
 {
+    [Route("[controller]")]
     public class BookingListController : Controller
     {
-        [Route("[controller]")]
-        public class BookingOrderController : Controller
-        {
-            private readonly lookdaysContext _context;
+        
+         private readonly lookdaysContext _context;
 
-            public BookingOrderController(lookdaysContext context)
+            public BookingListController(lookdaysContext context)
             {
                 _context = context;
             }
-
+            [HttpGet("List")]
             public async Task<IActionResult> List()
             {
                 var bookings = await _context.Bookings
@@ -39,5 +38,5 @@ namespace prjLookday.Controllers
                 return View(bookings);
             }
         }
-    }
+    
 }
