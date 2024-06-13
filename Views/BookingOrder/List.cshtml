@@ -1,0 +1,29 @@
+﻿@model IEnumerable<prjLookday.ViewModels.CBookingListViewModel>
+
+<table>
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Booking Date</th>
+            <th>User Name</th>
+            <th>Activity Name</th>
+            <th>Price</th>
+            <th>Booking Status</th>
+            <th>Member</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.BookingId</td>
+                <td>@booking.BookingDate</td>
+                <td>@booking.UserName</td>
+                <td>@booking.ActivityName</td>
+                <td>@booking.Price</td>
+                <td>@booking.bookingStatus</td>
+                <td>@booking.member</td>
+            </tr>
+        }
+    </tbody>
+</table>
