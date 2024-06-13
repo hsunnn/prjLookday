@@ -168,10 +168,14 @@
                 <div class="container-fluid px-4">
 
                     <h1>訂單管理</h1>
-                    <div style="margin-left:800px;">
-                        <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱">
-                        <button type="submit" onclick="getBooking()">搜尋</button>
-                        <button type="submit" id="allorders" onclick="allbookings()">全部訂單</button>
+                    <div class="input-group">
+                        <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        <div class="input-group-append">
+                            <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
+                        </div>
                     </div>
                     <div style="margin-left:800px;">
                         <input type="date" id="startdate" />
@@ -180,7 +184,8 @@
                     </div>
 
 
-                    <table id="bookingsTable" class="table table-striped" ><!--style="text-align: center;-->
+                    <table id="bookingsTable" class="table table-striped">
+                        <!--style="text-align: center;-->
                         <thead>
                             <tr style="width:250px;">
                                 <th scope="col">序號</th>
@@ -203,7 +208,7 @@
                     </table>
 
 
-                    <table id="activitytable" border="1" >
+                    <table id="activitytable" border="1">
                         <thead>
                             <tr style="width:250px">
                                 <th>序號</th>
@@ -214,7 +219,7 @@
                                 <th>訂單狀態</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <tr id="loading-indicator">
                                 <td colspan="12"> loading........</td>
                             </tr>
@@ -238,6 +243,11 @@
         </div>
     </div>
 
+    <style>
+       
+
+    </style>
+
 
     <script>
         let bookingData = [];
@@ -256,19 +266,19 @@
             tableBody.innerHTML = ''; // 清空原先資料
             //const btncell = document.createElement("button");
 
-         
+
             data.forEach((data, index) => {
                 if (data.bookingStatus == "已完成付款") {
-                const row = tableBody.insertRow();
-                row.insertCell(0).innerHTML = index + 1;
-                row.insertCell(1).innerText = data.bookingId;
-                row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-                //row.insertCell(3).innerHTML = data.UserName;
-                row.insertCell(3).innerHTML = data.userDisplay;
-                row.insertCell(4).innerHTML = data.activityDisplay;
-                row.insertCell(5).innerText = data.price;
-                row.insertCell(6).innerText = data.bookingStatus;
-                row.insertCell(7).innerText = data.remaining;
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).innerHTML = index + 1;
+                    row.insertCell(1).innerText = data.bookingId;
+                    row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                    //row.insertCell(3).innerHTML = data.UserName;
+                    row.insertCell(3).innerHTML = data.userDisplay;
+                    row.insertCell(4).innerHTML = data.activityDisplay;
+                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(6).innerText = data.bookingStatus;
+                    row.insertCell(7).innerText = data.remaining;
                 }
             });
         };
@@ -305,7 +315,7 @@
                 populateTable([data]);  // For ID search
             }
 
-            
+
         }
 
         //顯示全部訂單資料
