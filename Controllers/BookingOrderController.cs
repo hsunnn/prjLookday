@@ -40,8 +40,9 @@ namespace prjLookdayOrder.Controllers
             activityDisplay = b.Activity.Name,  //$"編號:{b.ActivityId}{b.Activity.Name}"
             Price = b.Price,
             bookingStatus = b.BookingStates.States.ToString(),
-            remaining = $"{b.Member}/{b.Activity.Remaining}",
-            
+            member = b.Member,
+            //remaining = $"{b.Member}/{b.Activity.Remaining}",
+
             //PaymentDate = b.Payments.ToString(),
         })
         //用于异步地从可查询的数据源中检索所有元素并将它们转换为 List<T>。在需要执行数据库操作而不阻塞主线程的情况下，它特别有用，从而提高应用程序的性能和响应速度。
@@ -76,8 +77,8 @@ namespace prjLookdayOrder.Controllers
                     //ActivityID = b.ActivityId,
                     //ActivityName = b.Activity.Name,
                     bookingStatus= b.BookingStates.States.ToString(),
-                    //member = b.Member,
-                    remaining = $"{b.Member}/{b.Activity.Remaining}"
+                    member = b.Member,
+                    //remaining = $"{b.Member}/{b.Activity.Remaining}"
                 })
             //找出所有相關的值
             .FirstOrDefaultAsync();
@@ -114,13 +115,14 @@ namespace prjLookdayOrder.Controllers
                     //ActivityID = b.ActivityId,
                     //ActivityName = b.Activity.Name,
                     bookingStatus = b.BookingStates.States.ToString(),
-                    remaining = $"{b.Member}/{b.Activity.Remaining}"
-                    //member = b.Member,
+                    //remaining = $"{b.Member}/{b.Activity.Remaining}"
+                    member = b.Member,
                 })
             //通过指定条件查找第一个符合条件的元素，如果没有找到符合条件的元素，则返回默认值（例如 null）
-            .FirstOrDefaultAsync();
+            //.FirstOrDefaultAsync();
+            .ToListAsync();
 
-            if (booking == null)
+            if (booking == null || !booking.Any())
             {
                 return NotFound();
             }
