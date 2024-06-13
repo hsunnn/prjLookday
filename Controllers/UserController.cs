@@ -2,6 +2,8 @@
 using prjLookday.Models;
 using prjLookday.ViewModels;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using X.PagedList;
 
 namespace prjLookday.Controllers
@@ -53,12 +55,22 @@ namespace prjLookday.Controllers
 
             userDb.Username = userIn.UserName;
             userDb.Email = userIn.Email;
-            userDb.Password = userIn.Password;
+            userDb.Password = HashPassword(userIn.Password);
             userDb.RoleId = userIn.RoleId;
 
             db.Users.Add(userDb);
             db.SaveChanges();
             return RedirectToAction("List");
+        }
+
+        private string HashPassword(string pwd)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(pwd));
+                var hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                return hash;
+            }
         }
 
         public IActionResult Edit(int? id)
