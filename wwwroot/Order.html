@@ -1,0 +1,505 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - SB Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <style>
+        .custom-sidenav {
+            background-color: rgb(225,223,218);
+            color: #ee7415;
+        }
+
+        .nav-link {
+            color: #5b5b5b;
+        }
+
+        .background-image {
+            position: relative;
+            z-index: 1; /* 確保內容在背景圖片之上 */
+        }
+
+            .background-image::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url('/images/mountain.jpg');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                opacity: 0.5; /* 調整透明度 */
+                z-index: -1; /* 確保背景圖片在內容之下 */
+            }
+
+        #activitytable {
+            display: none;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/chart-area-demo.js"></script>
+
+    <script src="assets/demo/chart-bar-demo.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="js/datatables-simple-demo.js"></script>
+
+
+</head>
+<body class="sb-nav-fixed background-image">
+    <nav class="sb-topnav navbar navbar-expand navbar-light" style="background-color:rgb(225,223,218);">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" style="color:rgb(237,134,28)">LookDay Admin</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 " id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-outline-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion custom-sidenav" id="sidenavAccordion">
+                <div class="sb-sidenav-menu ">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Dashboard</div>
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Power BI連結放這邊
+                        </a>
+                        <hr class="sidebar-divider my-0">
+                        <div class="sb-sidenav-menu-heading">Admin</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            會員管理
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="layout-sidenav-light.html">編輯會員檔案</a>
+                                <a class="nav-link" href="layout-sidenav-light.html">黑名單會員</a>
+                                <a class="nav-link" href="layout-sidenav-light.html">會員訊息</a>
+                            </nav>
+                        </div>
+                        <hr class="sidebar-divider my-0"> <!--@* 分隔線 *@-->
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            商品管理
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <hr class="sidebar-divider my-0">
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                    站上行程管理
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="login.html">已上架行程</a> @* 做刪減、編輯、搜尋 *@
+                                        <a class="nav-link" href="register.html">上架新行程</a>@* 做上架 *@
+                                        <a class="nav-link" href="register.html">評論管理</a>
+                                    </nav>
+                                </div>
+                                <hr class="sidebar-divider my-0">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                    會員訂單管理
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="Order.html">訂單管理</a>
+                                        <a class="nav-link" href="401.html">已付款訂單</a>
+                                        <a class="nav-link" href="404.html">已取消訂單</a>
+                                        <a class="nav-link" href="500.html">????</a>
+                                    </nav>
+                                </div>
+                                <hr class="sidebar-divider my-0">
+                            </nav>
+                        </div>
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            廣告輪播管理
+                        </a>
+                        <hr class="sidebar-divider my-0">
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            強檔活動管理
+                        </a>
+                        <hr class="sidebar-divider my-0">
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            常見問答
+                        </a>
+                        <hr class="sidebar-divider my-0">
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+
+                    <h1>訂單管理</h1>
+                    <div class="input-group">
+                        <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        <div class="input-group-append">
+                            <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
+                        </div>
+                    </div>
+                    <div style="margin-left:800px;">
+                        <input type="date" id="startdate" />
+                        <input type="date" id="enddate" />
+                        <button id="searchdate" onclick="getdurationbookings()">搜尋</button>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">訂單狀態</button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#" id="complete">已完成付款</a></li>
+                            <li><a class="dropdown-item" href="#" id="shoppingchart">購物車</a></li>
+                            <li><a class="dropdown-item" href="#" id="collect">收藏</a></li>
+                        </ul>
+                    </div>
+
+
+                    <table id="bookingsTable" class="table table-striped">
+                        <!--style="text-align: center;-->
+                        <thead>
+                            <tr style="width:250px;">
+                                <th scope="col">序號</th>
+                                <th scope="col">訂單編號</th>
+                                <th scope="col">訂單日期</th>
+                                <th scope="col">客戶資訊</th>
+                                <th scope="col">活動資訊</th>
+                                <th scope="col">金額</th>
+                                <th scope="col">訂單狀態</th>
+                                <th scope="col">參與人數</th>
+                                <!-- <th>訂單編輯</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="loading-indicator">
+                                <td colspan="12" scope="row"> loading........</td>
+                            </tr>
+                            <!-- 添加JavaScript的資料 -->
+                        </tbody>
+                    </table>
+
+
+                    <table id="activitytable" border="1">
+                        <thead>
+                            <tr style="width:250px">
+                                <th>序號</th>
+                                <th>訂單編號</th>
+                                <th>訂單日期</th>
+                                <th>活動名稱</th>
+                                <th>活動日期</th>
+                                <th>訂單狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="loading-indicator">
+                                <td colspan="12"> loading........</td>
+                            </tr>
+                            <!-- 添加JavaScript的資料 -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto" style="background-color:rgb(175,196,209)">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; LookDay 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <style>
+       
+
+    </style>
+
+
+    <script>
+        let bookingData = [];
+
+        async function loadBookings() {
+            const response = await fetch('/api/BookingOrder');
+            const data = await response.json();
+            bookingData = data;
+            populateTable(bookingData);
+            ////////document.getElementById('loading-indicator').style.display = 'none';
+        }
+
+        function populateTable(data) {
+            //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
+            const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // 清空原先資料
+            //const btncell = document.createElement("button");
+
+            //每次索引都從0開始
+            let index = 0;
+
+            data.forEach((data) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerHTML = index + 1;
+                row.insertCell(1).innerText = data.bookingId;
+                row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                //row.insertCell(3).innerHTML = data.UserName;
+                row.insertCell(3).innerHTML = data.userDisplay;
+                row.insertCell(4).innerHTML = data.activityDisplay;
+                row.insertCell(5).innerText = data.price;
+                row.insertCell(6).innerText = data.bookingStatus;
+                row.insertCell(7).innerText = data.remaining;
+                index++;
+            })
+               
+            };
+      
+
+        //已完成付款
+        function completeTable(data) {
+            //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
+            const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // 清空原先資料
+            //const btncell = document.createElement("button");
+
+            //每次索引都從0開始
+            let index = 0;
+
+            data.forEach((data) => {
+                if (data.bookingStatus === "已完成付款") {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).innerHTML = index + 1;
+                    row.insertCell(1).innerText = data.bookingId;
+                    row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                    //row.insertCell(3).innerHTML = data.UserName;
+                    row.insertCell(3).innerHTML = data.userDisplay;
+                    row.insertCell(4).innerHTML = data.activityDisplay;
+                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(6).innerText = data.bookingStatus;
+                    row.insertCell(7).innerText = data.remaining;
+                }
+                index++;
+            });
+        };
+
+        //已完成付款
+        document.getElementById('complete').addEventListener('click', () => {
+            console.log(complete);
+            document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
+            completeTable(bookingData);
+        });
+
+        //購物車
+        function shoppingchartTable(data) {
+            //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
+            const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // 清空原先資料
+            //const btncell = document.createElement("button");
+
+            let index = 0;
+
+            data.forEach((data) => {
+                if (data.bookingStatus === "購物車") {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).innerHTML = index + 1;
+                    row.insertCell(1).innerText = data.bookingId;
+                    row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                    //row.insertCell(3).innerHTML = data.UserName;
+                    row.insertCell(3).innerHTML = data.userDisplay;
+                    row.insertCell(4).innerHTML = data.activityDisplay;
+                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(6).innerText = data.bookingStatus;
+                    row.insertCell(7).innerText = data.remaining;
+                }
+                index++;
+            });
+        };
+
+
+        document.getElementById("shoppingchart").addEventListener('click', () => {
+            console.log(shoppingchart);
+            document.getElementById('dropdownMenuButton1').innerHTML = "購物車";
+            shoppingchartTable(bookingData);
+        });
+
+        //收藏
+        function collectTable(data) {
+            //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
+            const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // 清空原先資料
+            //const btncell = document.createElement("button");
+
+            let index = 0;
+            data.forEach((data) => {
+                if (data.bookingStatus === "收藏") {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).innerHTML = index + 1;
+                    row.insertCell(1).innerText = data.bookingId;
+                    row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                    //row.insertCell(3).innerHTML = data.UserName;
+                    row.insertCell(3).innerHTML = data.userDisplay;
+                    row.insertCell(4).innerHTML = data.activityDisplay;
+                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(6).innerText = data.bookingStatus;
+                    row.insertCell(7).innerText = data.remaining;
+                }
+                index++;
+            });
+        };
+
+
+        document.getElementById("collect").addEventListener('click', () => {
+            console.log(collect);
+            document.getElementById('dropdownMenuButton1').innerHTML = "收藏";
+            collectTable(bookingData);
+        });
+
+
+
+
+        async function getBooking() {
+            const search = document.getElementById('inputsearch').value.trim();
+            if (!search) {
+                alert("請輸入訂單編號或用戶名稱");
+                //populateTable(bookingData);
+                return; //populateTable(bookingData)
+            }
+
+            let url;
+            if (isNaN(search)) {
+                //如果不是數字 就會判定為用戶名
+                url = `/api/BookingOrder/ByUsername/${encodeURIComponent(search)}`;
+            } else {
+                //如果是數字就判定是訂單編號
+                url = `api/BookingOrder/ById/${search}`;
+            }
+
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                alert("找不到該訂單或用戶");
+                return;
+            }
+
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                populateTable(data);  // For username search
+            }
+            else {
+                populateTable([data]);  // For ID search
+            }
+
+
+        }
+
+        //顯示全部訂單資料
+        document.getElementById("allorders").addEventListener('click', () => {
+            populateTable(bookingData);
+        });
+
+        //顯示日期區間內資料
+        async function getdurationbookings() {
+            const startDate = document.getElementById("startdate").value;
+            const endDate = document.getElementById("enddate").value;
+
+            console.log(startDate);
+            console.log(endDate);
+
+            if (!startDate || !endDate) {
+                alert("請選擇完整日期區間");
+                return;
+            }
+
+            const url = `https://localhost:7221/api/filter/activitydate?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+            //console.log('Request URL:', url);
+
+            const response = await fetch(url);
+            console.log(response);
+            if (!response.ok) {
+                alert('找不到該日期的訂單');
+                return;
+            }
+            const data = await response.json();
+
+            //顯示table
+            //document.getElementById('bookingTable').style.display = 'none';
+            document.getElementById('bookingsTable').style.display = 'table';
+            datetable(data);
+        }
+
+        function datetable(data) {
+            const tablebody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            tablebody.innerHTML = '';     //清空原始數據
+
+            data.forEach((data, index) => {
+                const row = tablebody.insertRow();
+                row.insertCell(0).innerHTML = index + 1;
+                row.insertCell(1).innerText = data.bookingId;
+                row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                //row.insertCell(3).innerHTML = data.UserName;
+                row.insertCell(3).innerHTML = data.userDisplay;
+                row.insertCell(4).innerHTML = data.activityDisplay;
+                row.insertCell(5).innerText = data.price;
+                row.insertCell(6).innerText = data.bookingStatus;
+                row.insertCell(7).innerText = data.member;
+            });
+        }
+
+        //一載入頁面 就顯示資料
+        window.onload = loadBookings;
+    </script>
+
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/chart-area-demo.js"></script>
+    <script src="assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="js/datatables-simple-demo.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)-->
+
+
+
+
+</body>
+</html>
