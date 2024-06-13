@@ -10,6 +10,8 @@
         public DateTime? BookingDate { get; set; } 
         public decimal Price { get; set; }
 
+        public string userDisplay { get; set; }
+
         public int UserID { get; set; }
 
         //这行代码的含义是将 ActivityName 属性初始化为 null，但同时使用 !
@@ -17,18 +19,13 @@
         // public string UserName { get; set; } = null!;
         public string? UserName { get; set; }
 
+        public string activityDisplay { get; set; }
+
         public int ActivityID { get; set; }
        // public int ActivityID { get; set; }
         //public string ActivityName { get; set; } = null!;
         public string? ActivityName { get; set; } 
         public string? bookingStatus { get; set; }
         public int? member { get; set; }
-
-
-        //public User User { get; set; }
-        //public Activity Activity { get; set; }
-        //public BookingState BookingState { get; set; }
-        ////// public DateTime? PaymentDate { get; set; }
-        //////paymentmethod 也要寫
     }
 }

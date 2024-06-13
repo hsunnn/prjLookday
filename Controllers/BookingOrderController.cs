@@ -10,9 +10,9 @@ namespace prjLookdayOrder.Controllers
     [ApiController]
     public class BookingOrderController : ControllerBase
     {
-        private readonly LookdaysContext _context;
+        private readonly lookdaysContext _context;
 
-        public BookingOrderController(LookdaysContext context)
+        public BookingOrderController(lookdaysContext context)
         {
             _context = context;
         }
@@ -36,10 +36,12 @@ namespace prjLookdayOrder.Controllers
             BookingId = b.BookingId,
             BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
             Price = b.Price,
-            UserID = b.UserId,
-            UserName = b.User.Username,
-            ActivityID = b.ActivityId,
-            ActivityName = b.Activity.Name,
+            userDisplay = $"{b.UserId}--{b.User.Username}",
+            //UserID = b.UserId,
+            //UserName = b.User.Username,
+            activityDisplay = $"{b.ActivityId}--{b.BookingStates.States.ToString()}",
+            //ActivityID = b.ActivityId,
+            //ActivityName = b.Activity.Name,
             bookingStatus = b.BookingStates.States.ToString(),
             member = b.Member,
             //PaymentDate = b.Payments.ToString(),

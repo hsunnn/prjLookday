@@ -180,17 +180,15 @@
                     </div>
 
 
-                    <table id="bookingsTable" border="1" style="text-align: center;">
+                    <table id="bookingsTable" border="1" ><!--style="text-align: center;-->"
                         <thead>
                             <tr style="width:250px;">
                                 <th>序號</th>
                                 <th>訂單編號</th>
                                 <th>訂單日期</th>
                                 <th>總金額</th>
-                                <th>客戶編號</th>
-                                <th>客戶姓名</th>
-                                <th>活動編號</th>
-                                <th>活動名稱</th>
+                                <th>客戶資訊</th>
+                                <th>活動資訊</th>
                                 <th>訂單狀態</th>
                                 <th>總參與人數</th>
                                 <!-- <th>訂單編輯</th>-->
@@ -256,24 +254,24 @@
             //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
             const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // 清空原先資料
-            const btncell = document.createElement("button");
+            //const btncell = document.createElement("button");
 
-            //console.log("dataaaaa", data)
-            //if (!data.length) {
-            //    tableBody.insertRow().insertCell = "dsdfdsafasd"
-            //} else {
+         
             data.forEach((data, index) => {
                 const row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = index + 1;
                 row.insertCell(1).innerText = data.bookingId;
                 row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
                 row.insertCell(3).innerText = data.price;
-                row.insertCell(4).innerText = data.userID;
-                row.insertCell(5).innerText = data.userName;
-                row.insertCell(6).innerText = data.activityID;
-                row.insertCell(7).innerText = data.activityName;
-                row.insertCell(8).innerText = data.bookingStatus;
-                row.insertCell(9).innerText = data.member;
+                row.insertCell(4).innerHTML = data.userDisplay;
+                row.insertCell(5).innerHTML = data.activityDisplay;
+                //row.insertCell(4).innerText = data.userID;
+                //row.insertCell(5).innerText = data.userName;
+
+                //row.insertCell(6).innerText = data.activityID;
+                //row.insertCell(7).innerText = data.activityName;
+                row.insertCell(6).innerText = data.bookingStatus;
+                row.insertCell(7).innerText = data.member;
 
                 //const editcell = row.insertCell(10);
 
