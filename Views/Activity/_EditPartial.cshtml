@@ -1,0 +1,36 @@
+﻿@model prjLookday.ViewModels.CActivityAlbumViewModel
+
+<div id="editForm">
+    <form id="editActivityForm">
+        <input type="hidden" id="ActivityID" name="ActivityID" value="@Model.ActivityID" />
+        <div class="form-group">
+            <label for="Name">名稱</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" />
+        </div>
+        <div class="form-group">
+            <label for="Description">描述</label>
+            <textarea class="form-control" id="Description" name="Description">@Model.Description</textarea>
+        </div>
+        <div class="form-group">
+            <label for="Price">價格</label>
+            <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" />
+        </div>
+        <div class="form-group">
+            <label for="Date">日期</label>
+            <input type="date" class="form-control" id="Date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="form-group">
+            <label for="CityID">城市ID</label>
+            <input type="text" class="form-control" id="CityID" name="CityID" value="@Model.CityID" />
+        </div>
+        <div class="form-group">
+            <label for="Remaining">人數</label>
+            <input type="text" class="form-control" id="Remaining" name="Remaining" value="@Model.Remaining" />
+        </div>
+        <div class="form-group">
+            <label for="HotelID">酒店ID</label>
+            <input type="text" class="form-control" id="HotelID" name="HotelID" value="@Model.HotelID" />
+        </div>
+        <button type="submit" class="btn btn-primary">保存變更</button>
+    </form>
+</div>

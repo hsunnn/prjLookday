@@ -10,10 +10,13 @@ namespace prjLookday.Controllers
     public class ActivityController : SuperController
     {
         private readonly IWebHostEnvironment _enviro;
+        private readonly lookdaysContext _context;
 
-        public ActivityController(IWebHostEnvironment enviro)
+
+        public ActivityController(IWebHostEnvironment enviro, lookdaysContext context)
         {
             _enviro = enviro;
+            _context = context;
         }
 
         public IActionResult List(CKeywordViewModel vm, int? page)
@@ -49,6 +52,55 @@ namespace prjLookday.Controllers
             var pagedList = query.ToPagedList(pageNumber, pageSize);
 
             return View(pagedList);
+        }
+
+        // GET: /Activity/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var activity = await _context.Activities.FindAsync(id);
+            if (activity == null)
+            {
+                return NotFound();
+            }
+            var model = new CActivityAlbumViewModel
+            {
+                ActivityID = activity.ActivityId,
+                Name = activity.Name,
+                Description = activity.Description,
+                Price = (decimal)activity.Price,
+                Date = (DateOnly)activity.Date,
+                CityID = (int)activity.ActivityId,
+                Remaining = (int)activity.Remaining,
+                HotelID = (int)activity.HotelId
+            };
+            return PartialView("_EditPartial", model);  // 改用 _EditPartial
+        }
+
+        // POST: /Activity/Edit/5
+        [HttpPost]
+        public async Task<IActionResult> Edit(CActivityAlbumViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var activity = await _context.Activities.FindAsync(model.ActivityID);
+                if (activity == null)
+                {
+                    return NotFound();
+                }
+                activity.Name = model.Name;
+                activity.Description = model.Description;
+                activity.Price = model.Price;
+                activity.Date = model.Date;
+                activity.CityId = model.CityID;
+                activity.Remaining = model.Remaining;
+                activity.HotelId = model.HotelID;
+
+                _context.Update(activity);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            return PartialView("_EditPartial", model);  // 改用 _EditPartial
         }
     }
 }

@@ -67,7 +67,7 @@
                 <td>@item.Remaining</td>
                 <td>@item.HotelID</td>
                 <td>
-                    @Html.ActionLink("修改", "Edit", "Activity", new { id = item.ActivityID }, new { @class = "btn btn-primary btn-sm" }) |
+                        <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
                         @Html.ActionLink("刪除", "Delete", "Activity", new { id = item.ActivityID }, new { onclick = "return confirm('確定刪除此行程嗎?')", @class = "btn btn-danger btn-sm" })
                 </td>
             </tr>
@@ -76,6 +76,43 @@
     </tbody>
 </table>
 
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">修改活動</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+                <!-- 部分視圖內容會在這裡插入 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="d-flex justify-content-center">
     @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".edit-button").click(function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '@Url.Action("Edit", "Activity")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        $("#editModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('editModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入修改介面失敗");
+                    }
+                });
+            });
+        });
+    </script>
+}
