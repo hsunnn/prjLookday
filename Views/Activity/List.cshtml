@@ -76,11 +76,11 @@
     </tbody>
 </table>
 
-<div id="editModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">修改活動</h5>
+                <h5 class="modal-title" id="editModalLabel">修改活動</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="editModalBody">
@@ -98,21 +98,40 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".edit-button").click(function () {
-                var id = $(this).data("id");
+            $(".btn-edit").click(function (event) {
+                event.preventDefault();
+
+                var url = $(this).attr("href");
+
+                $.get(url, function (data) {
+                    $("#editModalBody").html(data);
+                    var editModal = new bootstrap.Modal(document.getElementById("editModal"));
+                    editModal.show();
+                });
+            });
+
+            $("#editModal").on("submit", "form", function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var formData = new FormData(form[0]);
+
                 $.ajax({
-                    url: '@Url.Action("Edit", "Activity")/' + id,
-                    type: 'GET',
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function (response) {
-                        $("#editModalBody").html(response);
-                        var modal = new bootstrap.Modal(document.getElementById('editModal'));
-                        modal.show();
-                    },
-                    error: function () {
-                        alert("載入修改介面失敗");
+                        if (response.success) {
+                            location.reload(); // 成功後刷新頁面或執行其他操作
+                        } else {
+                            $("#editModalBody").html(response);
+                        }
                     }
                 });
             });
         });
+
     </script>
 }
