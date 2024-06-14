@@ -70,18 +70,18 @@ namespace prjLookdayOrder.Controllers
                     BookingId = b.BookingId,
                     BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
                     Price = b.Price,
-                    userDisplay = b.User.Username,
-                    activityDisplay = b.Activity.Name,
+                    //userDisplay = b.User.Username,
+                    //activityDisplay = b.Activity.Name,
                     //UserID = b.UserId,
-                    //UserName = b.User.Username,
+                    UserName = b.User.Username,
                     //ActivityID = b.ActivityId,
-                    //ActivityName = b.Activity.Name,
+                    ActivityName = b.Activity.Name,
                     bookingStatus= b.BookingStates.States.ToString(),
                     member = b.Member,
                     //remaining = $"{b.Member}/{b.Activity.Remaining}"
                 })
-            //找出所有相關的值
-            .FirstOrDefaultAsync();
+             // 使用FirstOrDefaultAsync獲取單筆資料而不是ToListAsync獲取列表
+             .FirstOrDefaultAsync();  
 
             if (booking == null)
             {

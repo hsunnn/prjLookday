@@ -1,57 +1,70 @@
 ﻿@model IEnumerable<prjLookday.ViewModels.CBookingListViewModel>
 
-<h1>訂單管理</h1>
-<div>
-    <div class="input-group" style="justify-content:flex-end">
-        <div style="display: flex">
-            <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-            <div class="input-group-append">
-                <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
-            </div>
-            <div class="input-group-append">
-                <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
+<nav style="background-color: rgb(225,223,218);">
+    <h1>訂單管理</h1>
+    <div>
+        <div class="input-group" style="justify-content:flex-end">
+            <div style="display: flex">
+                <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                <div class="input-group-append">
+                    <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
+                </div>
+                <div class="input-group-append">
+                    <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="input-group" style="justify-content:flex-end">
-        <div style="display: flex">
-            <input type="date" id="startdate" />
-            <input type="date" id="enddate" />
-            <button id="searchdate" onclick="getdurationbookings()">搜尋</button>
+        <div class="input-group" style="justify-content:flex-end">
+            <div style="display: flex">
+                <input type="date" id="startdate" />
+                <input type="date" id="enddate" />
+                <button id="searchdate" onclick="getdurationbookings()">搜尋</button>
+            </div>
         </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">訂單狀態</button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#" id="complete">已完成付款</a></li>
+                <li><a class="dropdown-item" href="#" id="shoppingchart">購物車</a></li>
+                <li><a class="dropdown-item" href="#" id="collect">收藏</a></li>
+            </ul>
+        </div>
+
+        <nav>
+            <ul class="pagination pagination-sm">
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">1</span>
+                </li>
+                <li class="page-link">2</li>
+                <li class="page-link">3</li>
+            </ul>
+        </nav>
+
     </div>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">訂單狀態</button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#" id="complete">已完成付款</a></li>
-            <li><a class="dropdown-item" href="#" id="shoppingchart">購物車</a></li>
-            <li><a class="dropdown-item" href="#" id="collect">收藏</a></li>
-        </ul>
-    </div>
-</div>
 
 
-<table id="bookingsTable" class="table table-striped">
-    <!--style="text-align: center;-->
-    <thead>
-        <tr style="width:250px;">
-            <th scope="col">序號</th>
-            <th scope="col">訂單編號</th>
-            <th scope="col">訂單日期</th>
-            <th scope="col">客戶資訊</th>
-            <th scope="col">活動資訊</th>
-            <th scope="col">金額</th>
-            <th scope="col">訂單狀態</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr id="loading-indicator">
-            <td colspan="12" scope="row"> loading........</td>
-        </tr>
-        <!-- 添加JavaScript的資料 -->
-    </tbody>
-</table>
+    <table id="bookingsTable" class="table table-striped">
+        <!--style="text-align: center;-->
+        <thead>
+            <tr style="width:250px;">
+                <th scope="col">序號</th>
+                <th scope="col">訂單編號</th>
+                <th scope="col">訂單日期</th>
+                <th scope="col">客戶資訊</th>
+                <th scope="col">活動資訊</th>
+                <th scope="col">金額</th>
+                <th scope="col">訂單狀態</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="loading-indicator">
+                <td colspan="12" scope="row"> loading........</td>
+            </tr>
+            <!-- 添加JavaScript的資料 -->
+        </tbody>
+    </table>
+</nav>
 @section Styles {
     <style>
         #activitytable {
@@ -63,6 +76,8 @@
 @section Scripts {
     <script>
         let bookingData = [];
+        let currentPage = 1;
+        let itemsPerPage = 12;
 
         async function loadBookings() {
             const response = await fetch('/api/BookingOrder');
@@ -70,7 +85,58 @@
             bookingData = data;
             populateTable(bookingData);
             ////////document.getElementById('loading-indicator').style.display = 'none';
+            // renderPage();
         }
+
+        // function renderPage() {
+        //     const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+        //     tableBody.innerHTML = '';
+
+        //     const startIndex = (currentPage - 1) * itemsPerPage;
+        //     const endIndex = startIndex + itemsPerPage;
+        //     const pageData = bookingData.slice(startIndex, endIndex);
+
+        //     pageData.forEach((data) => {
+        //         if (data.bookingStatus === "已完成付款") {
+        //             const row = tableBody.insertRow();
+        //             row.insertCell(0).innerHTML = startIndex + index + 1;
+        //             row.insertCell(1).innerText = data.bookingId;
+        //             row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+        //             row.insertCell(3).innerHTML = data.userDisplay;
+        //             row.insertCell(4).innerHTML = data.activityDisplay;
+        //             row.insertCell(5).innerText = data.price;
+        //             row.insertCell(6).innerText = data.bookingStatus;
+        //         }
+        //     });
+        //     updatePagination();
+        // }
+
+        // function updatePagination() 
+        // {
+        //     const totalPages = Math.ceil(bookingData.length / itemsPerPage);
+        //     const pageButtons = document.getElementById('pageButtons');
+        //     let pageBtnHtml = "";
+
+        //     for (let i = 1; i <= totalPages; i++) 
+        //     {
+        //         pageBtnHtml +=`<li class="pageitem" onclick="changePage(${i})"><a class="page-link">${i}</a></li>`
+        //     }
+        //     pageButtons.innerHTML = pageBtnHtml;
+        //     updatePageInfo();
+        // }
+
+        // function updatePageInfo() {
+        //     const totalPages = Math.ceil(bookingData.length / itemsPerPage);
+        //     const pageInfo = document.getElementById('pageInfo');
+        //     pageInfo.innerText = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
+        // }
+
+        // function changePage(page) {
+        //     currentPage = page;
+        //     renderPage();
+        // }
+
+        // loadBookings();
 
         function populateTable(data) {
             //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
@@ -82,15 +148,17 @@
             let index = 0;
 
             data.forEach((data) => {
-                const row = tableBody.insertRow();
-                row.insertCell(0).innerHTML = index + 1;
-                row.insertCell(1).innerText = data.bookingId;
-                row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-                //row.insertCell(3).innerHTML = data.UserName;
-                row.insertCell(3).innerHTML = data.userDisplay;
-                row.insertCell(4).innerHTML = data.activityDisplay;
-                row.insertCell(5).innerText = data.price;
-                row.insertCell(6).innerText = data.bookingStatus;
+                if (data.bookingStatus === "已完成付款") {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).innerHTML = index + 1;
+                    row.insertCell(1).innerText = data.bookingId;
+                    row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+                    //row.insertCell(3).innerHTML = data.UserName;
+                    row.insertCell(3).innerHTML = data.userDisplay;
+                    row.insertCell(4).innerHTML = data.activityDisplay;
+                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(6).innerText = data.bookingStatus;
+                }
                 index++;
             })
 
@@ -124,7 +192,7 @@
         };
 
         //已完成付款
-        document.getElementById('complete').addEventListener('click', () => {
+        document.getElementById('complete').addEventListener('click', async () => {
             console.log(complete);
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
             completeTable(bookingData);
@@ -194,14 +262,12 @@
         });
 
 
-
-
         async function getBooking() {
             const search = document.getElementById('inputsearch').value.trim();
             if (!search) {
                 alert("請輸入訂單編號或用戶名稱");
                 //populateTable(bookingData);
-                return; //populateTable(bookingData)
+                return;
             }
 
             let url;
@@ -211,23 +277,27 @@
             } else {
                 //如果是數字就判定是訂單編號
                 url = `api/BookingOrder/ById/${search}`;
+
             }
 
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("HTTP error! status:${response.status}");
+                }
 
-            const response = await fetch(url);
-            if (!response.ok) {
-                alert("找不到該訂單或用戶");
-                return;
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    populateTable(data);  // For username search
+                }
+                else {
+                    populateTable(data);  // For ID search
+                }
             }
-
-            const data = await response.json();
-            if (Array.isArray(data)) {
-                populateTable(data);  // For username search
+            catch (error) {
+                console.log('Error fetching data:', error);
+                alert('找不到該訂單或用戶');
             }
-            else {
-                populateTable([data]);  // For ID search
-            }
-
 
         }
 
@@ -268,6 +338,7 @@
         function datetable(data) {
             const tablebody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
             tablebody.innerHTML = '';     //清空原始數據
+
 
             data.forEach((data, index) => {
                 const row = tablebody.insertRow();
