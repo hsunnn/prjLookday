@@ -1,0 +1,19 @@
+﻿@model IEnumerable<dynamic>
+
+<table>
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Booking Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.BookingId</td>
+                <td>@booking.BookingDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
