@@ -4,6 +4,7 @@ using prjLookday.ViewModels;
 using X.PagedList;
 using System.Linq;
 using System.Diagnostics;
+using System;
 
 namespace prjLookday.Controllers
 {
@@ -101,6 +102,39 @@ namespace prjLookday.Controllers
                 return Json(new { success = true });
             }
             return PartialView("_EditPartial", model);  // 改用 _EditPartial
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0)
+            {
+                return Json(new { success = false, message = "Invalid activity ID."});
+            }
+
+            using (lookdaysContext db = new lookdaysContext())
+            {
+                var activity = db.Activities.FirstOrDefault(a => a.ActivityId == id);
+                if (activity == null)
+                {
+                    return Json(new { success = false, message = "Activity not found."});
+                }
+
+                var booking = db.Bookings.FirstOrDefault(b => b.ActivityId == id && b.BookingStatesId == 3);
+                if (booking != null)
+                {
+                    return Json(new { success = false, message = "這個行程已有會員付款，暫時無法下架。" });
+                }
+
+                var albums = db.ActivitiesAlbums.Where(a => a.ActivityId == id).ToList();
+                db.ActivitiesAlbums.RemoveRange(albums);//要避免SqlException: DELETE 陳述式與 REFERENCE 條件約束衝突
+
+                db.Activities.Remove(activity);
+                db.SaveChanges();
+
+                return Json(new { success = true, message = "行程成功下架並移除圖片囉！" });
+            }
         }
     }
 }

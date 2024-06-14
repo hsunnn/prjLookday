@@ -1,5 +1,4 @@
 ﻿@model X.PagedList.IPagedList<prjLookday.ViewModels.CActivityAlbumViewModel>
-
 @using X.PagedList.Mvc.Core;
 
 @{
@@ -51,40 +50,39 @@
             {
                 count++;
                 <tr style="text-align:center">
-                <td>@count</td>
-                <td>@item.ActivityID</td>
-                <td>
-                    @if (item.Photo != null)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
-                    }
-                </td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-                <td>@((int)item.Price)</td>
-                <td>@item.Date</td>
-                <td>@item.CityID</td>
-                <td>@item.Remaining</td>
-                <td>@item.HotelID</td>
-                <td>
+                    <td>@count</td>
+                    <td>@item.ActivityID</td>
+                    <td>
+                        @if (item.Photo != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
+                        }
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@((int)item.Price)</td>
+                    <td>@item.Date</td>
+                    <td>@item.CityID</td>
+                    <td>@item.Remaining</td>
+                    <td>@item.HotelID</td>
+                    <td>
                         <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
-                        @Html.ActionLink("刪除", "Delete", "Activity", new { id = item.ActivityID }, new { onclick = "return confirm('確定刪除此行程嗎?')", @class = "btn btn-danger btn-sm" })
-                </td>
-            </tr>
-        }
+                        <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">刪除</button>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
 
-<div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div id="editModal" class="modal fade justify-content-center" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">修改活動</h5>
+                <h4 class="modal-title" id="editModalLabel">修改活動</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="editModalBody">
-                <!-- 部分視圖內容會在這裡插入 -->
             </div>
         </div>
     </div>
@@ -98,22 +96,28 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".btn-edit").click(function (event) {
-                event.preventDefault();
-
-                var url = $(this).attr("href");
-
-                $.get(url, function (data) {
-                    $("#editModalBody").html(data);
-                    var editModal = new bootstrap.Modal(document.getElementById("editModal"));
-                    editModal.show();
+            $(".edit-button").click(function () {
+                var id = $(this).data("id"); 
+                $.ajax({
+                    url: '@Url.Action("Edit", "Activity")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        $("#editModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('editModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入修改介面失敗");
+                    }
                 });
             });
 
-            $("#editModal").on("submit", "form", function (event) {
+
+            $('#editModal').on('submit', '#editActivityForm', function (event) {
                 event.preventDefault();
 
                 var form = $(this);
+
                 var formData = new FormData(form[0]);
 
                 $.ajax({
@@ -122,16 +126,42 @@
                     data: formData,
                     processData: false,
                     contentType: false,
+                    dataType: "json",
                     success: function (response) {
                         if (response.success) {
-                            location.reload(); // 成功後刷新頁面或執行其他操作
+                            location.reload();
                         } else {
                             $("#editModalBody").html(response);
                         }
                     }
                 });
             });
-        });
 
+            $(".delete-button").click(function () {
+                var id = $(this).data("id");
+                if (confirm('確定刪除此行程嗎?')) {
+                    var token = $('input[name="__RequestVerificationToken"]').val();
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Activity")',
+                        type: 'POST',
+                        data: { id: id },
+                        headers: {
+                            "RequestVerificationToken": token
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                alert(response.message);
+                                location.reload();
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function () {
+                            alert("刪除過程中出錯");
+                        }
+                    });
+                }
+            });
+        });
     </script>
 }
