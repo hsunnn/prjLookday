@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using prjLookday.Controllers;
 using prjLookday.DTO;
 using prjLookday.Models;
 using prjLookdayOrder.DTO;
@@ -8,7 +9,7 @@ namespace prjLookdayOrder.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingOrderController : ControllerBase
+    public class BookingOrderController : SuperController
     {
         private readonly lookdaysContext _context;
 
