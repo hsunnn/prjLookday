@@ -55,6 +55,7 @@ namespace prjLookday.Controllers
             return View(pagedList);
         }
 
+
         // GET: /Activity/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
