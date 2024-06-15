@@ -70,12 +70,12 @@ namespace prjLookdayOrder.Controllers
                     BookingId = b.BookingId,
                     BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
                     Price = b.Price,
-                    //userDisplay = b.User.Username,
+                    
                     //activityDisplay = b.Activity.Name,
                     //UserID = b.UserId,
-                    UserName = b.User.Username,
+                    userDisplay = b.User.Username,
                     //ActivityID = b.ActivityId,
-                    ActivityName = b.Activity.Name,
+                    activityDisplay = b.Activity.Name,
                     bookingStatus= b.BookingStates.States.ToString(),
                     member = b.Member,
                     //remaining = $"{b.Member}/{b.Activity.Remaining}"

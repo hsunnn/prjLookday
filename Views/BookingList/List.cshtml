@@ -257,8 +257,9 @@
             collectTable(bookingData);
         });
 
-
+        //搜尋訂單編號/客戶姓名
         async function getBooking() {
+            console.log("afsdfweqrfqwefdsfdsafsda")
             const search = document.getElementById('inputsearch').value.trim();
             if (!search) {
                 alert("請輸入訂單編號或用戶名稱");
@@ -272,7 +273,7 @@
                 url = `/api/BookingOrder/ByUsername/${encodeURIComponent(search)}`;
             } else {
                 //如果是數字就判定是訂單編號
-                url = `api/BookingOrder/ById/${search}`;
+                url = `/api/BookingOrder/ById/${search}`;
 
             }
 
@@ -287,7 +288,7 @@
                     populateTable(data);  // For username search
                 }
                 else {
-                    populateTable(data);  // For ID search
+                    populateTable([data]);  // For ID search
                 }
             }
             catch (error) {

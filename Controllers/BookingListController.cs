@@ -25,34 +25,34 @@ namespace prjLookday.Controllers
         [HttpGet("List")]
         public async Task<IActionResult> List(int? page)
         {
-           int pageNum = page ?? 1;
+            int pageNum = page ?? 1;
             int pageSize = 10;
 
-                var pages = await _context.Bookings
-                    .Include(x => x.User)
-                    .Include(x => x.Activity)
-                    .Include(x => x.BookingStates)
-                    .Include(x => x.Payments)
-                    .OrderBy(x=>x.BookingId)
-                    .Select(b => new CBookingListViewModel
-                    {
-                        BookingId = b.BookingId,
-                        BookingDate = (DateTime)b.BookingDate,
-                        UserName = b.User.Username,
-                        ActivityName = b.Activity.Name,
-                        Price = $"${b.Price:F2}",
-                        bookingStatus = b.BookingStates.States,
-                        member = (int)b.Member,
-                    })
-                    .ToPagedListAsync(pageNum, pageSize);
+            var pages = await _context.Bookings
+                .Include(x => x.User)
+                .Include(x => x.Activity)
+                .Include(x => x.BookingStates)
+                .Include(x => x.Payments)
+                .OrderBy(x => x.BookingId)
+                .Select(b => new CBookingListViewModel
+                {
+                    BookingId = b.BookingId,
+                    BookingDate = (DateTime)b.BookingDate,
+                    UserName = b.User.Username,
+                    ActivityName = b.Activity.Name,
+                    Price = $"${b.Price:F2}",
+                    bookingStatus = b.BookingStates.States,
+                    member = (int)b.Member,
+                })
+                .ToPagedListAsync(pageNum, pageSize);
 
-                return View(pages);
+            return View(pages);
 
-           
+
 
         }
 
     }
 
-    }
+}
 
