@@ -49,27 +49,27 @@
             foreach (var item in Model)
             {
                 count++;
-                <tr style="text-align:center">
-                    <td>@count</td>
-                    <td>@item.ActivityID</td>
-                    <td>
-                        @if (item.Photo != null)
+                    <tr style="text-align:center">
+                        <td>@count</td>
+                        <td>@item.ActivityID</td>
+                        <td>
+                            @if (item.Photo != null)
                         {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
                         }
-                    </td>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>@((int)item.Price)</td>
-                    <td>@item.Date</td>
-                    <td>@item.CityID</td>
-                    <td>@item.Remaining</td>
-                    <td>@item.HotelID</td>
-                    <td>
-                        <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
-                        <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">刪除</button>
-                    </td>
-                </tr>
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>@((int)item.Price)</td>
+                        <td>@item.Date</td>
+                        <td>@item.CityID</td>
+                        <td>@item.Remaining</td>
+                        <td>@item.HotelID</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
+                            <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">刪除</button>
+                        </td>
+                    </tr>
             }
         }
     </tbody>
@@ -130,7 +130,6 @@
                 event.preventDefault();
 
                 var form = $(this);
-
                 var formData = new FormData(form[0]);
 
                 $.ajax({
@@ -139,13 +138,17 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    dataType: "json",
                     success: function (response) {
                         if (response.success) {
+                            alert(response.message)
                             location.reload();
                         } else {
+                            alert(response.message);
                             $("#editModalBody").html(response);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤 : " + error);
                     }
                 });
             });

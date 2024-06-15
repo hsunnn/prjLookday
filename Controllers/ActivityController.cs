@@ -5,6 +5,7 @@ using X.PagedList;
 using System.Linq;
 using System.Diagnostics;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace prjLookday.Controllers
 {
@@ -88,7 +89,7 @@ namespace prjLookday.Controllers
                 var activity = await _context.Activities.FindAsync(model.ActivityID);
                 if (activity == null)
                 {
-                    return NotFound();
+                    return Json(new { success = false, message = "Activity not found."});
                 }
                 activity.Name = model.Name;
                 activity.Description = model.Description;
@@ -98,9 +99,34 @@ namespace prjLookday.Controllers
                 activity.Remaining = model.Remaining;
                 activity.HotelId = model.HotelID;
 
+                if (model.PhotoFile != null && model.PhotoFile.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await model.PhotoFile.CopyToAsync(memoryStream);
+                        var photo = new ActivitiesAlbum
+                        {
+                            ActivityId = model.ActivityID,
+                            Photo = memoryStream.ToArray()
+                        };
+
+                        var existingPhoto = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityID);
+
+                        if (existingPhoto != null)
+                        {
+                            existingPhoto.Photo = photo.Photo;
+                            _context.Update(existingPhoto);
+                        }
+                        else
+                        {
+                            _context.Add(photo);
+                        }
+                    }
+                }
+
                 _context.Update(activity);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true });
+                return Json(new { success = true, message = "活動成功更新囉!" });
             }
             return PartialView("_EditPartial", model);  // 改用 _EditPartial
         }
