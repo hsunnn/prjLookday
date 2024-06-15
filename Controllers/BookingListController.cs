@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using prjLookday.Models;
 using prjLookday.ViewModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using X.PagedList;
 
 namespace prjLookday.Controllers
 {
@@ -21,42 +22,18 @@ namespace prjLookday.Controllers
             _context = context;
         }
 
-
-        [HttpGet("SimpleList")]
-        public async Task<IActionResult> SimpleList()
-        {
-            try
-            {
-                var bookings = await _context.Bookings.Take(10).Select(b => new
-                {
-                    b.BookingId,
-                    b.BookingDate
-                }).ToListAsync();
-                return View(bookings);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception Message:{ex.Message}");
-                Console.WriteLine($"Stack Trace:{ex.StackTrace}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.GetType().FullName}");
-                    Console.WriteLine($"Inner Exception Message: {ex.InnerException.Message}");
-                    Console.WriteLine($"Inner Exception Stack Trace: {ex.InnerException.StackTrace}");
-                }
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-
         [HttpGet("List")]
         public async Task<IActionResult> List(int? page)
         {
-                var bookings = await _context.Bookings
+           int pageNum = page ?? 1;
+            int pageSize = 10;
+
+                var pages = await _context.Bookings
                     .Include(x => x.User)
                     .Include(x => x.Activity)
                     .Include(x => x.BookingStates)
                     .Include(x => x.Payments)
+                    .OrderBy(x=>x.BookingId)
                     .Select(b => new CBookingListViewModel
                     {
                         BookingId = b.BookingId,
@@ -67,15 +44,11 @@ namespace prjLookday.Controllers
                         bookingStatus = b.BookingStates.States,
                         member = (int)b.Member,
                     })
-                    .ToListAsync();
+                    .ToPagedListAsync(pageNum, pageSize);
 
-                return View(bookings);
+                return View(pages);
 
-            int pageSize = 10;
-            int pageNumber = page ?? 1;
-            var pagedList = query.ToPagedList(pageNumber, pageSize);
-
-            return View(pagedList);
+           
 
         }
 
