@@ -4,6 +4,14 @@
     <form id="editActivityForm" action="/Activity/Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" id="ActivityID" name="ActivityID" value="@Model.ActivityID" autocomplete="off" />
         <div class="form-group">
+            <div id="ActivityPicPreview" class="d-flex justify-content-center">
+                @if (Model.Photo != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Photo)" style="max-width: 100%; max-height: 150px;" />
+                }
+            </div>
+        </div>
+        <div class="form-group">
             <label for="Name">名稱</label>
             <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" autocomplete="off" />
         </div>
@@ -33,13 +41,79 @@
         </div>
         <div class="form-group">
             <label for="PhotoFile">照片</label>
-            <input type="file" class="form-control" id="ActivityPicInput" name="PhotoFile" autocomplete="off" />
+            <input type="file" class="form-control" id="PhotoFile" name="PhotoFile" autocomplete="off" accept="image/*" />
         </div>
         <br />
         <div class="form-group text-center">
-        <button type="submit" class="btn btn-primary btn-sm">修改</button> |
+        <button type="submit" class="btn btn-primary btn-sm" id="editSave">修改</button> |
         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
         </div>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById("ActivityPicInput").addEventListener('change', function (event) {
+            console.log('File input changed'); // 調試輸出
+            var input = event.target;
+            var preview = document.getElementById('ActivityPicPreview');
+            preview.innerHTML = '';  // Clear previous images
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    console.log('File loaded'); // 調試輸出
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '100px';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+
+        $(document).ready(function () {
+            // 提交按鈕點擊事件
+            $('#editSave').click(function (event) {
+                event.preventDefault(); // 防止表單默認提交行為
+
+                var form = $('#editActivityForm');
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            // 隱藏 Modal
+                            $('#editModal').modal('hide');
+                            // 刷新列表或其他後續操作
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                            $("#editModalBody").html(response);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤: " + error);
+                    }
+                });
+            });
+
+            // 其他你可能已經有的 JavaScript 代碼
+            // ...
+
+        });
+    </script>
+}
 

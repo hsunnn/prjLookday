@@ -66,6 +66,7 @@ namespace prjLookday.Controllers
             {
                 return NotFound();
             }
+            var activityAlbum = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == id);
             var model = new CActivityAlbumViewModel
             {
                 ActivityID = activity.ActivityId,
@@ -75,7 +76,9 @@ namespace prjLookday.Controllers
                 Date = (DateOnly)activity.Date,
                 CityID = (int)activity.ActivityId,
                 Remaining = (int)activity.Remaining,
-                HotelID = (int)activity.HotelId
+                HotelID = (int)activity.HotelId,
+                Photo = activityAlbum?.Photo
+        
             };
             return PartialView("_EditPartial", model);  // 改用 _EditPartial
         }
