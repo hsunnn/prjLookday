@@ -8,6 +8,7 @@ using prjLookday.Models;
 using prjLookday.ViewModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using X.PagedList;
+using X.PagedList.Mvc.Core;
 
 namespace prjLookday.Controllers
 {
@@ -23,17 +24,15 @@ namespace prjLookday.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<IActionResult> List(int? page)
+        public async Task<IActionResult> List(int page=1)
         {
-            int pageNum = page ?? 1;
-            int pageSize = 10;
+            int pageSize =20;
 
             var pages = await _context.Bookings
                 .Include(x => x.User)
                 .Include(x => x.Activity)
                 .Include(x => x.BookingStates)
                 .Include(x => x.Payments)
-                .OrderBy(x => x.BookingId)
                 .Select(b => new CBookingListViewModel
                 {
                     BookingId = b.BookingId,
@@ -44,12 +43,10 @@ namespace prjLookday.Controllers
                     bookingStatus = b.BookingStates.States,
                     member = (int)b.Member,
                 })
-                .ToPagedListAsync(pageNum, pageSize);
+                .OrderBy(x => x.BookingId)
+                .ToPagedListAsync(page, pageSize);
 
             return View(pages);
-
-
-
         }
 
     }
