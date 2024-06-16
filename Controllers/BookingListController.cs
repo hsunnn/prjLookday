@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using prjLookday.Models;
 using prjLookday.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using X.PagedList;
+using X.PagedList.Mvc.Core;
 
 namespace prjLookday.Controllers
 {
@@ -20,58 +23,33 @@ namespace prjLookday.Controllers
             _context = context;
         }
 
-
-        [HttpGet("SimpleList")]
-        public async Task<IActionResult> SimpleList()
-        {
-            try
-            {
-                var bookings = await _context.Bookings.Take(10).Select(b => new
-                {
-                    b.BookingId,
-                    b.BookingDate
-                }).ToListAsync();
-                return View(bookings);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception Message:{ex.Message}");
-                Console.WriteLine($"Stack Trace:{ex.StackTrace}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.GetType().FullName}");
-                    Console.WriteLine($"Inner Exception Message: {ex.InnerException.Message}");
-                    Console.WriteLine($"Inner Exception Stack Trace: {ex.InnerException.StackTrace}");
-                }
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-
         [HttpGet("List")]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(int page=1)
         {
-                var bookings = await _context.Bookings
-                    .Include(x => x.User)
-                    .Include(x => x.Activity)
-                    .Include(x => x.BookingStates)
-                    .Include(x => x.Payments)
-                    .Select(b => new CBookingListViewModel
-                    {
-                        BookingId = b.BookingId,
-                        BookingDate = (DateTime)b.BookingDate,
-                        UserName = b.User.Username,
-                        ActivityName = b.Activity.Name,
-                        Price = $"${b.Price:F2}",
-                        bookingStatus = b.BookingStates.States,
-                        member = (int)b.Member,
-                    })
-                    .ToListAsync();
+            int pageSize =20;
 
-                return View(bookings);
-            }
-      
+            var pages = await _context.Bookings
+                .Include(x => x.User)
+                .Include(x => x.Activity)
+                .Include(x => x.BookingStates)
+                .Include(x => x.Payments)
+                .Select(b => new CBookingListViewModel
+                {
+                    BookingId = b.BookingId,
+                    BookingDate = (DateTime)b.BookingDate,
+                    UserName = b.User.Username,
+                    ActivityName = b.Activity.Name,
+                    Price = $"${b.Price:F2}",
+                    bookingStatus = b.BookingStates.States,
+                    member = (int)b.Member,
+                })
+                .OrderBy(x => x.BookingId)
+                .ToPagedListAsync(page, pageSize);
+
+            return View(pages);
         }
 
     }
+
+}
 
