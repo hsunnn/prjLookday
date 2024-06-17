@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjLookday.Models;
 using prjLookday.ViewModels;
-using X.PagedList;
-using System.Linq;
-using System.Diagnostics;
-using System;
+using System.Threading.Tasks;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace prjLookday.Controllers
 {
-    public class ActivityController : SuperController
+    public class ActivityController : Controller
     {
         private readonly IWebHostEnvironment _enviro;
         private readonly lookdaysContext _context;
-
 
         public ActivityController(IWebHostEnvironment enviro, lookdaysContext context)
         {
@@ -23,10 +21,8 @@ namespace prjLookday.Controllers
 
         public IActionResult List(CKeywordViewModel vm, int? page)
         {
-            lookdaysContext db = new lookdaysContext();
-
-            var query = from activity in db.Activities
-                        join album in db.ActivitiesAlbums
+            var query = from activity in _context.Activities
+                        join album in _context.ActivitiesAlbums
                         on activity.ActivityId equals album.ActivityId into activityAlbumGroup
                         from activityAlbum in activityAlbumGroup.DefaultIfEmpty()
                         select new CActivityAlbumViewModel
@@ -56,8 +52,6 @@ namespace prjLookday.Controllers
             return View(pagedList);
         }
 
-
-        // GET: /Activity/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -66,6 +60,7 @@ namespace prjLookday.Controllers
             {
                 return NotFound();
             }
+
             var activityAlbum = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == id);
             var model = new CActivityAlbumViewModel
             {
@@ -74,16 +69,14 @@ namespace prjLookday.Controllers
                 Description = activity.Description,
                 Price = (decimal)activity.Price,
                 Date = (DateOnly)activity.Date,
-                CityID = (int)activity.ActivityId,
+                CityID = (int)activity.CityId,
                 Remaining = (int)activity.Remaining,
                 HotelID = (int)activity.HotelId,
                 Photo = activityAlbum?.Photo
-        
             };
-            return PartialView("_EditPartial", model);  // 改用 _EditPartial
+            return PartialView("_EditPartial", model);
         }
 
-        // POST: /Activity/Edit/5
         [HttpPost]
         public async Task<IActionResult> Edit(CActivityAlbumViewModel model)
         {
@@ -92,8 +85,9 @@ namespace prjLookday.Controllers
                 var activity = await _context.Activities.FindAsync(model.ActivityID);
                 if (activity == null)
                 {
-                    return Json(new { success = false, message = "Activity not found."});
+                    return Json(new { success = false, message = "Activity not found." });
                 }
+
                 activity.Name = model.Name;
                 activity.Description = model.Description;
                 activity.Price = model.Price;
@@ -131,7 +125,9 @@ namespace prjLookday.Controllers
                 await _context.SaveChangesAsync();
                 return Json(new { success = true, message = "活動成功更新囉!" });
             }
-            return PartialView("_EditPartial", model);  // 改用 _EditPartial
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return Json(new { success = false, message = "請填寫所有必填欄位.", errors = errors });
         }
 
         [HttpPost]
@@ -140,32 +136,28 @@ namespace prjLookday.Controllers
         {
             if (id == 0)
             {
-                return Json(new { success = false, message = "Invalid activity ID."});
+                return Json(new { success = false, message = "Invalid activity ID." });
             }
 
-            using (lookdaysContext db = new lookdaysContext())
+            var activity = _context.Activities.FirstOrDefault(a => a.ActivityId == id);
+            if (activity == null)
             {
-                var activity = db.Activities.FirstOrDefault(a => a.ActivityId == id);
-                if (activity == null)
-                {
-                    return Json(new { success = false, message = "Activity not found."});
-                }
-
-                var booking = db.Bookings.FirstOrDefault(b => b.ActivityId == id && b.BookingStatesId == 3);
-                if (booking != null)
-                {
-                    return Json(new { success = false, message = "這個行程已有會員付款，暫時無法下架。" });
-                }
-
-                var albums = db.ActivitiesAlbums.Where(a => a.ActivityId == id).ToList();
-                db.ActivitiesAlbums.RemoveRange(albums);//要避免SqlException: DELETE 陳述式與 REFERENCE 條件約束衝突
-
-                db.Activities.Remove(activity);
-                db.SaveChanges();
-
-                return Json(new { success = true, message = "行程成功下架並移除圖片囉！" });
+                return Json(new { success = false, message = "Activity not found." });
             }
+
+            var booking = _context.Bookings.FirstOrDefault(b => b.ActivityId == id && b.BookingStatesId == 3);
+            if (booking != null)
+            {
+                return Json(new { success = false, message = "這個行程已有會員付款，暫時無法下架。" });
+            }
+
+            var albums = _context.ActivitiesAlbums.Where(a => a.ActivityId == id).ToList();
+            _context.ActivitiesAlbums.RemoveRange(albums);
+
+            _context.Activities.Remove(activity);
+            _context.SaveChanges();
+
+            return Json(new { success = true, message = "行程成功下架並移除圖片囉！" });
         }
     }
 }
- 
