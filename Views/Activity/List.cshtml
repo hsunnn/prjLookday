@@ -6,11 +6,22 @@
 }
 
 <h1 class="text-center mb-3">活動列表</h1>
-@using (Html.BeginForm())
+@using (Html.BeginForm("List", "Activity", FormMethod.Get))
 {
-    <div class="d-flex justify-content-md-center mb-3">
-        <div class="col-md-3">
-            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+    <div class="row g-3">
+        <div class="d-flex justify-content-md-center mb-3">
+            <div class="col-md-2">
+                <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+            </div>
+            <div class="col-md-1">
+                <input type="date" class="form-control" name="startDate" placeholder="開始日期" />
+            </div>
+            <div class="col-md-1">
+                <input type="date" class="form-control" name="endDate" placeholder="結束日期" />
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-warning">搜尋</button>
+            </div>
         </div>
     </div>
 }
@@ -104,6 +115,7 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/chart-bar-demo.js"></script>
     <script>
         $(document).ready(function () {
             $(".edit-button").click(function () {

@@ -19,7 +19,7 @@ namespace prjLookday.Controllers
             _context = context;
         }
 
-        public IActionResult List(CKeywordViewModel vm, int? page)
+        public IActionResult List(CKeywordViewModel vm, int? page, DateTime? startDate, DateTime? endDate)
         {
             var query = from activity in _context.Activities
                         join album in _context.ActivitiesAlbums
@@ -43,6 +43,16 @@ namespace prjLookday.Controllers
             {
                 query = query.Where(r => r.Name.Contains(vm.txtKeyword) ||
                                          r.Description.Contains(vm.txtKeyword));
+            }
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(r => r.Date >= DateOnly.FromDateTime(startDate.Value));
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(r => r.Date <= DateOnly.FromDateTime(endDate.Value));
             }
 
             int pageSize = 10;
@@ -163,7 +173,7 @@ namespace prjLookday.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return PartialView("_CreatePartial");
+            return PartialView("_CreatePartial", new CActivityAlbumViewModel());
         }
 
         [HttpPost]
