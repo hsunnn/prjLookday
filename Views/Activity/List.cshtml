@@ -1,5 +1,4 @@
 ﻿@model X.PagedList.IPagedList<prjLookday.ViewModels.CActivityAlbumViewModel>
-
 @using X.PagedList.Mvc.Core;
 
 @{
@@ -7,24 +6,32 @@
 }
 
 <h1 class="text-center mb-3">活動列表</h1>
-@using (Html.BeginForm())
+@using (Html.BeginForm("List", "Activity", FormMethod.Get))
 {
-    <div class="d-flex justify-content-md-center mb-3">
-        <div class="col-md-3">
-            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+    <div class="row g-3">
+        <div class="d-flex justify-content-md-center mb-3">
+            <div class="col-md-2">
+                <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+            </div>
+            <div class="col-md-1">
+                <input type="date" class="form-control" name="startDate" placeholder="開始日期" />
+            </div>
+            <div class="col-md-1">
+                <input type="date" class="form-control" name="endDate" placeholder="結束日期" />
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-warning">搜尋</button>
+            </div>
         </div>
     </div>
 }
 <p>
     <div class="d-flex justify-content-end mb-3">
-        <form asp-action="Create" method="get" style="display:inline;">
-            <button type="submit" class="btn btn-warning btn-sm" name="btnCreate" style="display:flex; align-items:center;">
-                <?xml version="1.0" ?>
-                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>新增活動
-            </button>
-        </form>
+        <button type="button" class="btn btn-warning btn-sm" id="btnCreate" style="display:flex; align-items:center;">
+            <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
+            </svg>新增活動
+        </button>
     </div>
 </p>
 
@@ -51,31 +58,177 @@
             {
                 count++;
                 <tr style="text-align:center">
-                <td>@count</td>
-                <td>@item.ActivityID</td>
-                <td>
-                    @if (item.Photo != null)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
-                    }
-                </td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-                <td>@((int)item.Price)</td>
-                <td>@item.Date</td>
-                <td>@item.CityID</td>
-                <td>@item.Remaining</td>
-                <td>@item.HotelID</td>
-                <td>
-                    @Html.ActionLink("修改", "Edit", "Activity", new { id = item.ActivityID }, new { @class = "btn btn-primary btn-sm" }) |
-                        @Html.ActionLink("刪除", "Delete", "Activity", new { id = item.ActivityID }, new { onclick = "return confirm('確定刪除此行程嗎?')", @class = "btn btn-danger btn-sm" })
-                </td>
-            </tr>
-        }
+                    <td>@count</td>
+                    <td>@item.ActivityID</td>
+                    <td>
+                        @if (item.Photo != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
+                        }
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@((int)item.Price)</td>
+                    <td>@item.Date</td>
+                    <td>@item.CityID</td>
+                    <td>@item.Remaining</td>
+                    <td>@item.HotelID</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
+                        <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">刪除</button>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
 
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">修改行程</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+                @Html.Partial("_EditPartial", new prjLookday.ViewModels.CActivityAlbumViewModel())
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="createModal" class="modal fade justify-content-center" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="createModalLabel">新增活動</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="createModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="d-flex justify-content-center">
     @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
 </div>
+
+@section Scripts {
+    <script src="~/js/chart-bar-demo.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".edit-button").click(function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '@Url.Action("Edit", "Activity")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        $("#editModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('editModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入修改介面失敗");
+                    }
+                });
+            });
+
+            $('#editModal').on('submit', '#editActivityForm', function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#editModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                            $("#editModalBody").html(response);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤: " + xhr.responseText);
+                    }
+                });
+            });
+
+            $(".delete-button").click(function () {
+                var id = $(this).data("id");
+                if (confirm('確定刪除此行程嗎?')) {
+                    var token = $('input[name="__RequestVerificationToken"]').val();
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Activity")',
+                        type: 'POST',
+                        data: { id: id },
+                        headers: {
+                            "RequestVerificationToken": token
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                alert(response.message);
+                                location.reload();
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function () {
+                            alert("刪除過程中出錯");
+                        }
+                    });
+                }
+            });
+
+            $("#btnCreate").click(function () {
+                $.ajax({
+                    url: '@Url.Action("Create", "Activity")',
+                    type: 'GET',
+                    success: function (response) {
+                        $("#createModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('createModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入新增介面失敗");
+                    }
+                });
+            });
+
+            $('#createModal').on('submit', '#createActivityForm', function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#createModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

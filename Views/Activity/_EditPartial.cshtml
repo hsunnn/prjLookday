@@ -1,0 +1,112 @@
+﻿@model prjLookday.ViewModels.CActivityAlbumViewModel
+
+<div id="editForm">
+    <form id="editActivityForm" action="/Activity/Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="ActivityID" name="ActivityID" value="@Model.ActivityID" autocomplete="off" />
+        <div class="form-group">
+            <div id="ActivityPicPreview" class="d-flex justify-content-center">
+                @if (@Model.Photo != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(@Model.Photo)" id="currentPhoto" style="max-width: 100%; max-height: 150px;" />
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Name">名稱</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="Description">描述</label>
+            <textarea class="form-control" id="Description" name="Description" autocomplete="off">@Model.Description</textarea>
+        </div>
+        <div class="form-group">
+            <label for="Price">價格</label>
+            <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="Date">日期</label>
+            <input type="date" class="form-control" id="Date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="CityID">城市ID</label>
+            <input type="text" class="form-control" id="CityID" name="CityID" value="@Model.CityID" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="Remaining">人數</label>
+            <input type="text" class="form-control" id="Remaining" name="Remaining" value="@Model.Remaining" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="HotelID">酒店ID</label>
+            <input type="text" class="form-control" id="HotelID" name="HotelID" value="@Model.HotelID" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="PhotoFile">照片</label>
+            <input type="file" class="form-control" id="PhotoFile" name="PhotoFile" autocomplete="off" accept="image/*" />
+        </div>
+        <br />
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary btn-sm" id="editSave">修改</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            console.log("Document ready");
+            $('#editSave').click(function (event) {
+                console.log("1111 ready");
+                event.preventDefault();
+
+                var form = $('#editActivityForm')[0];
+                var formData = new FormData(form);
+
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#editModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                            $("#editModalBody").html(response);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // 圖片的更改
+            $('#PhotoFile').change(function (event) {
+                console.log('123');
+                var preview = $('#ActivityPicPreview');
+                preview.empty();
+                var input = event.target;
+                console.log(input.files);
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var img = $('<img>').attr('src', e.target.result)
+                            .css('max-width', '100%')
+                            .css('max-height', '150px');
+                        preview.append(img);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+        });
+    </script>
+}

@@ -106,9 +106,7 @@ public partial class lookdaysContext : DbContext
 
             entity.ToTable("ActivitiesAlbum");
 
-            entity.Property(e => e.PhotoId)
-                .ValueGeneratedNever()
-                .HasColumnName("PhotoID");
+            entity.Property(e => e.PhotoId).HasColumnName("PhotoID");
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
             entity.Property(e => e.Photo).HasColumnType("image");
 

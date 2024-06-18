@@ -14,5 +14,7 @@
         public int HotelID { get; set; }
 
         public int PriceInt => (int)Price;
+
+        public IFormFile PhotoFile { get; set; }
     }
 }

@@ -4,12 +4,13 @@ using prjLookday.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options=>options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddSession();
 builder.Services.AddDbContext<lookdaysContext>(
     options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("lookdaysConnection")
-));
+    )
+);
 
 //²K¥[CORSªA°È
 builder.Services.AddCors(options =>
@@ -40,9 +41,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession(); 
+app.UseSession();
 
 app.UseRouting();
+
+app.UseCors("AllowAllOrigins");
+
 
 app.UseAuthorization();
 
