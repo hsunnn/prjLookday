@@ -159,5 +159,52 @@ namespace prjLookday.Controllers
 
             return Json(new { success = true, message = "行程成功下架並移除圖片囉！" });
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return PartialView("_CreatePartial");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CActivityAlbumViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var activity = new Activity
+                {
+                    Name = vm.Name,
+                    Description = vm.Description,
+                    Price = vm.Price,
+                    Date = vm.Date,
+                    CityId = vm.CityID,
+                    Remaining = vm.Remaining,
+                    HotelId = vm.HotelID
+                };
+
+                _context.Activities.Add(activity);
+                await _context.SaveChangesAsync();
+
+                if (vm.PhotoFile != null && vm.PhotoFile.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await vm.PhotoFile.CopyToAsync(memoryStream);
+                        var photo = new ActivitiesAlbum
+                        {
+                            ActivityId = activity.ActivityId,
+                            Photo = memoryStream.ToArray()
+                        };
+                        _context.ActivitiesAlbums.Add(photo);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "活動成功新增囉!" });
+            }
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return Json(new { success = false, message = "請填寫所有必填欄位.", errors = errors });
+        }
     }
 }

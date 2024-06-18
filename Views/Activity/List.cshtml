@@ -16,13 +16,11 @@
 }
 <p>
     <div class="d-flex justify-content-end mb-3">
-        <form asp-action="Create" method="get" style="display:inline;">
-            <button type="submit" class="btn btn-warning btn-sm" name="btnCreate" style="display:flex; align-items:center;">
-                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>新增活動
-            </button>
-        </form>
+        <button type="button" class="btn btn-warning btn-sm" id="btnCreate" style="display:flex; align-items:center;">
+            <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
+            </svg>新增活動
+        </button>
     </div>
 </p>
 
@@ -176,6 +174,48 @@
                         }
                     });
                 }
+            });
+
+            $("#btnCreate").click(function () {
+                $.ajax({
+                    url: '@Url.Action("Create", "Activity")',
+                    type: 'GET',
+                    success: function (response) {
+                        $("#createModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('createModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入新增介面失敗");
+                    }
+                });
+            });
+
+            $('#createModal').on('submit', '#createActivityForm', function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#createModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤: " + xhr.responseText);
+                    }
+                });
             });
         });
     </script>

@@ -1,5 +1,75 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model prjLookday.ViewModels.CActivityAlbumViewModel
+
+<form id="createActivityForm" action="/Activity/Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="Name">名稱</label>
+        <input type="text" class="form-control" id="Name" name="Name" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">描述</label>
+        <textarea class="form-control" id="Description" name="Description" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="Price">價格</label>
+        <input type="number" class="form-control" id="Price" name="Price" required />
+    </div>
+    <div class="form-group">
+        <label for="Date">日期</label>
+        <input type="date" class="form-control" id="Date" name="Date" required />
+    </div>
+    <div class="form-group">
+        <label for="CityID">城市ID</label>
+        <input type="number" class="form-control" id="CityID" name="CityID" required />
+    </div>
+    <div class="form-group">
+        <label for="Remaining">人數</label>
+        <input type="number" class="form-control" id="Remaining" name="Remaining" required />
+    </div>
+    <div class="form-group">
+        <label for="HotelID">酒店ID</label>
+        <input type="number" class="form-control" id="HotelID" name="HotelID" required />
+    </div>
+    <div class="form-group">
+        <label for="PhotoFile">照片</label>
+        <input type="file" class="form-control" id="PhotoFile" name="PhotoFile" accept="image/*" />
+    </div>
+    <br />
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary btn-sm">儲存</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log("testttt");
+            $('#createActivityForm').submit(function (event) {
+                event.preventDefault();
+                var form = $(this)[0];
+                var formData = new FormData(form);
+
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#createModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("發生錯誤: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 }
