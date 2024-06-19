@@ -1,4 +1,6 @@
-﻿@model IEnumerable<prjLookday.ViewModels.CBookingListViewModel>
+﻿@* @model IEnumerable<prjLookday.ViewModels.CBookingListViewModel> *@
+    @model X.PagedList.IPagedList<prjLookday.ViewModels.CBookingListViewModel>
+
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 
@@ -57,10 +59,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr id="loading-indicator">
+           @*  <tr id="loading-indicator">
                 <td colspan="12" scope="row"> loading........</td>
-            </tr>
+            </tr> *@
             <!-- 添加JavaScript的資料 -->
+            @{
+                int count = (Model.PageNumber - 1) * Model.PageSize;
+                foreach (var bookings in Model)
+                {
+                    count++;
+                    <tr id="loading-indicator">
+                        <td scope="row">@count</td>
+                        <td scope="row">@bookings.BookingId</td>
+                        <td scope="row">@bookings.BookingDate</td>
+                        <td scope="row">@bookings.UserName</td>
+                        <td scope="row">@bookings.ActivityName</td>
+                        <td scope="row">@bookings.Price</td>
+                        <td scope="row">@bookings.bookingStatus</td>
+                    </tr>
+
+                }
+            }
+
+
         </tbody>
     </table>
 </nav>
@@ -80,7 +101,7 @@
             const response = await fetch('/api/BookingOrder');
             const data = await response.json();
             bookingData = data;
-            populateTable(bookingData);
+            // populateTable(bookingData);
         }
 
         function populateTable(data) {
@@ -111,7 +132,7 @@
         document.getElementById('complete').addEventListener('click', async () => {
             console.log(complete);
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
-            populateTable(bookingData);
+           // populateTable(bookingData);
           
         });
 

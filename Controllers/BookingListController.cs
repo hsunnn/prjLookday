@@ -44,6 +44,7 @@ namespace prjLookday.Controllers
                     member = (int)b.Member,
                 })
                 .OrderBy(x => x.BookingId)
+                .Where(b => b.bookingStatus == "已完成付款")
                 .ToPagedListAsync(page, pageSize);
 
             return View(pages);
