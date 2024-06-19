@@ -10,9 +10,9 @@ namespace prjLookdayOrder.Controllers
     [ApiController]
     public class BookingOrderController : ControllerBase
     {
-        private readonly lookdaysContext _context;
+        private readonly LookdaysContext _context;
 
-        public BookingOrderController(lookdaysContext context)
+        public BookingOrderController(LookdaysContext context)
         {
             _context = context;
         }

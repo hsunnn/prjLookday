@@ -16,9 +16,9 @@ namespace prjLookday.Controllers
     public class BookingListController : Controller
     {
 
-        private readonly lookdaysContext _context;
+        private readonly LookdaysContext _context;
 
-        public BookingListController(lookdaysContext context)
+        public BookingListController(LookdaysContext context)
         {
             _context = context;
         }

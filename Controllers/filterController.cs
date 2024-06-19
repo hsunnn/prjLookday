@@ -13,8 +13,8 @@ namespace prjLookday.Controllers
     [ApiController]
     public class filterController : ControllerBase
     {
-        private readonly lookdaysContext _context;
-        public filterController(lookdaysContext context)
+        private readonly LookdaysContext _context;
+        public filterController(LookdaysContext context)
         {
             _context = context;
         }
