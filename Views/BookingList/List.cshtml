@@ -100,7 +100,7 @@
             const response = await fetch('/api/BookingOrder');
             const data = await response.json();
             bookingData = data;
-            populateTable(bookingData);
+            // populateTable(bookingData);
         }
 
         function populateTable(data) {
@@ -131,7 +131,7 @@
         document.getElementById('complete').addEventListener('click', async () => {
             console.log(complete);
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
-            populateTable(bookingData);
+           // populateTable(bookingData);
           
         });
 

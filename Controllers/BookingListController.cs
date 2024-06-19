@@ -16,9 +16,9 @@ namespace prjLookday.Controllers
     public class BookingListController : SuperController
     {
 
-        private readonly lookdaysContext _context;
+        private readonly LookdaysContext _context;
 
-        public BookingListController(lookdaysContext context)
+        public BookingListController(LookdaysContext context)
         {
             _context = context;
         }
@@ -44,6 +44,7 @@ namespace prjLookday.Controllers
                     member = (int)b.Member,
                 })
                 .OrderBy(x => x.BookingId)
+                .Where(b => b.bookingStatus == "已完成付款")
                 .ToPagedListAsync(page, pageSize);
 
             return View(pages);

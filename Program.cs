@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews(options=>options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddSession();
-builder.Services.AddDbContext<lookdaysContext>(
+builder.Services.AddDbContext<LookdaysContext>(
     options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("lookdaysConnection")
     )

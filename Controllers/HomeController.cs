@@ -50,7 +50,7 @@ namespace prjLookday.Controllers
         [HttpPost]
         public IActionResult Login(CLoginViewModel vm)
         {
-            User user = (new lookdaysContext()).Users.FirstOrDefault(
+            User user = (new LookdaysContext()).Users.FirstOrDefault(
                 t => t.Email.Equals(vm.txtAccount) && t.Password.Equals(vm.txtPassword));
             if (user != null && user.Password.Equals(vm.txtPassword))
             {
