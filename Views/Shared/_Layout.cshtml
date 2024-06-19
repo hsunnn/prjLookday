@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Dashboard - SB Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="~/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -29,25 +29,25 @@
             z-index: 1; /* 確保內容在背景圖片之上 */
         }
 
-            .background-image::before {
-                content: "";
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-image: url('/images/mountain.jpg');
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
-                opacity: 0.5; /* 調整透明度 */
-                z-index: -1; /* 確保背景圖片在內容之下 */
-            }
-
-        .content{
-            position:relative;
-            z-index:2;
+        .background-image::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/mountain.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.5; /* 調整透明度 */
+            z-index: -1; /* 確保背景圖片在內容之下 */
         }
+/* 
+        .content {
+            position: relative;
+            z-index: 2;
+        } */
 
     </style>
 </head>
@@ -101,7 +101,6 @@
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-controller="User" asp-action="List"> 編輯會員檔案</a>
-                                <a class="nav-link" href="layout-sidenav-light.html"> 黑名單會員</a>
                                 <a class="nav-link" href="layout-sidenav-light.html"> 會員訊息</a>
                             </nav>
                         </div>
@@ -121,8 +120,7 @@
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
                                         <a class="nav-link" asp-controller="Activity" asp-action="List"> 已上架行程</a>
-                                        <a class="nav-link" href="register.html"> 上架新行程</a>
-                                        <a class="nav-link" href="register.html"> 評論管理</a>
+                                        <a class="nav-link" asp-controller="Review" asp-action="List"> 評論管理</a>
                                     </nav>
                                 </div>
                                 <hr class="sidebar-divider my-0">
@@ -158,11 +156,6 @@
                             強檔活動管理(要建新欄位)
                         </a>
                         <hr class="sidebar-divider my-0">
-                        <a class="nav-link" href="index.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            常見問答(可拿掉)
-                        </a>
-                        <hr class="sidebar-divider my-0">
                     </div>
                 </div>
             </nav>
@@ -187,6 +180,8 @@
             </footer>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="~/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
@@ -194,6 +189,8 @@
     <script src="~/assets/demo/chart-bar-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="~/js/datatables-simple-demo.js"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Styles", required: false)
 </body>

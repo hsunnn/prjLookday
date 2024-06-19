@@ -1,5 +1,6 @@
 ﻿@model X.PagedList.IPagedList<prjLookday.Models.User>
 @using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common
 
 @{
     ViewData["Title"] = "List";
@@ -9,7 +10,7 @@
 @using (Html.BeginForm())
 {
     <div class="d-flex justify-content-md-center mb-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
         </div>
     </div>
