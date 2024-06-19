@@ -1,4 +1,5 @@
-﻿@model IEnumerable<prjLookday.ViewModels.CBookingListViewModel>
+﻿@* @model IEnumerable<prjLookday.ViewModels.CBookingListViewModel> *@
+    @model X.PagedList.IPagedList<prjLookday.ViewModels.CBookingListViewModel>
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 
@@ -57,9 +58,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr id="loading-indicator">
+            @* <tr id="loading-indicator">
                 <td colspan="12" scope="row"> loading........</td>
-            </tr>
+            </tr> *@
+    
+            @{
+                int count = (Model.PageNumber - 1) * Model.PageSize;
+                foreach (var bookings in Model)
+                {
+                    count++;
+                    <tr id ="loading-indicator">
+                        <td scope="row">@count</td>
+                        <td scope="row">@bookings.BookingId</td>
+                        <td scope="row">@bookings.BookingDate</td>
+                        <td scope="row">@bookings.UserName</td>
+                        <td scope="row">@bookings.ActivityName</td>
+                        <td scope="row">@bookings.Price</td>
+                        <td scope="row">@bookings.bookingStatus</td>
+                    </tr>
+                
+                }
+            }
+            
             <!-- 添加JavaScript的資料 -->
         </tbody>
     </table>
@@ -77,33 +97,33 @@
         let bookingData = [];  //儲存所有預定數據
 
         async function loadBookings() {
-            const response = await fetch('/api/BookingOrder');
-            const data = await response.json();
-            bookingData = data;
-            populateTable(bookingData);
+            // const response = await fetch('/api/BookingOrder');
+            // const data = await response.json();
+            // bookingData = data;
+            // populateTable(bookingData);
         }
 
         function populateTable(data) {
-            //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
-            const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = ''; // 清空原先資料
+            // //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
+            // const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+            // tableBody.innerHTML = ''; // 清空原先資料
 
-            //每次索引都從0開始
-            let index = 0;
+            // //每次索引都從0開始
+            // let index = 0;
 
-            data.forEach((data) => {
-                if (data.bookingStatus === "已完成付款") {
-                    const row = tableBody.insertRow();
-                    row.insertCell(0).innerHTML = index + 1;
-                    row.insertCell(1).innerText = data.bookingId;
-                    row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-                    row.insertCell(3).innerHTML = data.userDisplay;
-                    row.insertCell(4).innerHTML = data.activityDisplay;
-                    row.insertCell(5).innerText = `$${data.price.toLocaleString('en-US')}`;
-                    row.insertCell(6).innerText = data.bookingStatus;
-                    index++;
-                }
-                    });
+            // data.forEach((data) => {
+            //     if (data.bookingStatus === "已完成付款") {
+            //         const row = tableBody.insertRow();
+            //         row.insertCell(0).innerHTML = index + 1;
+            //         row.insertCell(1).innerText = data.bookingId;
+            //         row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
+            //         row.insertCell(3).innerHTML = data.userDisplay;
+            //         row.insertCell(4).innerHTML = data.activityDisplay;
+            //         row.insertCell(5).innerText = `$${data.price.toLocaleString('en-US')}`;
+            //         row.insertCell(6).innerText = data.bookingStatus;
+            //         index++;
+            //     }
+            //         });
         }
 
         
