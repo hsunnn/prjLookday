@@ -7,6 +7,8 @@
         public int ActivityID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public string PhotoDesc {  get; set; }
         public decimal Price { get; set; }
         public DateOnly Date { get; set; }
         public int CityID { get; set; }

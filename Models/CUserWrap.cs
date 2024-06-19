@@ -52,7 +52,7 @@
             set { _user.RoleId = value; }
         }
 
-        public string? Userpic
+        public byte[]? Userpic
         {
             get { return _user.UserPic; }
             set { _user.UserPic = value; }

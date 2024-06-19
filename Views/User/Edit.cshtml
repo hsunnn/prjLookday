@@ -13,7 +13,12 @@
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <div id="UserPicPreview" class="d-flex justify-content-center"></div>
+                    <div id="UserPicPreview" class="d-flex justify-content-center">
+                        @if (Model.UserPic != null && Model.UserPic.Length > 0)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.UserPic)" style="max-width: 100%; max-height: 150px;" />
+                        }
+                    </div>
                 </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
@@ -34,11 +39,6 @@
                 <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Preferences" class="control-label"></label>
-                <input asp-for="Preferences" class="form-control" />
-                <span asp-validation-for="Preferences" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RoleId" class="control-label"></label>

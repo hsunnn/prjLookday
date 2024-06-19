@@ -29,6 +29,7 @@ namespace prjLookday.Controllers
                         {
                             PhotoID = activityAlbum != null ? (int?)activityAlbum.PhotoId : null,
                             Photo = activityAlbum != null ? activityAlbum.Photo : null,
+                            PhotoDesc = activityAlbum != null ? activityAlbum.PhotoDesc : null,
                             ActivityID = activity.ActivityId,
                             Name = activity.Name,
                             Description = activity.Description,
@@ -82,7 +83,8 @@ namespace prjLookday.Controllers
                 CityID = (int)activity.CityId,
                 Remaining = (int)activity.Remaining,
                 HotelID = (int)activity.HotelId,
-                Photo = activityAlbum?.Photo
+                Photo = activityAlbum?.Photo,
+                PhotoDesc = activityAlbum?.PhotoDesc
             };
             return PartialView("_EditPartial", model);
         }
@@ -106,29 +108,34 @@ namespace prjLookday.Controllers
                 activity.Remaining = model.Remaining;
                 activity.HotelId = model.HotelID;
 
+                var existingPhoto = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityID);
+
                 if (model.PhotoFile != null && model.PhotoFile.Length > 0)
                 {
                     using (var memoryStream = new MemoryStream())
                     {
                         await model.PhotoFile.CopyToAsync(memoryStream);
-                        var photo = new ActivitiesAlbum
-                        {
-                            ActivityId = model.ActivityID,
-                            Photo = memoryStream.ToArray()
-                        };
-
-                        var existingPhoto = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityID);
-
                         if (existingPhoto != null)
                         {
-                            existingPhoto.Photo = photo.Photo;
-                            _context.Update(existingPhoto);
+                            existingPhoto.Photo = memoryStream.ToArray();
                         }
                         else
                         {
+                            var photo = new ActivitiesAlbum
+                            {
+                                ActivityId = model.ActivityID,
+                                Photo = memoryStream.ToArray(),
+                                PhotoDesc = model.PhotoDesc
+                            };
                             _context.Add(photo);
                         }
                     }
+                }
+
+                if (existingPhoto != null)
+                {
+                    existingPhoto.PhotoDesc = model.PhotoDesc;
+                    _context.Update(existingPhoto);
                 }
 
                 _context.Update(activity);
@@ -203,7 +210,8 @@ namespace prjLookday.Controllers
                         var photo = new ActivitiesAlbum
                         {
                             ActivityId = activity.ActivityId,
-                            Photo = memoryStream.ToArray()
+                            Photo = memoryStream.ToArray(),
+                            PhotoDesc = vm.PhotoDesc
                         };
                         _context.ActivitiesAlbums.Add(photo);
                     }

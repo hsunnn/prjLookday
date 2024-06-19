@@ -35,53 +35,55 @@
     </div>
 </p>
 
-<table border="1" class="table table-hover table-sm table-bordered" style="background-color:white; color:dimgray">
-    <thead>
-        <tr style="color:white; background-color:darkorange; text-align:center">
-            <th>序號</th>
-            <th>活動ID</th>
-            <th>照片</th>
-            <th>名稱</th>
-            <th>描述</th>
-            <th>價格</th>
-            <th>日期</th>
-            <th>城市ID</th>
-            <th>人數</th>
-            <th>酒店ID</th>
-            <th>功能</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = (Model.PageNumber - 1) * Model.PageSize;
-            foreach (var item in Model)
-            {
-                count++;
-                <tr style="text-align:center">
-                    <td>@count</td>
-                    <td>@item.ActivityID</td>
-                    <td>
-                        @if (item.Photo != null)
-                        {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" style="width:50px; height:50px; object-fit:cover;" />
-                        }
-                    </td>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>@((int)item.Price)</td>
-                    <td>@item.Date</td>
-                    <td>@item.CityID</td>
-                    <td>@item.Remaining</td>
-                    <td>@item.HotelID</td>
-                    <td>
-                        <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
-                        <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">刪除</button>
-                    </td>
-                </tr>
+<div class="table-responsive">
+    <table border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
+        <thead>
+            <tr style="color:white; background-color:darkorange; text-align:center">
+                <th style="width: 3%;">序號</th>
+                <th style="width: 15%;">名稱</th>
+                <th style="width: 5%;">照片</th>
+                <th style="width: 20%;">照片描述</th>
+                <th style="width: 20%;">描述</th>
+                <th style="width: 8%;">價格</th>
+                <th style="width: 8%;">日期</th>
+                <th style="width: 5%;">人數</th>
+                <th style="width: 3%;">城市ID</th>
+                <th style="width: 3%;">酒店ID</th>
+                <th style="width: 8%;">功能</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = (Model.PageNumber - 1) * Model.PageSize;
+                foreach (var item in Model)
+                {
+                    count++;
+                    <tr style="text-align:center">
+                        <td>@count</td>
+                        <td>@item.Name</td>
+                        <td>
+                            @if (item.Photo != null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="rounded" style="width:60px; height:60px; object-fit:cover;" />
+                            }
+                        </td>
+                        <td>@item.PhotoDesc</td>
+                        <td>@item.Description</td>
+                        <td>@((int)item.Price)</td>
+                        <td>@item.Date</td>
+                        <td>@item.Remaining</td>
+                        <td>@item.CityID</td>
+                        <td>@item.HotelID</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
+                            <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">刪除</button>
+                        </td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -113,6 +115,12 @@
 <div class="d-flex justify-content-center">
     @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
 </div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>
 
 @section Scripts {
     <script src="~/js/chart-bar-demo.js"></script>

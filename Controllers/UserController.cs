@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using prjLookday.Models;
 using prjLookday.ViewModels;
 using System.Linq;
@@ -27,8 +28,8 @@ namespace prjLookday.Controllers
             else
                 datas = db.Users.Where(r => r.Username.Contains(vm.txtKeyword) || r.Email.Contains(vm.txtKeyword));
 
-            int pageSize = 10; // 每頁顯示的記錄數
-            int pageNumber = page ?? 1; // 當前頁碼，默認為第1頁
+            int pageSize = 10; // 每頁顯示的筆數
+            int pageNumber = page ?? 1;
             IPagedList<User> pagedList = datas.ToPagedList(pageNumber, pageSize);
 
             return View(pagedList);
@@ -48,9 +49,11 @@ namespace prjLookday.Controllers
 
             if (userIn.userpic != null)
             {
-                string picName = Guid.NewGuid().ToString() + ".jpg";
-                userDb.UserPic = picName;
-                userIn.userpic.CopyTo(new FileStream(_enviro.WebRootPath + "/Images/" + picName, FileMode.Create));
+                using (var memoryStream = new MemoryStream())
+                {
+                    userIn.userpic.CopyTo(memoryStream);
+                    userDb.UserPic = memoryStream.ToArray();
+                }
             }
 
             userDb.Username = userIn.UserName;
@@ -94,9 +97,11 @@ namespace prjLookday.Controllers
             {
                 if (userIn.userpic != null)
                 {
-                    string picName = Guid.NewGuid().ToString() + ".jpg";
-                    userDb.UserPic = picName;
-                    userIn.userpic.CopyTo(new FileStream(_enviro.WebRootPath + "/Images/" + picName, FileMode.Create));
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        userIn.userpic.CopyTo(memoryStream);
+                        userDb.UserPic = memoryStream.ToArray();
+                    }
                 }
 
                 userDb.Username = userIn.UserName;
@@ -113,14 +118,22 @@ namespace prjLookday.Controllers
         public IActionResult Delete(int id)
         {
             lookdaysContext db = new lookdaysContext();
-            User u = db.Users.FirstOrDefault(x => x.UserId == id);
-            if (u != null)
+            var user = db.Users.Include(u => u.Bookings).FirstOrDefault(u => u.UserId == id);
+            if (user != null)
             {
-                db.Users.Remove(u);
-                db.SaveChanges();
+                if (user.Bookings.Any())
+                {
+                    return Json(new { success = false, message = "此會員已有購買紀錄，無法刪除。" });
+                }
+                else
+                {
+                    db.Users.Remove(user);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "會員成功刪除！" });
+                }
             }
 
-            return RedirectToAction("List");
+            return Json(new { success = false, message = "會員不存在。" });
         }
     }
 }

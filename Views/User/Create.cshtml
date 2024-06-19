@@ -9,41 +9,40 @@
 
 <div class="row">
     <div class="d-flex justify-content-center mb-3">
-    <div class="col-md-3">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-3">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <div id="UserPicPreview" class="d-flex justify-content-center"></div>
                 </div>
-                <br/>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" required />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" type="email" required/>
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" required/>
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleId" class="control-label"></label>
-                <input asp-for="RoleId" class="form-control" id="roleId" />
-                <span asp-validation-for="RoleId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label  class="control-label">圖片</label>
-                    <input class="form-control" type="file" id="UserPicInput" name="userpic" />
-                @* <span asp-validation-for="UserPic" class="text-danger"></span> *@
-            </div>
-            <p>
                 <br />
-            </p>
+                <div class="form-group">
+                    <label asp-for="Username" class="control-label"></label>
+                    <input asp-for="Username" class="form-control" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" type="email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoleId" class="control-label"></label>
+                    <input asp-for="RoleId" class="form-control" id="roleId" />
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">圖片</label>
+                    <input class="form-control" type="file" id="UserPicInput" name="userpic" />
+                </div>
+                <p>
+                    <br />
+                </p>
                 <div class="form-group">
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <input type="submit" value="建立" class="btn btn-primary btn-sm" />
@@ -52,35 +51,36 @@
                         </form>
                     </div>
                 </div>
-        </form>
+            </form>
             <div>
-                
             </div>
-    </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         document.getElementById('roleId').value = '1';
-            document.getElementById("UserPicInput").addEventListener('change', function (event) {
-                var input = event.target;
-                var preview = document.getElementById('UserPicPreview');
-                preview.innerHTML = '';
+        document.getElementById("UserPicInput").addEventListener('change', function (event) {
+            var input = event.target;
+            var preview = document.getElementById('UserPicPreview');
+            preview.innerHTML = '';
 
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-                    reader.onload = function (e) {
-                        var img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.style.maxWidth = '100%';
-                        img.style.maxHeight = '150px';
-                        preview.appendChild(img);
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            });
+                reader.onload = function (e) {
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '150px';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
     </script>
 }
