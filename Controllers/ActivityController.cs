@@ -11,9 +11,9 @@ namespace prjLookday.Controllers
     public class ActivityController : Controller
     {
         private readonly IWebHostEnvironment _enviro;
-        private readonly lookdaysContext _context;
+        private readonly LookdaysContext _context;
 
-        public ActivityController(IWebHostEnvironment enviro, lookdaysContext context)
+        public ActivityController(IWebHostEnvironment enviro, LookdaysContext context)
         {
             _enviro = enviro;
             _context = context;

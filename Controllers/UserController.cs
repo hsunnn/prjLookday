@@ -19,7 +19,7 @@ namespace prjLookday.Controllers
 
         public IActionResult List(CKeywordViewModel vm, int? page)
         {
-            lookdaysContext db = new lookdaysContext();
+            LookdaysContext db = new LookdaysContext();
 
             IEnumerable<User> datas;
             if (string.IsNullOrEmpty(vm.txtKeyword))
@@ -42,7 +42,7 @@ namespace prjLookday.Controllers
         [HttpPost]
         public IActionResult Create(CUserWrap userIn)
         {
-            lookdaysContext db = new lookdaysContext();
+            LookdaysContext db = new LookdaysContext();
 
             User userDb = new User();
 
@@ -77,7 +77,7 @@ namespace prjLookday.Controllers
         {
             if (id == null)
                 return RedirectToAction("List");
-            lookdaysContext db = new lookdaysContext();
+            LookdaysContext db = new LookdaysContext();
             User u = db.Users.FirstOrDefault(x => x.UserId == id);
 
             if (u == null)
@@ -88,7 +88,7 @@ namespace prjLookday.Controllers
         [HttpPost]
         public IActionResult Edit(CUserWrap userIn)
         {
-            lookdaysContext db = new lookdaysContext();
+            LookdaysContext db = new LookdaysContext();
             User userDb = db.Users.FirstOrDefault(x => x.UserId == userIn.UserId);
             if (userDb != null)
             {
@@ -112,7 +112,7 @@ namespace prjLookday.Controllers
 
         public IActionResult Delete(int id)
         {
-            lookdaysContext db = new lookdaysContext();
+            LookdaysContext db = new LookdaysContext();
             User u = db.Users.FirstOrDefault(x => x.UserId == id);
             if (u != null)
             {
