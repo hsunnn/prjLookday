@@ -15,7 +15,9 @@ public partial class Review
 
     public double? Rating { get; set; }
 
-    public virtual Activity Activity { get; set; } = null!;
+    public DateTime? Date { get; set; }
+
+    public virtual Activity Activity { get; set; }
 
     public virtual User User { get; set; } = null!;
 }

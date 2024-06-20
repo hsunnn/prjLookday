@@ -11,5 +11,5 @@ public partial class ActivitiesAlbum
 
     public int ActivityId { get; set; }
 
-    public virtual Activity Activity { get; set; } = null!;
+    public virtual Activity Activity { get; set; }
 }

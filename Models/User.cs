@@ -1,23 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace prjLookday.Models;
 
 public partial class User
 {
+    [DisplayName("ID")]
     public int UserId { get; set; }
 
-    public string Username { get; set; } = null!;
+    [DisplayName("姓名")]
+    public string Username { get; set; }
 
-    public string Email { get; set; } = null!;
+    [DisplayName("帳號")]
+    public string Email { get; set; }
 
-    public string Password { get; set; } = null!;
+    [DisplayName("密碼")]
+    public string Password { get; set; }
 
     public int? Preferences { get; set; }
 
+    [DisplayName("角色 ID")]
     public int RoleId { get; set; }
 
-    public string? UserPic { get; set; }
+    [DisplayName("照片")]
+    public byte[] UserPic { get; set; }
+
+    [DisplayName("電話")]
+    public string FPhone { get; set; }
 
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
 

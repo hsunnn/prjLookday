@@ -8,7 +8,7 @@ using X.PagedList;
 
 namespace prjLookday.Controllers
 {
-    public class ActivityController : Controller
+    public class ActivityController : SuperController
     {
         private readonly IWebHostEnvironment _enviro;
         private readonly LookdaysContext _context;
@@ -25,18 +25,29 @@ namespace prjLookday.Controllers
                         join album in _context.ActivitiesAlbums
                         on activity.ActivityId equals album.ActivityId into activityAlbumGroup
                         from activityAlbum in activityAlbumGroup.DefaultIfEmpty()
+                        group new { activity, activityAlbum } by new
+                        {
+                            activity.ActivityId,
+                            activity.Name,
+                            activity.Description,
+                            activity.Price,
+                            activity.Date,
+                            activity.CityId,
+                            activity.Remaining,
+                            activity.HotelId
+                        } into activityGroup
                         select new CActivityAlbumViewModel
                         {
-                            PhotoID = activityAlbum != null ? (int?)activityAlbum.PhotoId : null,
-                            Photo = activityAlbum != null ? activityAlbum.Photo : null,
-                            ActivityID = activity.ActivityId,
-                            Name = activity.Name,
-                            Description = activity.Description,
-                            Price = (decimal)activity.Price,
-                            Date = (DateOnly)activity.Date,
-                            CityID = (int)activity.CityId,
-                            Remaining = (int)activity.Remaining,
-                            HotelID = (int)activity.HotelId
+                            ActivityID = activityGroup.Key.ActivityId,
+                            Name = activityGroup.Key.Name,
+                            Description = activityGroup.Key.Description,
+                            Price = (decimal)activityGroup.Key.Price,
+                            Date = (DateOnly)activityGroup.Key.Date,
+                            CityID = (int)activityGroup.Key.CityId,
+                            Remaining = (int)activityGroup.Key.Remaining,
+                            HotelID = (int)activityGroup.Key.HotelId,
+                            Photo = activityGroup.Select(g => g.activityAlbum.Photo).FirstOrDefault(),
+                            PhotoDesc = activityGroup.Select(g => g.activityAlbum.PhotoDesc).FirstOrDefault()
                         };
 
             if (!string.IsNullOrEmpty(vm.txtKeyword))
@@ -62,6 +73,7 @@ namespace prjLookday.Controllers
             return View(pagedList);
         }
 
+
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -82,7 +94,8 @@ namespace prjLookday.Controllers
                 CityID = (int)activity.CityId,
                 Remaining = (int)activity.Remaining,
                 HotelID = (int)activity.HotelId,
-                Photo = activityAlbum?.Photo
+                Photo = activityAlbum?.Photo,
+                PhotoDesc = activityAlbum?.PhotoDesc
             };
             return PartialView("_EditPartial", model);
         }
@@ -106,29 +119,34 @@ namespace prjLookday.Controllers
                 activity.Remaining = model.Remaining;
                 activity.HotelId = model.HotelID;
 
+                var existingPhoto = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityID);
+
                 if (model.PhotoFile != null && model.PhotoFile.Length > 0)
                 {
                     using (var memoryStream = new MemoryStream())
                     {
                         await model.PhotoFile.CopyToAsync(memoryStream);
-                        var photo = new ActivitiesAlbum
-                        {
-                            ActivityId = model.ActivityID,
-                            Photo = memoryStream.ToArray()
-                        };
-
-                        var existingPhoto = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityID);
-
                         if (existingPhoto != null)
                         {
-                            existingPhoto.Photo = photo.Photo;
-                            _context.Update(existingPhoto);
+                            existingPhoto.Photo = memoryStream.ToArray();
                         }
                         else
                         {
+                            var photo = new ActivitiesAlbum
+                            {
+                                ActivityId = model.ActivityID,
+                                Photo = memoryStream.ToArray(),
+                                PhotoDesc = model.PhotoDesc
+                            };
                             _context.Add(photo);
                         }
                     }
+                }
+
+                if (existingPhoto != null)
+                {
+                    existingPhoto.PhotoDesc = model.PhotoDesc;
+                    _context.Update(existingPhoto);
                 }
 
                 _context.Update(activity);
@@ -203,7 +221,8 @@ namespace prjLookday.Controllers
                         var photo = new ActivitiesAlbum
                         {
                             ActivityId = activity.ActivityId,
-                            Photo = memoryStream.ToArray()
+                            Photo = memoryStream.ToArray(),
+                            PhotoDesc = vm.PhotoDesc
                         };
                         _context.ActivitiesAlbums.Add(photo);
                     }
@@ -215,6 +234,47 @@ namespace prjLookday.Controllers
 
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
             return Json(new { success = false, message = "請填寫所有必填欄位.", errors = errors });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPhotos(int id)
+        {
+            var photos = await _context.ActivitiesAlbums
+                .Where(a => a.ActivityId == id)
+                .Select(a => new { a.Photo, a.PhotoDesc})
+                .ToListAsync();
+
+            return PartialView("_PhotoGalleryPartial", photos);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UploadPhoto(int activityId, IFormFile newPhoto, string newPhotoDesc)
+        {
+            if (newPhoto != null && newPhoto.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await newPhoto.CopyToAsync(memoryStream);
+                    var photo = new ActivitiesAlbum
+                    {
+                        ActivityId = activityId,
+                        Photo = memoryStream.ToArray(),
+                        PhotoDesc = newPhotoDesc
+                    };
+
+                    _context.ActivitiesAlbums.Add(photo);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            var photos = await _context.ActivitiesAlbums
+                                       .Where(a => a.ActivityId == activityId)
+                                       .Select(a => new { a.Photo, a.PhotoDesc })
+                                       .ToListAsync();
+
+            return PartialView("_PhotoGalleryPartial", photos);
         }
     }
 }
