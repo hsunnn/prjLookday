@@ -8,7 +8,7 @@ using X.PagedList;
 
 namespace prjLookday.Controllers
 {
-    public class ActivityController : Controller
+    public class ActivityController : SuperController
     {
         private readonly IWebHostEnvironment _enviro;
         private readonly lookdaysContext _context;
@@ -25,19 +25,29 @@ namespace prjLookday.Controllers
                         join album in _context.ActivitiesAlbums
                         on activity.ActivityId equals album.ActivityId into activityAlbumGroup
                         from activityAlbum in activityAlbumGroup.DefaultIfEmpty()
+                        group new { activity, activityAlbum } by new
+                        {
+                            activity.ActivityId,
+                            activity.Name,
+                            activity.Description,
+                            activity.Price,
+                            activity.Date,
+                            activity.CityId,
+                            activity.Remaining,
+                            activity.HotelId
+                        } into activityGroup
                         select new CActivityAlbumViewModel
                         {
-                            PhotoID = activityAlbum != null ? (int?)activityAlbum.PhotoId : null,
-                            Photo = activityAlbum != null ? activityAlbum.Photo : null,
-                            PhotoDesc = activityAlbum != null ? activityAlbum.PhotoDesc : null,
-                            ActivityID = activity.ActivityId,
-                            Name = activity.Name,
-                            Description = activity.Description,
-                            Price = (decimal)activity.Price,
-                            Date = (DateOnly)activity.Date,
-                            CityID = (int)activity.CityId,
-                            Remaining = (int)activity.Remaining,
-                            HotelID = (int)activity.HotelId
+                            ActivityID = activityGroup.Key.ActivityId,
+                            Name = activityGroup.Key.Name,
+                            Description = activityGroup.Key.Description,
+                            Price = (decimal)activityGroup.Key.Price,
+                            Date = (DateOnly)activityGroup.Key.Date,
+                            CityID = (int)activityGroup.Key.CityId,
+                            Remaining = (int)activityGroup.Key.Remaining,
+                            HotelID = (int)activityGroup.Key.HotelId,
+                            Photo = activityGroup.Select(g => g.activityAlbum.Photo).FirstOrDefault(),
+                            PhotoDesc = activityGroup.Select(g => g.activityAlbum.PhotoDesc).FirstOrDefault()
                         };
 
             if (!string.IsNullOrEmpty(vm.txtKeyword))
@@ -62,6 +72,7 @@ namespace prjLookday.Controllers
 
             return View(pagedList);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -223,6 +234,47 @@ namespace prjLookday.Controllers
 
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
             return Json(new { success = false, message = "請填寫所有必填欄位.", errors = errors });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPhotos(int id)
+        {
+            var photos = await _context.ActivitiesAlbums
+                .Where(a => a.ActivityId == id)
+                .Select(a => new { a.Photo, a.PhotoDesc})
+                .ToListAsync();
+
+            return PartialView("_PhotoGalleryPartial", photos);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UploadPhoto(int activityId, IFormFile newPhoto, string newPhotoDesc)
+        {
+            if (newPhoto != null && newPhoto.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await newPhoto.CopyToAsync(memoryStream);
+                    var photo = new ActivitiesAlbum
+                    {
+                        ActivityId = activityId,
+                        Photo = memoryStream.ToArray(),
+                        PhotoDesc = newPhotoDesc
+                    };
+
+                    _context.ActivitiesAlbums.Add(photo);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            var photos = await _context.ActivitiesAlbums
+                                       .Where(a => a.ActivityId == activityId)
+                                       .Select(a => new { a.Photo, a.PhotoDesc })
+                                       .ToListAsync();
+
+            return PartialView("_PhotoGalleryPartial", photos);
         }
     }
 }

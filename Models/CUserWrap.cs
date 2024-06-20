@@ -58,6 +58,8 @@
             set { _user.UserPic = value; }
         }
 
+        public string? FPhone { get; set; }
+
         public IFormFile userpic { get; set; }
     }
 

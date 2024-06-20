@@ -8,10 +8,10 @@ namespace prjLookday.Models;
 
 public partial class User
 {
-    [DisplayName("會員ID")]
+    [DisplayName("ID")]
     public int UserId { get; set; }
 
-    [DisplayName("會員姓名")]
+    [DisplayName("姓名")]
     public string Username { get; set; }
 
     [DisplayName("帳號")]
@@ -22,7 +22,7 @@ public partial class User
 
     public int? Preferences { get; set; }
 
-    [DisplayName("角色ID")]
+    [DisplayName("角色 ID")]
     public int RoleId { get; set; }
 
     [DisplayName("照片")]

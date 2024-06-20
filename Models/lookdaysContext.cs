@@ -137,6 +137,7 @@ public partial class lookdaysContext : DbContext
         modelBuilder.Entity<Activity>(entity =>
         {
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
+            entity.Property(e => e.Address).HasMaxLength(50);
             entity.Property(e => e.CityId).HasColumnName("CityID");
             entity.Property(e => e.HotelId).HasColumnName("HotelID");
             entity.Property(e => e.Latitude).HasColumnName("latitude");

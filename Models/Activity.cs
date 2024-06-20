@@ -27,6 +27,8 @@ public partial class Activity
 
     public double? Longitude { get; set; }
 
+    public string Address { get; set; }
+
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
 
     public virtual ICollection<ActivitiesAlbum> ActivitiesAlbums { get; set; } = new List<ActivitiesAlbum>();

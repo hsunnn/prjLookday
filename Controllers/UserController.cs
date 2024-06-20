@@ -60,6 +60,7 @@ namespace prjLookday.Controllers
             userDb.Email = userIn.Email;
             userDb.Password = HashPassword(userIn.Password);
             userDb.RoleId = userIn.RoleId;
+            userDb.FPhone = userIn.FPhone;
 
             db.Users.Add(userDb);
             db.SaveChanges();
@@ -108,6 +109,7 @@ namespace prjLookday.Controllers
                 userDb.Email = userIn.Email;
                 userDb.Password = userIn.Password;
                 userDb.RoleId = userIn.RoleId;
+                userDb.FPhone = userIn.FPhone;
 
                 db.SaveChanges();
             }
