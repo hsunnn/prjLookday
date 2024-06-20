@@ -58,10 +58,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr id="loading-indicator">
+          @*   <tr id="loading-indicator">
                 <td colspan="12" scope="row"> loading........</td>
-            </tr>
-    @* 
+            </tr> *@
+   
             @{
                 int count = (Model.PageNumber - 1) * Model.PageSize;
                 foreach (var bookings in Model)
@@ -78,7 +78,7 @@
                     </tr>
                 
                 }
-            } *@
+            } 
             
             <!-- 添加JavaScript的資料 -->
         </tbody>
