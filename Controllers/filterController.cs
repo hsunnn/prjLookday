@@ -28,7 +28,7 @@ namespace prjLookday.Controllers
             {
                 return BadRequest("無效的日期區間");
             }
-
+            endDate = endDate.AddDays(1);
             var bookings = await _context.Bookings
                 .Include(x => x.User)
                 .Include(x => x.Activity)
