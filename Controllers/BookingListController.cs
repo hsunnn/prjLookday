@@ -13,7 +13,7 @@ using X.PagedList.Mvc.Core;
 namespace prjLookday.Controllers
 {
     [Route("[controller]")]
-    public class BookingListController : Controller
+    public class BookingListController : SuperController
     {
 
         private readonly LookdaysContext _context;
