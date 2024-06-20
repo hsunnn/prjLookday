@@ -4,7 +4,7 @@
 @using X.PagedList;
 
 <nav style="background-color: rgb(225,223,218);">
-    <h1>訂單管理</h1>
+    <h1 class="text-center mb-3">訂單管理</h1>
     <div>
         <div class="input-group" style="justify-content:flex-end">
             <div style="display: flex">
@@ -44,17 +44,17 @@
     </div>
 
 
-    <table id="bookingsTable" class="table table-striped" style="background-color:#F0F0F0">
+    <table id="bookingsTable" border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
         <!--style="text-align: center;-->
         <thead>
-            <tr style="width:250px; background-color:#FFDCB9">
-                <th scope="col">序號</th>
-                <th scope="col">訂單編號</th>
-                <th scope="col">訂單日期</th>
-                <th scope="col">客戶資訊</th>
-                <th scope="col">活動資訊</th>
-                <th scope="col">金額</th>
-                <th scope="col">訂單狀態</th>
+            <tr style="color:white; background-color:darkorange; text-align:center">
+                <th style="width: 3%;">序號</th>
+                <th style="width: 3%;">訂單編號</th>
+                <th style="width: 3%;">訂單日期</th>
+                <th style="width: 10%;">客戶資訊</th>
+                <th style="width: 10%;">活動資訊</th>
+                <th style="width: 5%;">金額</th>
+                <th style="width: 5%;">訂單狀態</th>
             </tr>
         </thead>
         <tbody>
@@ -89,6 +89,15 @@
         #activitytable {
             display: none;
         }
+
+        #bookingsTable tbody tr {
+            height: 50px; /* 調整這裡的數值來設置行高 */
+        }
+
+        #bookingsTable th, #bookingsTable td {
+            vertical-align: middle; /* 垂直置中單元格內容 */
+        }
+
     </style>
 }
 

@@ -11,9 +11,9 @@ namespace prjLookdayOrder.Controllers
     [ApiController]
     public class BookingOrderController : SuperController
     {
-        private readonly LookdaysContext _context;
+        private readonly lookdaysContext _context;
 
-        public BookingOrderController(LookdaysContext context)
+        public BookingOrderController(lookdaysContext context)
         {
             _context = context;
         }

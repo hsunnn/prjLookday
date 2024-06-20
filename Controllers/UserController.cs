@@ -20,7 +20,7 @@ namespace prjLookday.Controllers
 
         public IActionResult List(CKeywordViewModel vm, int? page)
         {
-            LookdaysContext db = new LookdaysContext();
+            lookdaysContext db = new lookdaysContext();
 
             IEnumerable<User> datas;
             if (string.IsNullOrEmpty(vm.txtKeyword))
@@ -43,7 +43,7 @@ namespace prjLookday.Controllers
         [HttpPost]
         public IActionResult Create(CUserWrap userIn)
         {
-            LookdaysContext db = new LookdaysContext();
+            lookdaysContext db = new lookdaysContext();
 
             User userDb = new User();
 
@@ -81,7 +81,7 @@ namespace prjLookday.Controllers
         {
             if (id == null)
                 return RedirectToAction("List");
-            LookdaysContext db = new LookdaysContext();
+            lookdaysContext db = new lookdaysContext();
             User u = db.Users.FirstOrDefault(x => x.UserId == id);
 
             if (u == null)
@@ -92,7 +92,7 @@ namespace prjLookday.Controllers
         [HttpPost]
         public IActionResult Edit(CUserWrap userIn)
         {
-            LookdaysContext db = new LookdaysContext();
+            lookdaysContext db = new lookdaysContext();
             User userDb = db.Users.FirstOrDefault(x => x.UserId == userIn.UserId);
             if (userDb != null)
             {
