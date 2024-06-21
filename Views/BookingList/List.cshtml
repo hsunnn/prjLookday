@@ -5,8 +5,31 @@
 
 <nav style="background-color: rgb(225,223,218);">
     <h1 class="text-center mb-3">訂單管理</h1>
-    <div>
-        <div class="input-group" style="justify-content:flex-end">
+    <div >
+
+        <div class="d-flex justify-content-md-center mb-3">
+            <div class="col-md-2">
+                <input class="form-control" type="text" name="txtKeyword" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" />
+            </div>
+            <div class="input-group-append">
+                <button type="submit" onclick="getBooking()" class="btn btn-warning" id="searchButton">搜尋</button>
+            </div>
+            <div class="input-group-append">
+                <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-warning">全部訂單</button>
+            </div>
+        </div>
+            <div class="d-flex justify-content-md-center mb-3">
+        <div class="col-md-1">
+            <input type="date" class="form-control" name="startDate" id="startdate" placeholder="開始日期" />
+        </div>
+        <div class="col-md-1">
+            <input type="date" class="form-control" name="endDate" id="enddate" placeholder="結束日期" />
+        </div>
+        <div class="col-md-1">
+            <button type="submit" id="searchdate" class="btn btn-warning" onclick="getdurationbookings()">搜尋</button>
+        </div>
+        </div>
+       @*  <div class="input-group" style="justify-content:flex-end">
             <div style="display: flex">
                 <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                 <div class="input-group-append">
@@ -16,15 +39,15 @@
                     <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
                 </div>
             </div>
-        </div>
+        </div> *@
 
-        <div class="input-group" style="justify-content:flex-end">
+       @*  <div class="input-group" style="justify-content:flex-end">
             <div style="display: flex">
                 <input type="date" id="startdate" />
                 <input type="date" id="enddate" />
                 <button id="searchdate" onclick="getdurationbookings()" class="btn btn-outline-secondary">搜尋</button>
             </div>
-        </div>
+        </div> *@
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">訂單狀態</button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -34,10 +57,7 @@
             </ul>
         </div>
 
-        @* 頁面按鈕 *@
-       <div>
-            @Html.PagedListPager((IPagedList)Model, page=>Url.Action("List", new{page}))
-       </div>
+     
 
 
 
@@ -73,7 +93,19 @@
                         <td scope="row">@bookings.BookingDate?.ToString("yyyy/M/d")</td>
                         <td scope="row">@bookings.UserName</td>
                         <td scope="row">@bookings.ActivityName</td>
-                        <td scope="row">@bookings.Price</td>
+                        <td scope="row">
+                            @{
+                                decimal price;
+                                if (decimal.TryParse(bookings.Price, out price))
+                                {
+                                    @price.ToString("F0")
+                                }
+                                else
+                                {
+                                    @bookings.Price
+                                }
+                            }
+                        </td>
                         <td scope="row">@bookings.bookingStatus</td>
                     </tr>
                 
@@ -84,6 +116,10 @@
         </tbody>
     </table>
 </nav>
+@* 頁面按鈕 *@
+<div class="d-flex justify-content-center">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { page }))
+</div>
 @section Styles {
     <style>
         #activitytable {
@@ -304,7 +340,7 @@
                 row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
                 row.insertCell(3).innerHTML = data.userDisplay;
                 row.insertCell(4).innerHTML = data.activityDisplay;
-                row.insertCell(5).innerText = data.price;
+                row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
                 row.insertCell(6).innerText = data.bookingStatus;
             });
         }

@@ -26,7 +26,7 @@ namespace prjLookday.Controllers
         [HttpGet("List")]
         public async Task<IActionResult> List(int page=1)
         {
-            int pageSize =20;
+            int pageSize =10;
 
             var pages = await _context.Bookings
                 .Include(x => x.User)
