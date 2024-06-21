@@ -49,7 +49,7 @@ namespace prjLookday.Controllers
             if (userIn.userpic != null)
             {
                 string picName = Guid.NewGuid().ToString() + ".jpg";
-                userDb.UserPic = picName;
+                //userDb.UserPic = picName;
                 userIn.userpic.CopyTo(new FileStream(_enviro.WebRootPath + "/Images/" + picName, FileMode.Create));
             }
 
@@ -95,7 +95,7 @@ namespace prjLookday.Controllers
                 if (userIn.userpic != null)
                 {
                     string picName = Guid.NewGuid().ToString() + ".jpg";
-                    userDb.UserPic = picName;
+                //    userDb.UserPic = picName;
                     userIn.userpic.CopyTo(new FileStream(_enviro.WebRootPath + "/Images/" + picName, FileMode.Create));
                 }
 

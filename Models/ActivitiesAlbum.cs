@@ -11,5 +11,7 @@ public partial class ActivitiesAlbum
 
     public int ActivityId { get; set; }
 
+    public string? PhotoDesc { get; set; }
+
     public virtual Activity Activity { get; set; } = null!;
 }

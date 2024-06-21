@@ -57,7 +57,7 @@ public partial class LookdaysContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(" Data Source=.;Initial Catalog=lookdays;Integrated Security=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=lookdays;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -107,6 +107,7 @@ public partial class LookdaysContext : DbContext
             entity.Property(e => e.PhotoId).HasColumnName("PhotoID");
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
             entity.Property(e => e.Photo).HasColumnType("image");
+            entity.Property(e => e.PhotoDesc).HasMaxLength(50);
 
             entity.HasOne(d => d.Activity).WithMany(p => p.ActivitiesAlbums)
                 .HasForeignKey(d => d.ActivityId)
@@ -134,8 +135,11 @@ public partial class LookdaysContext : DbContext
         modelBuilder.Entity<Activity>(entity =>
         {
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
+            entity.Property(e => e.Address).HasMaxLength(50);
             entity.Property(e => e.CityId).HasColumnName("CityID");
             entity.Property(e => e.HotelId).HasColumnName("HotelID");
+            entity.Property(e => e.Latitude).HasColumnName("latitude");
+            entity.Property(e => e.Longitude).HasColumnName("longitude");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Price).HasColumnType("money");
 
@@ -227,9 +231,7 @@ public partial class LookdaysContext : DbContext
 
             entity.ToTable("ClassName");
 
-            entity.Property(e => e.ClassId)
-                .ValueGeneratedNever()
-                .HasColumnName("ClassID");
+            entity.Property(e => e.ClassId).HasColumnName("ClassID");
             entity.Property(e => e.ClassName1)
                 .HasMaxLength(50)
                 .HasColumnName("ClassName");
@@ -334,6 +336,7 @@ public partial class LookdaysContext : DbContext
             entity.Property(e => e.ReviewId).HasColumnName("ReviewID");
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
             entity.Property(e => e.Comment).HasMaxLength(500);
+            entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Activity).WithMany(p => p.Reviews)
@@ -367,8 +370,12 @@ public partial class LookdaysContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.FPhone)
+                .HasMaxLength(50)
+                .HasColumnName("fPhone");
             entity.Property(e => e.Password).HasMaxLength(64);
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
+            entity.Property(e => e.UserPic).HasColumnType("image");
             entity.Property(e => e.Username).HasMaxLength(24);
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
