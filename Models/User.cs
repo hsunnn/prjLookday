@@ -20,6 +20,7 @@ public partial class User
     [DisplayName("密碼")]
     public string Password { get; set; }
 
+
     public int? Preferences { get; set; }
 
     [DisplayName("角色 ID")]
