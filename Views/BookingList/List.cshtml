@@ -1,9 +1,10 @@
-﻿@model IEnumerable<prjLookday.ViewModels.CBookingListViewModel>
+﻿@* @model IEnumerable<prjLookday.ViewModels.CBookingListViewModel> *@
+    @model X.PagedList.IPagedList<prjLookday.ViewModels.CBookingListViewModel>
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 
 <nav style="background-color: rgb(225,223,218);">
-    <h1>訂單管理</h1>
+    <h1 class="text-center mb-3">訂單管理</h1>
     <div>
         <div class="input-group" style="justify-content:flex-end">
             <div style="display: flex">
@@ -43,23 +44,42 @@
     </div>
 
 
-    <table id="bookingsTable" class="table table-striped" style="background-color:#F0F0F0">
+    <table id="bookingsTable" border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
         <!--style="text-align: center;-->
         <thead>
-            <tr style="width:250px; background-color:#FFDCB9">
-                <th scope="col">序號</th>
-                <th scope="col">訂單編號</th>
-                <th scope="col">訂單日期</th>
-                <th scope="col">客戶資訊</th>
-                <th scope="col">活動資訊</th>
-                <th scope="col">金額</th>
-                <th scope="col">訂單狀態</th>
+            <tr style="color:white; background-color:darkorange; text-align:center">
+                <th style="width: 3%;">序號</th>
+                <th style="width: 3%;">訂單編號</th>
+                <th style="width: 3%;">訂單日期</th>
+                <th style="width: 10%;">客戶資訊</th>
+                <th style="width: 10%;">活動資訊</th>
+                <th style="width: 5%;">金額</th>
+                <th style="width: 5%;">訂單狀態</th>
             </tr>
         </thead>
         <tbody>
-            <tr id="loading-indicator">
+          @*   <tr id="loading-indicator">
                 <td colspan="12" scope="row"> loading........</td>
-            </tr>
+            </tr> *@
+   
+            @{
+                int count = (Model.PageNumber - 1) * Model.PageSize;
+                foreach (var bookings in Model)
+                {
+                    count++;
+                    <tr id ="loading-indicator">
+                        <td scope="row">@count</td>
+                        <td scope="row">@bookings.BookingId</td>
+                        <td scope="row">@bookings.BookingDate?.ToString("yyyy/M/d")</td>
+                        <td scope="row">@bookings.UserName</td>
+                        <td scope="row">@bookings.ActivityName</td>
+                        <td scope="row">@bookings.Price</td>
+                        <td scope="row">@bookings.bookingStatus</td>
+                    </tr>
+                
+                }
+            } 
+            
             <!-- 添加JavaScript的資料 -->
         </tbody>
     </table>
@@ -69,6 +89,15 @@
         #activitytable {
             display: none;
         }
+
+        #bookingsTable tbody tr {
+            height: 50px; /* 調整這裡的數值來設置行高 */
+        }
+
+        #bookingsTable th, #bookingsTable td {
+            vertical-align: middle; /* 垂直置中單元格內容 */
+        }
+
     </style>
 }
 
@@ -80,7 +109,7 @@
             const response = await fetch('/api/BookingOrder');
             const data = await response.json();
             bookingData = data;
-            populateTable(bookingData);
+            // populateTable(bookingData);
         }
 
         function populateTable(data) {
@@ -99,7 +128,7 @@
                     row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
                     row.insertCell(3).innerHTML = data.userDisplay;
                     row.insertCell(4).innerHTML = data.activityDisplay;
-                    row.insertCell(5).innerText = `$${data.price.toLocaleString('en-US')}`;
+                    row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
                     row.insertCell(6).innerText = data.bookingStatus;
                     index++;
                 }
@@ -111,7 +140,7 @@
         document.getElementById('complete').addEventListener('click', async () => {
             console.log(complete);
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
-            populateTable(bookingData);
+           populateTable(bookingData);
           
         });
 
@@ -133,10 +162,11 @@
                     //row.insertCell(3).innerHTML = data.UserName;
                     row.insertCell(3).innerHTML = data.userDisplay;
                     row.insertCell(4).innerHTML = data.activityDisplay;
-                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
                     row.insertCell(6).innerText = data.bookingStatus;
+                    index++;
                 }
-                index++;
+               
             });
         };
 
@@ -161,13 +191,12 @@
                     row.insertCell(0).innerHTML = index + 1;
                     row.insertCell(1).innerText = data.bookingId;
                     row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-                    //row.insertCell(3).innerHTML = data.UserName;
                     row.insertCell(3).innerHTML = data.userDisplay;
                     row.insertCell(4).innerHTML = data.activityDisplay;
-                    row.insertCell(5).innerText = data.price;
+                    row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
                     row.insertCell(6).innerText = data.bookingStatus;
-                }
-                index++;
+                    index++;
+                }         
             });
         };
 

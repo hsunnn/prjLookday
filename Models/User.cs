@@ -27,7 +27,10 @@ public partial class User
     public int RoleId { get; set; }
 
     [DisplayName("照片")]
-    public string UserPic { get; set; }
+    public byte[] UserPic { get; set; }
+
+    [DisplayName("電話")]
+    public string FPhone { get; set; }
 
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
 

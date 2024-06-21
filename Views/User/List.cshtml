@@ -21,21 +21,23 @@
             <button type="submit" class="btn btn-warning btn-sm" name="btnCreate" style="display:flex; align-items:center;">
                 <?xml version="1.0" ?>
                 <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 L19,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
+                    <path d="M13,3 L5,3 L5,21 L15,21 L15,23 L5,23 C3.8954305,23 3,22.1045695 3,21 L3,3 C3,1.8954305 3.8954305,1 5,1 L15.4142136,1 L21,6.58578644 L21,14 L19,14 L19,9 L15,9 C13.8954305,9 13,8.1045695 13,7 L13,3 Z M19,19 L19,17 L21,17 L21,19 L23,19 L23,21 L21,21 L21,23 L19,23 L19,21 L17,21 L17,19 Z M18.5857864,7 L15,3.41421356 L15,7 L18.5857864,7 Z" fill="currentColor" fill-rule="evenodd" />
                 </svg>新增會員帳號
             </button>
         </form>
     </div>
 </p>
 
-<table border="1" class="table table-hover table-sm table-bordered" style="background-color:white; color:dimgray">
+<div class="table-responsive">
+<table border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
     <thead>
         <tr style="color:white; background-color:darkorange; text-align:center">
-            <th>序號</th>
-            <th>照片</th>
-            <th>會員名稱</th>
-            <th>電子信箱</th>
-            <th>功能</th>
+                <th style="width: 8%;">序號</th>
+                <th style="width: 15%;">照片</th>
+                <th style="width: 15%;">會員名稱</th>
+                <th style="width: 25%;">電子信箱</th>
+                <th style="width: 20%;">電話</th>
+                <th style="width: 20%;">功能</th>
         </tr>
     </thead>
     <tbody>
@@ -46,19 +48,58 @@
                 count++;
                 <tr style="text-align:center">
                     <td>@count</td>
-                    <td><img src="~/Images/@item.UserPic" style="width:50px; height:50px; object-fit:cover;" /></td>
+                    <td>
+                        @if (item.UserPic != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.UserPic)" class="rounded" style="width:100px; height:100px; object-fit:cover;" />
+                        }
+                    </td>
                     <td>@Html.DisplayFor(modelItem => item.Username)</td>
                     <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FPhone)</td>
                     <td>
                         @Html.ActionLink("修改", "Edit", "User", new { id = item.UserId }, new { @class = "btn btn-primary btn-sm" }) |
-                        @Html.ActionLink("刪除", "Delete", "User", new { id = item.UserId }, new { onclick = "return confirm('確定刪除此會員嗎?')", @class = "btn btn-danger btn-sm" })
+                        <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.UserId">刪除</button>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
+</div>
 
 <div class="d-flex justify-content-center">
-    @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    @* @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast) *@
 </div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".delete-button").click(function () {
+                var id = $(this).data("id");
+                if (confirm('確定刪除此會員嗎?')) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "User")',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            alert(response.message);
+                            if (response.success) {
+                                location.reload();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("刪除過程中出錯: " + xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
