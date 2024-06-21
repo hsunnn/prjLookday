@@ -234,11 +234,6 @@
         }
 
 
-
-
-
-
-
         //已完成付款
         document.getElementById('complete').addEventListener('click', async () => {
             console.log(complete);
@@ -356,10 +351,10 @@
 
                 const data = await response.json();
                 if (Array.isArray(data)) {
-                    populateTable();  // For username search
+                    bookingData = data; // 將搜索到的數據賦值給 bookingData
                 }
                 else {
-                    populateTable([]);  // For ID search
+                    bookingData = [data]; // 將單個數據賦值給 bookingData
                 }
             }
             catch (error) {
@@ -372,7 +367,8 @@
         //顯示全部訂單資料
         document.getElementById("allorders").addEventListener('click', () => {
             //populateTable(bookingData);
-            loadBookings()
+            //loadBookings()
+            switchBookingStatus("已完成付款");
         });
 
         //顯示日期區間內資料
@@ -386,16 +382,19 @@
             }
 
             if (document.getElementById('dropdownMenuButton1').innerHTML === "已完成付款") {
-                populateTable(bookingData);
+               // populateTable(bookingData);
                 console.log("1111111111111111111");
+                switchBookingStatus("已完成付款");
             }
             else if (document.getElementById('dropdownMenuButton1').innerHTML === "購物車") {
-                shoppingchartTable(bookingData);
+                //shoppingchartTable(bookingData);
                 console.log("222222222222222222");
+                switchBookingStatus("購物車");
             }
             else if (document.getElementById('dropdownMenuButton1').innerHTML === "收藏") {
-                collectTable(bookingData);
+                //collectTable(bookingData);
                 console.log("3333333333333333333");
+                switchBookingStatus("收藏");
             }
             else { }
 
