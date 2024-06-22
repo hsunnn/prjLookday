@@ -42,9 +42,8 @@
             <tr style="color:white; background-color:darkorange; text-align:center">
                 <th style="width: 3%;">序號</th>
                 <th style="width: 15%;">名稱</th>
-                <th style="width: 8%;">照片</th>
-                <th style="width: 20%;">照片描述</th>
-                <th style="width: 20%;">描述</th>
+                <th style="width: 12%;">照片</th>
+                <th style="width: 20%;">活動描述</th>
                 <th style="width: 5%;">價格</th>
                 <th style="width: 8%;">日期</th>
                 <th style="width: 5%;">人數</th>
@@ -66,11 +65,10 @@
                                 @if (item.Photo != null)
                             {
                                     <a href="javascript:void(0)" class="photo-link" data-id="@item.ActivityID">
-                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="rounded" style="width:80px; height:80px; object-fit:cover;" />
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="rounded" style="width:90px; height:90px; object-fit:cover;" />
                                     </a>
                             }
                             </td>
-                            <td>@item.PhotoDesc</td>
                             <td>@item.Description</td>
                             <td>@((int)item.Price)</td>
                             <td>@item.Date</td>
@@ -129,7 +127,7 @@
 </div>
 
 <div class="d-flex justify-content-center">
-    @* @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast) *@
+    @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast) 
 </div>
 
 <style>
