@@ -206,7 +206,7 @@
         function updatePageInfo() {
             const pageInfo = document.getElementById('pageInfo');
             const totalPage = Math.ceil(bookingData.length / pageSize);
-            pageInfo.innerText = `Page ${currentPage} of ${totalPage}`;
+            pageInfo.innerText = `第 ${currentPage} 頁，共 ${totalPage}頁`;
             document.getElementById('prevPage').disabled = currentPage === 1;
             document.getElementById('nextPage').disabled = currentPage === totalPage;
         }
@@ -240,6 +240,7 @@
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
            //populateTable(bookingData);
             loadBookings();
+            switchBookingStatus("已完成付款");
         });
 
         //購物車
@@ -368,6 +369,7 @@
         document.getElementById("allorders").addEventListener('click', () => {
             //populateTable(bookingData);
             //loadBookings()
+            document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款"
             switchBookingStatus("已完成付款");
         });
 
@@ -382,18 +384,15 @@
             }
 
             if (document.getElementById('dropdownMenuButton1').innerHTML === "已完成付款") {
-               // populateTable(bookingData);
-                console.log("1111111111111111111");
+               // populateTable(bookingData);                
                 switchBookingStatus("已完成付款");
             }
             else if (document.getElementById('dropdownMenuButton1').innerHTML === "購物車") {
                 //shoppingchartTable(bookingData);
-                console.log("222222222222222222");
                 switchBookingStatus("購物車");
             }
             else if (document.getElementById('dropdownMenuButton1').innerHTML === "收藏") {
                 //collectTable(bookingData);
-                console.log("3333333333333333333");
                 switchBookingStatus("收藏");
             }
             else { }
