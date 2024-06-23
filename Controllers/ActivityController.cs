@@ -70,6 +70,9 @@ namespace prjLookday.Controllers
             int pageNumber = page ?? 1;
             var pagedList = query.ToPagedList(pageNumber, pageSize);
 
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = pagedList.PageCount;
+
             return View(pagedList);
         }
 

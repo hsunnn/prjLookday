@@ -68,9 +68,12 @@
 </table>
 </div>
 
-<div class="d-flex justify-content-center">
-    @Html.PagedListPager(Model, page => Url.Action("List", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+<div id="pagination" class="d-flex justify-content-center">
+    <button id="prevPage" class="btn btn-warning btn-sm mx-2">上一頁</button>
+    <span id="pageInfo" class="mx-2">第 @ViewBag.CurrentPage 頁，共 @ViewBag.TotalPages 頁</span>
+    <button id="nextPage" class="btn btn-warning btn-sm mx-2">下一頁</button>
 </div>
+<p></p>
 
 <style>
     .table th, .table td {
@@ -99,6 +102,28 @@
                         }
                     });
                 }
+            });
+
+            $(document).ready(function () {
+                // 分頁按鈕點擊事件
+                $("#prevPage").click(function () {
+                    var currentPage = parseInt($("#pageInfo").data("current-page"));
+                    if (currentPage > 1) {
+                        var prevPage = currentPage - 1;
+                        window.location.href = '@Url.Action("List", "User")' + '?page=' + prevPage;
+                    }
+                });
+
+                $("#nextPage").click(function () {
+                    var currentPage = parseInt($("#pageInfo").data("current-page"));
+                    var totalPages = parseInt('@ViewBag.TotalPages');
+                    if (currentPage < totalPages) {
+                        var nextPage = currentPage + 1;
+                        window.location.href = '@Url.Action("List", "User")' + '?page=' + nextPage;
+                    }
+                });
+
+                $("#pageInfo").data("current-page", '@ViewBag.CurrentPage').text('第 ' + '@ViewBag.CurrentPage' + ' 頁，共 ' + '@ViewBag.TotalPages' + ' 頁');
             });
         });
     </script>

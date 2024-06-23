@@ -32,6 +32,9 @@ namespace prjLookday.Controllers
             int pageNumber = page ?? 1;
             IPagedList<User> pagedList = datas.ToPagedList(pageNumber, pageSize);
 
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = pagedList.PageCount;
+
             return View(pagedList);
         }
 
