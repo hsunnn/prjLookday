@@ -5,14 +5,14 @@
     ViewData["Title"] = "活動評分列表";
 }
 
-<h1 class="text-center mb-3">行程評論管理</h1>
+<h1 class="text-center mb-3">行程評論列表</h1>
 @using (Html.BeginForm("List", "Review", FormMethod.Get))
 {
     <div class="d-flex justify-content-md-center mb-3">
         <div class="col-md-2">
-            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" value="@ViewBag.txtKeyword" />
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             @Html.DropDownList("ratingFilter", new List<SelectListItem>
         {
         new SelectListItem { Text = "所有評分", Value = "", Selected = ViewBag.RatingFilter == "" },
@@ -32,7 +32,7 @@
             <tr style="color:white; background-color:darkorange; text-align:center">
                 <th style="width: 5%;">序號</th>
                 <th style="width: 20%;">名稱</th>
-                <th style="width: 20%;">照片</th>
+                <th style="width: 16%;">照片</th>
                 <th style="width: 30%;">行程描述</th>
                 <th style="width: 6%;">平均評分</th>
             </tr>
@@ -53,7 +53,7 @@
                             }
                         </td>
                         <td>@item.Description</td>
-                        <td style="color:@(item.AverageRating < 4 ? "red" : "green")">@item.FormattedAvgRating</td>
+                        <td style="color:@(item.AverageRating < 4 ? "red" : "green"); font-size: 1.25rem;">@item.FormattedAvgRating</td>
                     </tr>
                 }
             }
@@ -110,7 +110,9 @@
                 var currentPage = parseInt($("#pageInfo").data("current-page"));
                 if (currentPage > 1) {
                     var prevPage = currentPage - 1;
-                    window.location.href = '@Url.Action("List", "Review")' + '?page=' + prevPage;
+                    var keyword = $("input[name='txtKeyword']").val();
+                    var ratingFilter = $("select[name='ratingFilter']").val();
+                    window.location.href = '@Url.Action("List", "Review")' + '?page=' + prevPage + '&txtKeyword=' + keyword + '&ratingFilter=' + ratingFilter;
                 }
             });
 
@@ -119,7 +121,9 @@
                 var totalPages = parseInt('@ViewBag.TotalPages');
                 if (currentPage < totalPages) {
                     var nextPage = currentPage + 1;
-                    window.location.href = '@Url.Action("List", "Review")' + '?page=' + nextPage;
+                    var keyword = $("input[name='txtKeyword']").val();
+                    var ratingFilter = $("select[name='ratingFilter']").val();
+                    window.location.href = '@Url.Action("List", "Review")' + '?page=' + nextPage + '&txtKeyword=' + keyword + '&ratingFilter=' + ratingFilter;
                 }
             });
 

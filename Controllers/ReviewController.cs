@@ -49,14 +49,20 @@ namespace prjLookday.Controllers
                                          r.Description.Contains(vm.txtKeyword));
             }
 
-            switch (ratingFilter)
+            if (!string.IsNullOrEmpty(ratingFilter))
             {
-                case "4andAbove":
-                    query = query.Where(r => r.AverageRating >= 4);
-                    break;
-                case "0to3_9":
-                    query = query.Where(r => r.AverageRating < 4);
-                    break;
+                if (ratingFilter == "4andAbove")
+                {
+                    query = query.Where(r => r.AverageRating >= 4).OrderByDescending(r => r.AverageRating);
+                }
+                else if (ratingFilter == "0to3_9")
+                {
+                    query = query.Where(r => r.AverageRating < 4).OrderByDescending(r => r.AverageRating);
+                }
+            }
+            else
+            {
+                query = query.OrderByDescending(r => r.AverageRating);
             }
 
             int pageSize = 10;
@@ -65,10 +71,12 @@ namespace prjLookday.Controllers
 
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = pagedList.PageCount;
+            ViewBag.txtKeyword = vm.txtKeyword;
             ViewBag.RatingFilter = ratingFilter;
 
             return View(pagedList);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetReviews(int id)
@@ -80,12 +88,28 @@ namespace prjLookday.Controllers
                     UserName = r.User.Username,
                     UserEmail = r.User.Email,
                     Comment = r.Comment,
-                    Rating = (int)r.Rating,
+                    Rating = r.Rating.HasValue ? r.Rating.Value : 0,
                     UserPic = r.User.UserPic
                 })
                 .ToListAsync();
 
             return PartialView("_ReviewPartialView", reviews);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteReviews([FromBody] List<int> reviewIds)
+        {
+            if (reviewIds == null || !reviewIds.Any())
+            {
+                return Json(new { success = false, message = "沒有選中的評論。" });
+            }
+
+            var reviews = await _context.Reviews.Where(r => reviewIds.Contains(r.ReviewId)).ToListAsync();
+            _context.Reviews.RemoveRange(reviews);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "選中的評論已刪除。" });
         }
 
     }
