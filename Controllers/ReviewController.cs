@@ -19,7 +19,7 @@ namespace prjLookday.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> List(CKeywordViewModel vm, int? page)
+        public async Task<IActionResult> List(CKeywordViewModel vm, int? page, string ratingFilter)
         {
             var query = from activity in _context.Activities
                         join album in _context.ActivitiesAlbums
@@ -49,14 +49,44 @@ namespace prjLookday.Controllers
                                          r.Description.Contains(vm.txtKeyword));
             }
 
-            int pageSize = 10; 
+            switch (ratingFilter)
+            {
+                case "4andAbove":
+                    query = query.Where(r => r.AverageRating >= 4);
+                    break;
+                case "0to3_9":
+                    query = query.Where(r => r.AverageRating < 4);
+                    break;
+            }
+
+            int pageSize = 10;
             int pageNumber = page ?? 1;
             var pagedList = await query.ToPagedListAsync(pageNumber, pageSize);
 
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = pagedList.PageCount;
+            ViewBag.RatingFilter = ratingFilter;
 
             return View(pagedList);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetReviews(int id)
+        {
+            var reviews = await _context.Reviews
+                .Where(r => r.ActivityId == id)
+                .Select(r => new ReviewViewModel
+                {
+                    UserName = r.User.Username,
+                    UserEmail = r.User.Email,
+                    Comment = r.Comment,
+                    Rating = (int)r.Rating,
+                    UserPic = r.User.UserPic
+                })
+                .ToListAsync();
+
+            return PartialView("_ReviewPartialView", reviews);
+        }
+
     }
 }

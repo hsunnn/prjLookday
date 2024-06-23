@@ -29,25 +29,7 @@
             <button type="submit" id="searchdate" class="btn btn-warning" onclick="getdurationbookings()">搜尋</button>
         </div>
         </div>
-       @*  <div class="input-group" style="justify-content:flex-end">
-            <div style="display: flex">
-                <input type="text" id="inputsearch" placeholder="搜尋訂單編號/客戶名稱" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                <div class="input-group-append">
-                    <button type="submit" onclick="getBooking()" class="btn btn-outline-secondary" id="searchButton">搜尋</button>
-                </div>
-                <div class="input-group-append">
-                    <button type="submit" id="allorders" onclick="allbookings()" class="btn btn-outline-secondary">全部訂單</button>
-                </div>
-            </div>
-        </div> *@
 
-       @*  <div class="input-group" style="justify-content:flex-end">
-            <div style="display: flex">
-                <input type="date" id="startdate" />
-                <input type="date" id="enddate" />
-                <button id="searchdate" onclick="getdurationbookings()" class="btn btn-outline-secondary">搜尋</button>
-            </div>
-        </div> *@
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">訂單狀態</button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -56,10 +38,7 @@
                 <li><a class="dropdown-item" href="#" id="collect">收藏</a></li>
             </ul>
         </div>
-
-     
-
-
+        <p></p>
 
     </div>
 
@@ -133,37 +112,7 @@
 
 @section Scripts {
     <script>
-        let bookingData = [];  //儲存所有預定數據
-
-        // async function loadBookings() {
-        //     const response = await fetch('/api/BookingOrder');
-        //     const data = await response.json();
-        //     bookingData = data;
-        //      //populateTable(bookingData);
-        // }
-
-        // function populateTable(data) {
-        //     //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
-        //     const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
-        //     tableBody.innerHTML = ''; // 清空原先資料
-
-        //     //每次索引都從0開始
-        //     let index = 0;
-
-        //     data.forEach((data) => {
-        //         if (data.bookingStatus === "已完成付款") {
-        //             const row = tableBody.insertRow();
-        //             row.insertCell(0).innerHTML = index + 1;
-        //             row.insertCell(1).innerText = data.bookingId;
-        //             row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-        //             row.insertCell(3).innerHTML = data.userDisplay;
-        //             row.insertCell(4).innerHTML = data.activityDisplay;
-        //             row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
-        //             row.insertCell(6).innerText = data.bookingStatus;
-        //             index++;
-        //         }
-        //             });
-        // }
+        let bookingData = [];
 
         let currentPage = 1;
         const pageSize = 10;
@@ -198,7 +147,13 @@
                 row.insertCell(3).innerHTML = data.userDisplay;
                 row.insertCell(4).innerHTML = data.activityDisplay;
                 row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
-                row.insertCell(6).innerText = data.bookingStatus;
+                const statusCell = row.insertCell(6);
+                statusCell.innerText = data.bookingStatus;
+                if (data.bookingStatus === "已完成付款") {
+                    statusCell.style.color = "green";
+                } else if (data.bookingStatus === "收藏") {
+                    statusCell.style.color = "red";
+                }
             });
         }
 
@@ -251,30 +206,6 @@
            populateTable();
             updatePageInfo();
         }
-        // // // function shoppingchartTable(data) {
-        // // //     //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
-        // // //     const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
-        // // //     tableBody.innerHTML = ''; // 清空原先資料
-        // // //     //const btncell = document.createElement("button");
-
-        // // //     let index = 0;
-
-        // // //     data.forEach((data) => {
-        // // //         if (data.bookingStatus === "購物車") {
-        // // //             const row = tableBody.insertRow();
-        // // //             row.insertCell(0).innerHTML = index + 1;
-        // // //             row.insertCell(1).innerText = data.bookingId;
-        // // //             row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-        // // //             //row.insertCell(3).innerHTML = data.UserName;
-        // // //             row.insertCell(3).innerHTML = data.userDisplay;
-        // // //             row.insertCell(4).innerHTML = data.activityDisplay;
-        // // //             row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
-        // // //             row.insertCell(6).innerText = data.bookingStatus;
-        // // //             index++;
-        // // //         }
-               
-        // // //     });
-        // // // };
 
 
         document.getElementById("shoppingchart").addEventListener('click', () => {
@@ -294,27 +225,6 @@
             populateTable();
             updatePageInfo();
         }
-        // // function collectTable(data) {
-        // //     //getElementsByTagName會將 < tbody > 裡面的內容，丟進 tableBody 變數當中
-        // //     const tableBody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
-        // //     tableBody.innerHTML = ''; // 清空原先資料
-        // //     //const btncell = document.createElement("button");
-
-        // //     let index = 0;
-        // //     data.forEach((data) => {
-        // //         if (data.bookingStatus === "收藏") {
-        // //             const row = tableBody.insertRow();
-        // //             row.insertCell(0).innerHTML = index + 1;
-        // //             row.insertCell(1).innerText = data.bookingId;
-        // //             row.insertCell(2).innerText = new Date(data.bookingDate).toLocaleDateString(); //用于将日期对象转换为特定语言格式的日期字符串。它可以根据本地语言环境（Locale）来格式化日期，提供了一种简便的方法来显示用户友好的日期格式。
-        // //             row.insertCell(3).innerHTML = data.userDisplay;
-        // //             row.insertCell(4).innerHTML = data.activityDisplay;
-        // //             row.insertCell(5).innerText = `$${Math.floor(data.price).toLocaleString('en-US')}`;
-        // //             row.insertCell(6).innerText = data.bookingStatus;
-        // //             index++;
-        // //         }         
-        // //     });
-        // // };
 
 
         document.getElementById("collect").addEventListener('click', () => {

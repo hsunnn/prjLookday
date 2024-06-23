@@ -5,12 +5,23 @@
     ViewData["Title"] = "活動評分列表";
 }
 
-<h1 class="text-center mb-3">活動評分列表</h1>
+<h1 class="text-center mb-3">行程評論管理</h1>
 @using (Html.BeginForm("List", "Review", FormMethod.Get))
 {
     <div class="d-flex justify-content-md-center mb-3">
         <div class="col-md-2">
             <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("ratingFilter", new List<SelectListItem>
+        {
+        new SelectListItem { Text = "所有評分", Value = "", Selected = ViewBag.RatingFilter == "" },
+        new SelectListItem { Text = "4 顆星以上", Value = "4andAbove", Selected = ViewBag.RatingFilter == "4andAbove" },
+        new SelectListItem { Text = "0~3.9 顆星", Value = "0to3_9", Selected = ViewBag.RatingFilter == "0to3_9" }
+        }, new { @class = "form-control" })
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-warning">搜尋</button>
         </div>
     </div>
 }
@@ -22,7 +33,7 @@
                 <th style="width: 5%;">序號</th>
                 <th style="width: 20%;">名稱</th>
                 <th style="width: 20%;">照片</th>
-                <th style="width: 30%;">活動描述</th>
+                <th style="width: 30%;">行程描述</th>
                 <th style="width: 6%;">平均評分</th>
             </tr>
         </thead>
@@ -35,19 +46,32 @@
                     <tr style="text-align:center">
                         <td>@count</td>
                         <td>@item.Name</td>
-                        <td>
+                        <td data-id="@item.ActivityID" class="review-link">
                             @if (item.Photo != null)
                             {
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="rounded" style="width:120px; height:120px; object-fit:cover;" />
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="rounded" style="width:130px; height:110px; object-fit:cover;" />
                             }
                         </td>
                         <td>@item.Description</td>
-                        <td style="color:@(item.AverageRating < 4 ? "white" : "darkorange"); background-color:@(item.AverageRating < 4 ? "red" : "white")">@item.FormattedAvgRating</td>
+                        <td style="color:@(item.AverageRating < 4 ? "red" : "green")">@item.FormattedAvgRating</td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+</div>
+
+<div id="reviewModal" class="modal fade" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">活動評論</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="reviewModalBody">
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="pagination" class="d-flex justify-content-center">
@@ -66,7 +90,22 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // 分頁按鈕點擊事件
+            $(".review-link").click(function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '@Url.Action("GetReviews", "Review")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        $("#reviewModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入評論失敗");
+                    }
+                });
+            });
+
             $("#prevPage").click(function () {
                 var currentPage = parseInt($("#pageInfo").data("current-page"));
                 if (currentPage > 1) {
