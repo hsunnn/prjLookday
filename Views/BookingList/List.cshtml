@@ -105,10 +105,7 @@
         </tbody>
     </table>
 </nav>
-@* 頁面按鈕 *@
-@* <div class="d-flex justify-content-center">
-    @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { page }))
-</div> *@
+
 
 <div id="pagination" class="d-flex justify-content-center">
     <button id="prevPage" class="btn btn-warning mx-2">上一頁</button>
@@ -240,7 +237,7 @@
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
            //populateTable(bookingData);
             loadBookings();
-            switchBookingStatus("已完成付款");
+           // switchBookingStatus("已完成付款");
         });
 
         //購物車
@@ -401,16 +398,16 @@
             const url = `https://localhost:7221/api/filter/activitydate?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
 
             const response = await fetch(url);
-            console.log(response);
             if (!response.ok) {
                 alert('找不到該日期的訂單');
                 return;
             }
             const data = await response.json();
-
+        
             //顯示table
             document.getElementById('bookingsTable').style.display = 'table';
             datetable(data);
+            updatePageInfo();
         }
 
         function datetable(data) {
