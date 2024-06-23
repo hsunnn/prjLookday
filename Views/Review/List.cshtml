@@ -1,0 +1,90 @@
+﻿@model X.PagedList.IPagedList<prjLookday.ViewModels.CAvgReviewViewModel>
+@using X.PagedList.Mvc.Core;
+
+@{
+    ViewData["Title"] = "活動評分列表";
+}
+
+<h1 class="text-center mb-3">活動評分列表</h1>
+@using (Html.BeginForm("List", "Review", FormMethod.Get))
+{
+    <div class="d-flex justify-content-md-center mb-3">
+        <div class="col-md-2">
+            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+        </div>
+    </div>
+}
+
+<div class="table-responsive">
+    <table border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
+        <thead>
+            <tr style="color:white; background-color:darkorange; text-align:center">
+                <th style="width: 5%;">序號</th>
+                <th style="width: 20%;">名稱</th>
+                <th style="width: 20%;">照片</th>
+                <th style="width: 30%;">活動描述</th>
+                <th style="width: 6%;">平均評分</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = (Model.PageNumber - 1) * Model.PageSize;
+                foreach (var item in Model)
+                {
+                    count++;
+                    <tr style="text-align:center">
+                        <td>@count</td>
+                        <td>@item.Name</td>
+                        <td>
+                            @if (item.Photo != null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="rounded" style="width:120px; height:120px; object-fit:cover;" />
+                            }
+                        </td>
+                        <td>@item.Description</td>
+                        <td style="color:@(item.AverageRating < 4 ? "white" : "darkorange"); background-color:@(item.AverageRating < 4 ? "red" : "white")">@item.FormattedAvgRating</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="pagination" class="d-flex justify-content-center">
+    <button id="prevPage" class="btn btn-warning btn-sm mx-2">上一頁</button>
+    <span id="pageInfo" class="mx-2">第 @ViewBag.CurrentPage 頁，共 @ViewBag.TotalPages 頁</span>
+    <button id="nextPage" class="btn btn-warning btn-sm mx-2">下一頁</button>
+</div>
+<p></p>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // 分頁按鈕點擊事件
+            $("#prevPage").click(function () {
+                var currentPage = parseInt($("#pageInfo").data("current-page"));
+                if (currentPage > 1) {
+                    var prevPage = currentPage - 1;
+                    window.location.href = '@Url.Action("List", "Review")' + '?page=' + prevPage;
+                }
+            });
+
+            $("#nextPage").click(function () {
+                var currentPage = parseInt($("#pageInfo").data("current-page"));
+                var totalPages = parseInt('@ViewBag.TotalPages');
+                if (currentPage < totalPages) {
+                    var nextPage = currentPage + 1;
+                    window.location.href = '@Url.Action("List", "Review")' + '?page=' + nextPage;
+                }
+            });
+
+            $("#pageInfo").data("current-page", '@ViewBag.CurrentPage').text('第 ' + '@ViewBag.CurrentPage' + ' 頁，共 ' + '@ViewBag.TotalPages' + ' 頁');
+        });
+    </script>
+}

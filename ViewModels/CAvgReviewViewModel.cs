@@ -7,5 +7,13 @@
         public byte[] Photo { get; set; }
         public string Description { get; set; }
         public double AverageRating { get; set; }
+
+        public string FormattedAvgRating
+        {
+            get
+            {
+                return AverageRating.ToString("F1");
+            }
+        }
     }
 }
