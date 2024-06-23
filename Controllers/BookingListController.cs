@@ -24,9 +24,9 @@ namespace prjLookday.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<IActionResult> List(int page=1)
+        public async Task<IActionResult> List(int page = 1)   
         {
-            int pageSize =20;
+            int pageSize =10;
 
             var pages = await _context.Bookings
                 .Include(x => x.User)
@@ -45,7 +45,8 @@ namespace prjLookday.Controllers
                 })
                 .OrderBy(x => x.BookingId)
                 .Where(b => b.bookingStatus == "已完成付款")
-                .ToPagedListAsync(page, pageSize);
+              .ToPagedListAsync(page, pageSize);
+              //.ToListAsync();
 
             return View(pages);
         }
