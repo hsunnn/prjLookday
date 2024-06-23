@@ -67,15 +67,15 @@
                 foreach (var bookings in Model)
                 {
                     count++;
-                    <tr id ="loading-indicator">
-                        <td scope="row">@count</td>
-                        <td scope="row">@bookings.BookingId</td>
-                        <td scope="row">@bookings.BookingDate?.ToString("yyyy/M/d")</td>
-                        <td scope="row">@bookings.UserName</td>
-                        <td scope="row">@bookings.ActivityName</td>
-                        <td scope="row">@bookings.Price</td>
-                        <td scope="row">@bookings.bookingStatus</td>
-                    </tr>
+                                <tr id ="loading-indicator">
+                                    <td scope="row">@count</td>
+                                    <td scope="row">@bookings.BookingId</td>
+                                    <td scope="row">@bookings.BookingDate?.ToString("yyyy/M/d")</td>
+                                    <td scope="row">@bookings.UserName</td>
+                                    <td scope="row">@bookings.ActivityName</td>
+                                    <td scope="row">@bookings.Price</td>
+                                    <td scope="row">@bookings.bookingStatus</td>
+                                </tr>
                 
                 }
             } 
@@ -115,8 +115,8 @@
         let bookingData = [];
 
         let currentPage = 1;
-        const pageSize = 10;
-        let currentBookingStatus = "已完成付款";
+        const pageSize = 10;     
+        let currentBookingStatus = "已完成付款";    
 
         async function loadBookings() {
             const response = await fetch('/api/BookingOrder');
@@ -127,8 +127,13 @@
             updatePageInfo();
         }
 
-        function filterBookingData(data) {
+        function filterBookingData(data,all) {
+            currentPage=1
+            if (all) {
+                bookingData=data
+            } else { 
             bookingData = data.filter(data => data.bookingStatus === currentBookingStatus);
+            }
         }
 
         function populateTable() {
@@ -194,7 +199,7 @@
             document.getElementById('dropdownMenuButton1').innerHTML = "已完成付款";
            //populateTable(bookingData);
             loadBookings();
-           // switchBookingStatus("已完成付款");
+           switchBookingStatus("已完成付款");
         });
 
         //購物車
@@ -237,12 +242,14 @@
 
         //搜尋訂單編號/客戶姓名
         async function getBooking() {
+           
             const search = document.getElementById('inputsearch').value.trim();
+      
             if (!search) {
                 alert("請輸入訂單編號或用戶名稱");
                 return;
             }
-
+            document.getElementById("inputsearch").value = '';
             let url;
             if (isNaN(search)) {
                 //如果不是數字 就會判定為用戶名
@@ -254,6 +261,7 @@
             }
 
             try {
+                currentBookingStatus = '';
                 const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error("HTTP error! status:${response.status}");
@@ -261,7 +269,10 @@
 
                 const data = await response.json();
                 if (Array.isArray(data)) {
-                    bookingData = data; // 將搜索到的數據賦值給 bookingData
+                    //bookingData = data; // 將搜索到的數據賦值給 bookingData
+                    filterBookingData(data,'all');
+                    populateTable();
+                    updatePageInfo();
                 }
                 else {
                     bookingData = [data]; // 將單個數據賦值給 bookingData
@@ -315,17 +326,23 @@
                 return;
             }
             const data = await response.json();
-        
+            console.log(data);
+
             //顯示table
             document.getElementById('bookingsTable').style.display = 'table';
-            datetable(data);
+            datetable(data);                       
+            filterBookingData(data);
+            populateTable();
             updatePageInfo();
+
+            document.getElementById("startdate").value = '';
+            document.getElementById("enddate").value = '';
+
         }
 
         function datetable(data) {
             const tablebody = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
-            tablebody.innerHTML = '';     //清空原始數據
-
+            tablebody.innerHTML = '';     //清空原始數據   
 
             data.forEach((data, index) => {
                 const row = tablebody.insertRow();

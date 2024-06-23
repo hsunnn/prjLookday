@@ -26,8 +26,7 @@ namespace prjLookdayOrder.Controllers
             //return await _context.Bookings.ToListAsync();
             var bookings = await _context.Bookings
             .Include(x => x.User)
-            .Include(x => x.Activity)
-            //.Include 和資料表有直接的關聯
+            .Include(x => x.Activity)           
             .Include(x => x.BookingStates)
             .Include(x=>x.Payments)
             //.ThenInclude 有兩層的關聯
@@ -35,16 +34,12 @@ namespace prjLookdayOrder.Controllers
         .Select(b => new BookingDTO
         {
             BookingId = b.BookingId,
-            BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)
-            //UserName= b.User.Username,
+            BookingDate = b.BookingDate,  //(DateTime)(b.BookingDate)          
             userDisplay =b.User.Username,  //$"編號:{b.UserId}|姓名:{b.User.Username}"
             activityDisplay = b.Activity.Name,  //$"編號:{b.ActivityId}{b.Activity.Name}"
             Price = b.Price,
             bookingStatus = b.BookingStates.States.ToString(),
             member = b.Member,
-            //remaining = $"{b.Member}/{b.Activity.Remaining}",
-
-            //PaymentDate = b.Payments.ToString(),
         })
         //用于异步地从可查询的数据源中检索所有元素并将它们转换为 List<T>。在需要执行数据库操作而不阻塞主线程的情况下，它特别有用，从而提高应用程序的性能和响应速度。
         //ToListAsync 通常与 await 一起使用
