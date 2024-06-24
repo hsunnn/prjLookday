@@ -23,13 +23,15 @@ else
                             <i class="fas fa-user-circle fa-5x"></i>
                         }
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <h5><strong>姓名:</strong> @review.UserName</h5>
                         <p><strong>帳號:</strong> @review.UserEmail</p>
                         <p><strong>評論:</strong> @review.Comment</p>
+                    </div>
+                    <div class="col-md-2 text-right">
                         <p>
                             <strong>評分:</strong>
-                            @review.Rating
+                            <span style="font-size: 1.75rem; color: @(review.Rating > 4 ? "green" : "red");">@review.Rating</span>
                         </p>
                     </div>
                 </div>
