@@ -98,7 +98,7 @@ namespace prjLookdayOrder.Controllers
                 .Include(x => x.Activity)
                 .Include(x => x.BookingStates)
                 .Include(x => x.Payments)
-                .Where(b => b.User.Username == username)
+                .Where(b => EF.Functions.Like(b.User.Username, $"%{username}%"))
                 .Select(b => new BookingDTO
                 {
                     BookingId = b.BookingId,
