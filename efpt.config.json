@@ -43,6 +43,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[BrowsingHistory]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[City]",
          "ObjectType": 0
       },

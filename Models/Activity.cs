@@ -29,6 +29,8 @@ public partial class Activity
 
     public string Address { get; set; }
 
+    public string DescriptionJson { get; set; }
+
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
 
     public virtual ICollection<ActivitiesAlbum> ActivitiesAlbums { get; set; } = new List<ActivitiesAlbum>();
@@ -36,6 +38,8 @@ public partial class Activity
     public virtual ICollection<ActivitiesModel> ActivitiesModels { get; set; } = new List<ActivitiesModel>();
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ICollection<BrowsingHistory> BrowsingHistories { get; set; } = new List<BrowsingHistory>();
 
     public virtual City City { get; set; }
 
