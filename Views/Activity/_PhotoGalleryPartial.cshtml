@@ -1,46 +1,73 @@
 ﻿@model IEnumerable<dynamic>
 
-<div id="photoGallery">
-    @foreach (var photo in Model)
-    {
-        <div class="photo-item">
-            <img src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Photo)" class="img-thumbnail rounded" style="width:280px; height:200px; object-fit:cover;" />
-            <p>@photo.PhotoDesc</p>
-        </div>
-    }
+<div id="photoGallery" class="container">
+    <div class="row">
+        @foreach (var photo in Model)
+        {
+            <div class="photo-item col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(photo.Photo)" class="card-img-top" style="width:100%; height:200px; object-fit:cover;" />
+                    <div class="card-body">
+                        <p class="card-text">@photo.PhotoDesc</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
-<div class="photo-upload">
+<div class="photo-upload container mt-4">
     <form id="photoUploadForm" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="newPhoto">上傳照片</label>
-            <input type="file" class="form-control" id="newPhoto" name="newPhoto" accept="image/*" required />
+        <div class="row mb-3 justify-content-center">
+            <div class="col-md-15">
+                <label for="newPhoto" class="form-label">上傳照片</label>
+                <input type="file" class="form-control" id="newPhoto" name="newPhoto" accept="image/*" required />
+            </div>
         </div>
-        <br />
-        <div class="form-group">
-            <label for="newPhotoDesc">照片描述</label>
-            <input type="text" class="form-control" id="newPhotoDesc" name="newPhotoDesc" required />
+        <div class="row mb-3 justify-content-center">
+            <div class="col-md-15">
+                <label for="newPhotoDesc" class="form-label">照片描述</label>
+                <input type="text" class="form-control" id="newPhotoDesc" name="newPhotoDesc" required />
+            </div>
         </div>
-        <br />
-        <div class="form-group text-center">
-            <button type="submit" class="btn btn-primary btn-sm">上傳</button>
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <button type="submit" class="btn btn-primary btn-sm">上傳</button>
+            </div>
         </div>
     </form>
 </div>
 
 <style>
     #photoGallery {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .photo-item {
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .photo-upload {
         margin-top: 20px;
+    }
+
+    .photo-item .card {
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+        .photo-item .card:hover {
+            transform: scale(1.10);
+        }
+
+    .card-body {
+        background-color: #f8f9fa;
+        padding: 10px;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    .photo-upload .form-label {
+        font-weight: bold;
+    }
+
+    .photo-upload .form-control {
+        border-radius: 5px;
     }
 </style>
