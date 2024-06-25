@@ -3,80 +3,94 @@
 @using X.PagedList.Web.Common
 
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "會員列表";
 }
 
 <h1 class="text-center mb-3">會員列表</h1>
-@using (Html.BeginForm())
+@using (Html.BeginForm("List", "User", FormMethod.Get))
 {
     <div class="d-flex justify-content-md-center mb-3">
         <div class="col-md-2">
-            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" />
+            <input class="form-control" type="text" name="txtKeyword" placeholder="輸入關鍵字" value="@ViewBag.txtKeyword" />
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-warning">搜尋</button>
         </div>
     </div>
 }
+
 <p>
     <div class="d-flex justify-content-end mb-3">
-        <form asp-action="Create" method="get" style="display:inline; margin-right: 20px;">
-            <button type="submit" class="btn btn-secondary btn-sm" name="btnCreate" style="display:flex; align-items:center;">
+        <form asp-action="SuspendedList" method="get" style="display:inline; margin-right: 20px;">
+            <button type="submit" class="btn btn-secondary btn-sm" name="btnSuspendedList" style="display:flex; align-items:center;">
                 <?xml version="1.0" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-x" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708" />
+                    <path fill-rule="evenodd" d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l-1.146 1.147a.5.5 0 0 1-.708.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708" />
                     <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
                 </svg> 已停權會員列表
             </button>
         </form>
-        
+
         <form asp-action="Create" method="get" style="display:inline;">
             <button type="submit" class="btn btn-warning btn-sm" name="btnCreate" style="display:flex; align-items:center;">
                 <?xml version="1.0" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                     <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                </svg>  新增會員帳號
+                </svg> 新增會員帳號
             </button>
         </form>
     </div>
 </p>
 
 <div class="table-responsive">
-<table border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
-    <thead>
-        <tr style="color:white; background-color:darkorange; text-align:center">
+    <table border="1" class="table table-hover table-sm table-bordered rounded" style="background-color:white; color:dimgray">
+        <thead>
+            <tr style="color:white; background-color:darkorange; text-align:center">
                 <th style="width: 8%;">序號</th>
                 <th style="width: 12%;">照片</th>
                 <th style="width: 10%;">會員名稱</th>
                 <th style="width: 30%;">電子信箱</th>
                 <th style="width: 20%;">電話</th>
                 <th style="width: 18%;">功能</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = (Model.PageNumber - 1) * Model.PageSize;
-            foreach (var item in Model)
-            {
-                count++;
-                <tr style="text-align:center">
-                    <td>@count</td>
-                    <td>
-                        @if (item.UserPic != null)
-                        {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.UserPic)" class="rounded" style="width:100px; height:100px; object-fit:cover;" />
-                        }
-                    </td>
-                    <td>@Html.DisplayFor(modelItem => item.Username)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                    <td>@Html.DisplayFor(modelItem => item.FPhone)</td>
-                    <td>
-                        @Html.ActionLink("修改", "Edit", "User", new { id = item.UserId }, new { @class = "btn btn-warning btn-sm" }) |
-                            <button type="button" class="btn btn-outline-danger btn-sm" data-id="@item.UserId">停權</button> |
-                        <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.UserId">刪除</button>
-                    </td>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = (Model.PageNumber - 1) * Model.PageSize;
+                foreach (var item in Model)
+                {
+                    count++;
+                    <tr style="text-align:center">
+                        <td>@count</td>
+                        <td>
+                            @if (item.UserPic != null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.UserPic)" class="rounded" style="width:100px; height:100px; object-fit:cover;" />
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FPhone)</td>
+                        <td>
+                            @if (item.RoleId == 9)
+                            {
+                                <button type="button" class="btn btn-success btn-sm restore-button" data-id="@item.UserId">恢復權限</button>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("修改", "Edit", "User", new { id = item.UserId }, new { @class = "btn btn-warning btn-sm" })
+                                <span style="margin: 0 5px;">|</span>
+                                <button type="button" class="btn btn-outline-danger btn-sm suspend-button" data-id="@item.UserId">停權</button>
+                                <span style="margin: 0 5px;">|</span>
+                                <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.UserId">刪除</button>
+                            }
+                        </td>
+
                 </tr>
+}
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 </div>
 
 <div id="pagination" class="d-flex justify-content-center">
@@ -115,27 +129,66 @@
                 }
             });
 
-            $(document).ready(function () {
-                // 分頁按鈕點擊事件
-                $("#prevPage").click(function () {
-                    var currentPage = parseInt($("#pageInfo").data("current-page"));
-                    if (currentPage > 1) {
-                        var prevPage = currentPage - 1;
-                        window.location.href = '@Url.Action("List", "User")' + '?page=' + prevPage;
-                    }
-                });
-
-                $("#nextPage").click(function () {
-                    var currentPage = parseInt($("#pageInfo").data("current-page"));
-                    var totalPages = parseInt('@ViewBag.TotalPages');
-                    if (currentPage < totalPages) {
-                        var nextPage = currentPage + 1;
-                        window.location.href = '@Url.Action("List", "User")' + '?page=' + nextPage;
-                    }
-                });
-
-                $("#pageInfo").data("current-page", '@ViewBag.CurrentPage').text('第 ' + '@ViewBag.CurrentPage' + ' 頁，共 ' + '@ViewBag.TotalPages' + ' 頁');
+            $(".suspend-button").click(function () {
+                var id = $(this).data("id");
+                if (confirm('確定停權此會員嗎?')) {
+                    $.ajax({
+                        url: '@Url.Action("Suspend", "User")',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            alert(response.message);
+                            if (response.success) {
+                                location.reload();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("停權過程中出錯: " + xhr.responseText);
+                        }
+                    });
+                }
             });
+
+            $(".restore-button").click(function () {
+                var id = $(this).data("id");
+                if (confirm('確定恢復此會員權限嗎?')) {
+                    $.ajax({
+                        url: '@Url.Action("Restore", "User")',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            alert(response.message);
+                            if (response.success) {
+                                location.reload();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("恢復權限過程中出錯: " + xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            $("#prevPage").click(function () {
+                var currentPage = parseInt($("#pageInfo").data("current-page"));
+                var keyword = $("input[name='txtKeyword']").val();
+                if (currentPage > 1) {
+                    var prevPage = currentPage - 1;
+                    window.location.href = '@Url.Action("List", "User")' + '?page=' + prevPage + '&txtKeyword=' + keyword;
+                }
+            });
+
+            $("#nextPage").click(function () {
+                var currentPage = parseInt($("#pageInfo").data("current-page"));
+                var totalPages = parseInt('@ViewBag.TotalPages');
+                var keyword = $("input[name='txtKeyword']").val();
+                if (currentPage < totalPages) {
+                    var nextPage = currentPage + 1;
+                    window.location.href = '@Url.Action("List", "User")' + '?page=' + nextPage + '&txtKeyword=' + keyword;
+                }
+            });
+
+            $("#pageInfo").data("current-page", '@ViewBag.CurrentPage').text('第 ' + '@ViewBag.CurrentPage' + ' 頁，共 ' + '@ViewBag.TotalPages' + ' 頁');
         });
     </script>
 }
