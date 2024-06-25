@@ -13,12 +13,12 @@
         <div class="border p-4 rounded" style="background-color: rgb(127,156,176)">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="mb-3">
-                <label for="formGroupExampleInput" class="form-label" style="color:white">帳號：</label>
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Email" name="txtAccount" required>
+                <label for="formGroupExampleInput" class="form-label" style="color:white">名稱：</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Name" name="txtAccount" required>
             </div>
             <div class="mb-3">
                 <label for="formGroupExampleInput2" class="form-label" style="color:white">密碼：</label>
-                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Passwaord" name="txtPassword" required>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Password" name="txtPassword" required>
             </div>
         <div class="form-group">
                 <div class="d-grid gap-2 col-6 mx-auto">
@@ -34,7 +34,7 @@
 </div>
 <script>
     function demokey(){
-        document.getElementById('formGroupExampleInput').value = 'test123@test.com';
+        document.getElementById('formGroupExampleInput').value = 'test123';
         document.getElementById('formGroupExampleInput2').value = 'test';
     }
 </script>
