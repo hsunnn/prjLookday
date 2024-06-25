@@ -51,7 +51,7 @@ namespace prjLookday.Controllers
         public IActionResult Login(CLoginViewModel vm)
         {
             User user = (new lookdaysContext()).Users.FirstOrDefault(
-                t => t.Email.Equals(vm.txtAccount) && t.Password.Equals(vm.txtPassword));
+                t => t.Username.Equals(vm.txtAccount) && t.Password.Equals(vm.txtPassword));
             if (user != null && user.Password.Equals(vm.txtPassword))
             {
                 string json = JsonSerializer.Serialize(user);

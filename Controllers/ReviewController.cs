@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using prjLookday.DTO;
 
 namespace prjLookday.Controllers
 {
@@ -85,6 +86,7 @@ namespace prjLookday.Controllers
                 .Where(r => r.ActivityId == id)
                 .Select(r => new ReviewViewModel
                 {
+                    ReviewId = r.ReviewId,
                     UserName = r.User.Username,
                     UserEmail = r.User.Email,
                     Comment = r.Comment,
@@ -96,6 +98,18 @@ namespace prjLookday.Controllers
             return PartialView("_ReviewPartialView", reviews);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteSelectReviews(ReviewSelect reviewSelect)
+        {
+            if(reviewSelect == null) return Json(new { success = false, message = "沒有選中的評論。" });
+
+            var reviews = await _context.Reviews.Where(a=>reviewSelect.ReviewID.Contains(a.ReviewId)).ToListAsync();
+            _context.Reviews.RemoveRange(reviews);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "選中的評論已刪除。" });
+        }
 
         [HttpPost]
         public async Task<IActionResult> DeleteReviews([FromBody] List<int> reviewIds)
