@@ -110,8 +110,8 @@ namespace prjLookday.Controllers
 
                 userDb.Username = userIn.UserName;
                 userDb.Email = userIn.Email;
-                userDb.Password = userIn.Password;
-                userDb.RoleId = userIn.RoleId;
+                //userDb.Password = userIn.Password;
+                //userDb.RoleId = userIn.RoleId;
                 userDb.FPhone = userIn.FPhone;
 
                 db.SaveChanges();
