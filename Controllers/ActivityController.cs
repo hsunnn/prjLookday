@@ -46,6 +46,7 @@ namespace prjLookday.Controllers
                             Price = (decimal)activityGroup.Key.Price,
                             Date = (DateOnly)activityGroup.Key.Date,
                             CityID = (int)activityGroup.Key.CityId,
+                            CityName = activityGroup.Select(a => a.activity.City.CityName).FirstOrDefault(),
                             Remaining = (int)activityGroup.Key.Remaining,
                             HotelID = (int)activityGroup.Key.HotelId,
                             Photo = activityGroup.Select(g => g.activityAlbum.Photo).FirstOrDefault(),

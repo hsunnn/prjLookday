@@ -12,8 +12,10 @@ else
         <div class="container">
             @foreach (var review in Model)
             {
-                <div class="d-flex align-items-start mb-4">
-                    <input id="@review.ReviewId" value="@review.ReviewId" name="ReviewID" type="checkbox" class="mr-3 mt-2" />
+                <div class="review-container mb-4 d-flex align-items-center">
+                    <div class="form-check" style="margin-right: 20px;">
+                        <input class="form-check-input position-static" type="checkbox" id="@review.ReviewId" value="@review.ReviewId" name="ReviewID" />
+                    </div>
                     <div class="review-item p-3 border rounded shadow-sm bg-light flex-grow-1">
                         <div class="row">
                             <div class="col-md-2 text-center">
@@ -48,6 +50,48 @@ else
     </form>
 }
 
+@section Styles {
+    <style>
+        .review-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .review-item {
+            flex-grow: 1;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+            .review-item img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+            }
+
+            .review-item h5 {
+                margin-top: 0;
+            }
+
+            .review-item p {
+                margin-bottom: 5px;
+            }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-check-input {
+            margin-top: 0;
+        }
+    </style>
+}
+
 <script>
     $(document).ready(function () {
         $("#deleteSelectReviewsForm").submit(function (event) {
@@ -60,12 +104,9 @@ else
                 type: 'POST',
                 data: formData,
                 success: function (response) {
-                   
                     if (response.success) {
                         alert(response.message);
-                        // // Get the activity ID from a hidden input or another element in the modal
-                        var activityId = $("#reviewModalBody").data("activity-id");                   
-
+                        var activityId = $("#reviewModalBody").data("activity-id");
                         if (activityId) {
                             $.ajax({
                                 url: '@Url.Content("~/Review/GetReviews")/' + activityId,
