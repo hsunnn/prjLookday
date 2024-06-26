@@ -11,6 +11,7 @@
         public string PhotoDesc {  get; set; }
         public decimal Price { get; set; }
         public DateOnly Date { get; set; }
+        public string CityName { get; set; }
         public int CityID { get; set; }
         public int Remaining { get; set; }
         public int HotelID { get; set; }

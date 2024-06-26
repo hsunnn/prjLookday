@@ -17,23 +17,23 @@
                 </div>
                 <br />
                 <div class="form-group">
-                    <label asp-for="Username" class="control-label"></label>
-                    <input asp-for="Username" class="form-control" required />
+                    <label asp-for="Username" class="control-label" for="demo1"></label>
+                    <input asp-for="Username" class="form-control" id="demo1" required />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" type="email" required />
+                    <label asp-for="Email" class="control-label" for="demo2"></label>
+                    <input asp-for="Email" class="form-control" type="email" id="demo2" required />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" required />
+                    <label asp-for="Password" class="control-label" for="demo3"></label>
+                    <input asp-for="Password" class="form-control" id="demo3" required />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="FPhone" class="control-label"></label>
-                    <input asp-for="FPhone" class="form-control" required />
+                    <label asp-for="FPhone" class="control-label" for="demo4"></label>
+                    <input asp-for="FPhone" class="form-control"  id="demo4"required />
                     <span asp-validation-for="FPhone" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -51,6 +51,7 @@
                 <div class="form-group">
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <input type="submit" value="建立" class="btn btn-primary btn-sm" />
+                        <button class="btn btn-outline-warning btn-sm" onclick="demokey()">DEMO</button>
                         <form method="post" asp-controller="Home" asp-action="List">
                             <input type="submit" value="返回" class="btn btn-warning btn-sm " />
                         </form>
@@ -68,7 +69,14 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        document.getElementById('roleId').value = '1';
+        function demokey() {
+            document.getElementById('demo1').value = 'Victoria';
+            document.getElementById('demo2').value = 'vicvic@haha.org.com';
+            document.getElementById('demo3').value = 'Vic1999';
+            document.getElementById('demo4').value = '0922707299';
+            document.getElementById('roleId').value = '1';
+        }
+        
         document.getElementById("UserPicInput").addEventListener('change', function (event) {
             var input = event.target;
             var preview = document.getElementById('UserPicPreview');
