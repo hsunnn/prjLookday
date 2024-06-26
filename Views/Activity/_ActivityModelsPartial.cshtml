@@ -1,0 +1,17 @@
+﻿@model IEnumerable<prjLookday.ViewModels.CActivityModelViewModel>
+
+<div class="modal-body">
+
+    @foreach (var mod in Model)
+    {
+        <div class="model-item mb-3">
+            <h5>@mod.ModelName</h5>
+            <p><strong>價格:</strong> @($"${mod.ModelPrice:N0}")</p>
+            <p><strong>日期:</strong> @mod.ModelDate</p>
+            <p><strong>內容:</strong> @mod.ModelContent</p>
+            <hr />
+        </div>
+    }
+</div>
+
+

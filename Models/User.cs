@@ -20,7 +20,7 @@ public partial class User
     [DisplayName("密碼")]
     public string Password { get; set; }
 
-
+    
     public int? Preferences { get; set; }
 
     [DisplayName("角色 ID")]
@@ -35,6 +35,8 @@ public partial class User
     public virtual ICollection<ActionJoint> ActionJoints { get; set; } = new List<ActionJoint>();
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ICollection<BrowsingHistory> BrowsingHistories { get; set; } = new List<BrowsingHistory>();
 
     public virtual ICollection<CreditCardInfo> CreditCardInfos { get; set; } = new List<CreditCardInfo>();
 

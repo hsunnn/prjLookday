@@ -54,13 +54,13 @@
 <body class="sb-nav-fixed background-image">
     <nav class="sb-topnav navbar navbar-expand navbar-light" style="background-color:rgb(225,223,218);">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" asp-controller="Home" asp-action="Index" style="color:rgb(237,134,28)">LookDay Admin</a>
+        <a class="navbar-brand ps-3" asp-controller="Home" asp-action="Index" style="color:rgb(237,134,28)"><strong>LookDay Admin</strong></a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 " id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <input class="form-control" type="text" placeholder="搜尋‧‧‧" aria-label="搜尋‧‧‧" aria-describedby="btnNavbarSearch" />
                 <button class="btn btn-outline-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
             </div>
         </form>
@@ -69,12 +69,11 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Settings</a></li>
-                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                    <li><a class="dropdown-item" href="#!">設定</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li>
                         <form method="post" asp-controller="Home" asp-action="Logout">
-                            <button type="submit" class="dropdown-item">Log Out</button>
+                            <button type="submit" class="dropdown-item">登出</button>
                         </form>
                     </li>
                 </ul>
@@ -87,9 +86,9 @@
                 <div class="sb-sidenav-menu ">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading"> - Dashboard - </div>
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" asp-controller="Home" asp-action="PowerBi">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Power BI連結放這邊
+                            Power BI
                         </a>
                         <hr class="sidebar-divider my-0">
                         <div class="sb-sidenav-menu-heading"> - Admin - </div>
@@ -100,7 +99,7 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" asp-controller="User" asp-action="List"> 編輯會員檔案</a>
+                                <a class="nav-link" asp-controller="User" asp-action="List"> 會員列表</a>
                                 <a class="nav-link" href="layout-sidenav-light.html"> 會員訊息(視開發狀況)</a>
                                 <a class="nav-link" href="500.html"></a>
                             </nav>

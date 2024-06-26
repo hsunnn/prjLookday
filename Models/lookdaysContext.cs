@@ -31,6 +31,8 @@ public partial class lookdaysContext : DbContext
 
     public virtual DbSet<BookingState> BookingStates { get; set; }
 
+    public virtual DbSet<BrowsingHistory> BrowsingHistories { get; set; }
+
     public virtual DbSet<City> Cities { get; set; }
 
     public virtual DbSet<ClassJoint> ClassJoints { get; set; }
@@ -142,7 +144,9 @@ public partial class lookdaysContext : DbContext
             entity.Property(e => e.HotelId).HasColumnName("HotelID");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(50);
             entity.Property(e => e.Price).HasColumnType("money");
 
             entity.HasOne(d => d.City).WithMany(p => p.Activities)
@@ -186,6 +190,24 @@ public partial class lookdaysContext : DbContext
 
             entity.Property(e => e.BookingStatesId).HasColumnName("BookingStatesID");
             entity.Property(e => e.States).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<BrowsingHistory>(entity =>
+        {
+            entity.ToTable("BrowsingHistory");
+
+            entity.Property(e => e.BrowsingHistoryId).HasColumnName("BrowsingHistoryID");
+            entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
+            entity.Property(e => e.BrowseTime).HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Activity).WithMany(p => p.BrowsingHistories)
+                .HasForeignKey(d => d.ActivityId)
+                .HasConstraintName("FK_BrowsingHistory_Activities");
+
+            entity.HasOne(d => d.User).WithMany(p => p.BrowsingHistories)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_BrowsingHistory_User");
         });
 
         modelBuilder.Entity<City>(entity =>
@@ -341,7 +363,9 @@ public partial class lookdaysContext : DbContext
         {
             entity.Property(e => e.ReviewId).HasColumnName("ReviewID");
             entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
-            entity.Property(e => e.Comment).HasMaxLength(500);
+            entity.Property(e => e.Comment)
+                .IsRequired()
+                .HasMaxLength(500);
             entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -380,10 +404,14 @@ public partial class lookdaysContext : DbContext
             entity.Property(e => e.FPhone)
                 .HasMaxLength(50)
                 .HasColumnName("fPhone");
-            entity.Property(e => e.Password).HasMaxLength(64);
+            entity.Property(e => e.Password)
+                .IsRequired()
+                .HasMaxLength(64);
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
             entity.Property(e => e.UserPic).HasColumnType("image");
-            entity.Property(e => e.Username).HasMaxLength(24);
+            entity.Property(e => e.Username)
+                .IsRequired()
+                .HasMaxLength(24);
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)

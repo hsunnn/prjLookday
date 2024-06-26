@@ -8,38 +8,86 @@
 }
 else
 {
-    <form asp-action="DeleteSelectReviews">
+    <form id="deleteSelectReviewsForm">
         <div class="container">
             @foreach (var review in Model)
             {
-                <input id=@review.ReviewId value=@review.ReviewId name="ReviewID" type="checkbox" />
-                <div class="review-item mb-4 p-3 border rounded shadow-sm bg-light">
-                    <div class="row">
-                        <div class="col-md-2 text-center">
-                            @if (review.UserPic != null)
-                            {
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(review.UserPic)" class="img-thumbnail rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" />
-                            }
-                            else
-                            {
-                                <i class="fas fa-user-circle fa-5x"></i>
-                            }
-                        </div>
-                        <div class="col-md-8">
-                            <h5><strong>姓名:</strong> @review.UserName</h5>
-                            <p><strong>帳號:</strong> @review.UserEmail</p>
-                            <p><strong>評論:</strong> @review.Comment</p>
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <p>
-                                <strong>評分:</strong>
-                                <span style="font-size: 1.75rem; color: @(review.Rating > 4 ? "green" : "red");">@review.Rating</span>
-                            </p>
+                <div class="d-flex align-items-start mb-4">
+                    <input id="@review.ReviewId" value="@review.ReviewId" name="ReviewID" type="checkbox" class="mr-3 mt-2" />
+                    <div class="review-item p-3 border rounded shadow-sm bg-light flex-grow-1">
+                        <div class="row">
+                            <div class="col-md-2 text-center">
+                                @if (review.UserPic != null)
+                                {
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(review.UserPic)" class="img-thumbnail rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <i class="fas fa-user-circle fa-5x"></i>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <h5><strong>姓名:</strong> @review.UserName</h5>
+                                <p><strong>帳號:</strong> @review.UserEmail</p>
+                                <p><strong>評論:</strong> @review.Comment</p>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <p>
+                                    <strong>評分:</strong>
+                                    <span style="font-size: 1.75rem; color: @(review.Rating > 4 ? "green" : "red");">@review.Rating</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             }
-                <input type="submit" value="DeleteSelectReviews"/>
+            <div class="text-center">
+                <button type="submit" class="btn btn-danger btn-sm">刪除評論</button>
+            </div>
         </div>
     </form>
 }
+
+<script>
+    $(document).ready(function () {
+        $("#deleteSelectReviewsForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '@Url.Action("DeleteSelectReviews", "Review")',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                   
+                    if (response.success) {
+                        alert(response.message);
+                        // // Get the activity ID from a hidden input or another element in the modal
+                        var activityId = $("#reviewModalBody").data("activity-id");                   
+
+                        if (activityId) {
+                            $.ajax({
+                                url: '@Url.Content("~/Review/GetReviews")/' + activityId,
+                                type: 'GET',
+                                success: function (response) {
+                                    $("#reviewModalBody").html(response);
+                                },
+                                error: function () {
+                                    alert("重新載入評論失敗");
+                                }
+                            });
+                        } else {
+                            alert("未找到活動 ID，無法重新載入評論");
+                        }
+                    } else {
+                        alert('失敗');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("刪除過程中出錯: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

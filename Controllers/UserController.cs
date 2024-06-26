@@ -24,9 +24,31 @@ namespace prjLookday.Controllers
 
             IEnumerable<User> datas;
             if (string.IsNullOrEmpty(vm.txtKeyword))
-                datas = from user in db.Users select user;
+                datas = db.Users.Where(u => u.RoleId != 9);
             else
-                datas = db.Users.Where(r => r.Username.Contains(vm.txtKeyword) || r.Email.Contains(vm.txtKeyword));
+                datas = db.Users.Where(r => r.RoleId != 9 && (r.Username.Contains(vm.txtKeyword) || r.Email.Contains(vm.txtKeyword)));
+
+            int pageSize = 10; // 每頁顯示的筆數
+            int pageNumber = page ?? 1;
+            IPagedList<User> pagedList = datas.ToPagedList(pageNumber, pageSize);
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = pagedList.PageCount;
+            ViewBag.txtKeyword = vm.txtKeyword;
+
+            return View(pagedList);
+        }
+
+        public IActionResult SuspendedList(CKeywordViewModel vm, int? page)
+        {
+            lookdaysContext db = new lookdaysContext();
+
+            IEnumerable<User> datas = db.Users.Where(r => r.RoleId == 9);
+
+            if (!string.IsNullOrEmpty(vm.txtKeyword))
+            {
+                datas = datas.Where(r => r.Username.Contains(vm.txtKeyword) || r.Email.Contains(vm.txtKeyword));
+            }
 
             int pageSize = 10; // 每頁顯示的筆數
             int pageNumber = page ?? 1;
@@ -35,7 +57,7 @@ namespace prjLookday.Controllers
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = pagedList.PageCount;
 
-            return View(pagedList);
+            return View("List", pagedList);
         }
 
         public IActionResult Create()
@@ -110,8 +132,6 @@ namespace prjLookday.Controllers
 
                 userDb.Username = userIn.UserName;
                 userDb.Email = userIn.Email;
-                userDb.Password = userIn.Password;
-                userDb.RoleId = userIn.RoleId;
                 userDb.FPhone = userIn.FPhone;
 
                 db.SaveChanges();
@@ -120,6 +140,35 @@ namespace prjLookday.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public IActionResult Suspend(int id)
+        {
+            lookdaysContext db = new lookdaysContext();
+            User user = db.Users.FirstOrDefault(u => u.UserId == id);
+            if (user != null)
+            {
+                user.RoleId = 9; // 停權
+                db.SaveChanges();
+                return Json(new { success = true, message = "會員已停權。" });
+            }
+            return Json(new { success = false, message = "會員不存在。" });
+        }
+
+        [HttpPost]
+        public IActionResult Restore(int id)
+        {
+            lookdaysContext db = new lookdaysContext();
+            User user = db.Users.FirstOrDefault(u => u.UserId == id);
+            if (user != null)
+            {
+                user.RoleId = 1;
+                db.SaveChanges();
+                return Json(new { success = true, message = "會員權限已恢復。" });
+            }
+            return Json(new { success = false, message = "會員不存在。" });
+        }
+
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             lookdaysContext db = new lookdaysContext();

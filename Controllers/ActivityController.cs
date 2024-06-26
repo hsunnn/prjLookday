@@ -279,5 +279,24 @@ namespace prjLookday.Controllers
 
             return PartialView("_PhotoGalleryPartial", photos);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetActivityModels(int id)
+        {
+            var activityModels = await _context.ActivitiesModels
+                .Where(m => m.ActivityId == id)
+                .Select(m => new CActivityModelViewModel
+                {
+                    ModelId = m.ModelId,
+                    ModelName = m.ModelName,
+                    ModelPrice = m.ModelPrice,
+                    ModelDate = m.ModelDate,
+                    ModelContent = m.ModelContent
+                })
+                .ToListAsync();
+
+            return PartialView("_ActivityModelsPartial", activityModels);
+        }
+
     }
 }

@@ -41,15 +41,15 @@
         <thead>
             <tr style="color:white; background-color:darkorange; text-align:center">
                 <th style="width: 3%;">序號</th>
-                <th style="width: 15%;">名稱</th>
+                <th style="width: 12%;">名稱</th>
                 <th style="width: 10%;">照片</th>
-                <th style="width: 25%;">活動描述</th>
+                <th style="width: 20%;">活動描述</th>
                 <th style="width: 5%;">價格</th>
                 <th style="width: 8%;">日期</th>
                 <th style="width: 5%;">人數</th>
                 <th style="width: 3%;">城市ID</th>
                 <th style="width: 3%;">酒店ID</th>
-                <th style="width: 8%;">功能</th>
+                <th style="width: 10%;">功能</th>
             </tr>
         </thead>
         <tbody>
@@ -76,8 +76,10 @@
                         <td>@item.CityID</td>
                         <td>@item.HotelID</td>
                         <td>
-                            <button type="button" class="btn btn-warning btn-sm edit-button" data-id="@item.ActivityID">修改</button> |
+                            <button type="button" class="btn btn-warning btn-sm edit-button" data-id="@item.ActivityID">行程</button> |
+                            <button type="button" class="btn btn-secondary btn-sm model-button" data-id="@item.ActivityID">方案</button>
                             <button type="button" class="btn btn-danger btn-sm delete-button" data-id="@item.ActivityID">下架</button>
+                            
                         </td>
                     </tr>
                 }
@@ -125,6 +127,20 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="activityModelsModal" tabindex="-1" aria-labelledby="activityModelsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activityModelsModalLabel">活動方案</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="activityModelsModalBody" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div id="pagination" class="d-flex justify-content-center">
     <button id="prevPage" class="btn btn-warning btn-sm mx-2">上一頁</button>
@@ -212,6 +228,22 @@
                         }
                     });
                 }
+            });
+
+            $(".model-button").click(function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '@Url.Action("GetActivityModels", "Activity")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        $("#activityModelsModalBody").html(response);
+                        var modal = new bootstrap.Modal(document.getElementById('activityModelsModal'));
+                        modal.show();
+                    },
+                    error: function () {
+                        alert("載入方案失敗");
+                    }
+                });
             });
 
             $("#btnCreate").click(function () {

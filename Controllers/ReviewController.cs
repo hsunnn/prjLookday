@@ -100,16 +100,22 @@ namespace prjLookday.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> DeleteSelectReviews(ReviewSelect reviewSelect)
+        public async Task<IActionResult> DeleteSelectReviews([FromForm] ReviewSelect reviewSelect)
         {
-            if(reviewSelect == null) return Json(new { success = false, message = "沒有選中的評論。" });
+            if (reviewSelect == null || reviewSelect.ReviewID == null || !reviewSelect.ReviewID.Any())
+            {
+                return Json(new { success = false, message = "沒有選中的評論。" });
+            }
 
-            var reviews = await _context.Reviews.Where(a=>reviewSelect.ReviewID.Contains(a.ReviewId)).ToListAsync();
+            var reviews = await _context.Reviews.Where(a => reviewSelect.ReviewID.Contains(a.ReviewId)).ToListAsync();
             _context.Reviews.RemoveRange(reviews);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "選中的評論已刪除。" });
+            return Json(new { success = true, message = "此評論已成功刪除。" });
         }
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> DeleteReviews([FromBody] List<int> reviewIds)
