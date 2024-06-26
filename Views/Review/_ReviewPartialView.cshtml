@@ -8,12 +8,12 @@
 }
 else
 {
-    <form asp-action="DeleteSelectReviews">
+    <form id="deleteSelectReviewsForm">
         <div class="container">
             @foreach (var review in Model)
             {
                 <div class="d-flex align-items-start mb-4">
-                    <input id=@review.ReviewId value=@review.ReviewId name="ReviewID" type="checkbox" class="mr-3 mt-2" />
+                    <input id="@review.ReviewId" value="@review.ReviewId" name="ReviewID" type="checkbox" class="mr-3 mt-2" />
                     <div class="review-item p-3 border rounded shadow-sm bg-light flex-grow-1">
                         <div class="row">
                             <div class="col-md-2 text-center">
@@ -42,8 +42,52 @@ else
                 </div>
             }
             <div class="text-center">
-                <input type="submit" value="刪除評論" class="btn btn-danger btn-sm" />
+                <button type="submit" class="btn btn-danger btn-sm">刪除評論</button>
             </div>
         </div>
     </form>
 }
+
+<script>
+    $(document).ready(function () {
+        $("#deleteSelectReviewsForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '@Url.Action("DeleteSelectReviews", "Review")',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                   
+                    if (response.success) {
+                        alert(response.message);
+                        // // Get the activity ID from a hidden input or another element in the modal
+                        var activityId = $("#reviewModalBody").data("activity-id");                   
+
+                        if (activityId) {
+                            $.ajax({
+                                url: '@Url.Content("~/Review/GetReviews")/' + activityId,
+                                type: 'GET',
+                                success: function (response) {
+                                    $("#reviewModalBody").html(response);
+                                },
+                                error: function () {
+                                    alert("重新載入評論失敗");
+                                }
+                            });
+                        } else {
+                            alert("未找到活動 ID，無法重新載入評論");
+                        }
+                    } else {
+                        alert('失敗');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("刪除過程中出錯: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

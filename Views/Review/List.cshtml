@@ -68,7 +68,7 @@
                 <h5 class="modal-title" id="reviewModalLabel">活動評論</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="reviewModalBody">
+            <div class="modal-body" id="reviewModalBody" data-activity-id="">
             </div>
         </div>
     </div>
@@ -97,6 +97,7 @@
                     type: 'GET',
                     success: function (response) {
                         $("#reviewModalBody").html(response);
+                        $("#reviewModalBody").data("activity-id", id); // 設置 activity-id
                         var modal = new bootstrap.Modal(document.getElementById('reviewModal'));
                         modal.show();
                     },
@@ -108,10 +109,10 @@
 
             $("#prevPage").click(function () {
                 var currentPage = parseInt($("#pageInfo").data("current-page"));
+                var keyword = $("input[name='txtKeyword']").val();
+                var ratingFilter = $("select[name='ratingFilter']").val();
                 if (currentPage > 1) {
                     var prevPage = currentPage - 1;
-                    var keyword = $("input[name='txtKeyword']").val();
-                    var ratingFilter = $("select[name='ratingFilter']").val();
                     window.location.href = '@Url.Action("List", "Review")' + '?page=' + prevPage + '&txtKeyword=' + keyword + '&ratingFilter=' + ratingFilter;
                 }
             });
@@ -119,10 +120,10 @@
             $("#nextPage").click(function () {
                 var currentPage = parseInt($("#pageInfo").data("current-page"));
                 var totalPages = parseInt('@ViewBag.TotalPages');
+                var keyword = $("input[name='txtKeyword']").val();
+                var ratingFilter = $("select[name='ratingFilter']").val();
                 if (currentPage < totalPages) {
                     var nextPage = currentPage + 1;
-                    var keyword = $("input[name='txtKeyword']").val();
-                    var ratingFilter = $("select[name='ratingFilter']").val();
                     window.location.href = '@Url.Action("List", "Review")' + '?page=' + nextPage + '&txtKeyword=' + keyword + '&ratingFilter=' + ratingFilter;
                 }
             });
