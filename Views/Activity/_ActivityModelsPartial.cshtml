@@ -12,6 +12,15 @@
             <hr />
         </div>
     }
+    <form id="AddActivityModel" action="/Activity/AddActivityModels" method="post" enctype="multipart/form-data">
+        <div class="model-item mb-3">
+            <p><strong><input type="text" class="form-control" id="formGroupExampleInput" placeholder="模組名稱" name="txtName" required></strong> </p>
+            <p><strong><input type="number" class="form-control" id="formGroupExampleInput" placeholder="價格" name="txtPrice" required></strong> </p>
+            <p><strong><input type="date" class="form-control" id="formGroupExampleInput" placeholder="日期" name="txtDate" required></strong> </p>
+            <p><strong><input type="text" class="form-control" id="formGroupExampleInput" placeholder="內容" name="txtContent" required></strong> </p>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
 </div>
 
 

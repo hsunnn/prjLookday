@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using Microsoft.Identity.Client;
+using prjLookday.DTO;
 
 namespace prjLookday.Controllers
 {
@@ -287,6 +289,7 @@ namespace prjLookday.Controllers
                 .Where(m => m.ActivityId == id)
                 .Select(m => new CActivityModelViewModel
                 {
+                    ActivityId = id,
                     ModelId = m.ModelId,
                     ModelName = m.ModelName,
                     ModelPrice = m.ModelPrice,
@@ -296,6 +299,22 @@ namespace prjLookday.Controllers
                 .ToListAsync();
 
             return PartialView("_ActivityModelsPartial", activityModels);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddActivityModels(ActivityModleDTO activityModleDTO)
+        {
+            var activityModel = new ActivitiesModel
+            {
+                ActivityId = activityModleDTO.ActivityId,
+                ModelPrice = activityModleDTO.ModelPrice,
+                ModelDate = activityModleDTO.ModelDate,
+                ModelContent = activityModleDTO.ModelContent,
+                ModelName = activityModleDTO.ModelName
+            };
+            _context.ActivitiesModels.Add(activityModel);
+            await _context.SaveChangesAsync();
+            return PartialView("_ActivityModelsPartial");
         }
 
     }

@@ -1,12 +1,15 @@
-﻿namespace prjLookday.ViewModels
+﻿namespace prjLookday.DTO
 {
-    public class CActivityModelViewModel
+    public class ActivityModleDTO
     {
-        public int ActivityId { get; set; }
-        public int ModelId { get; set; }
+        public int? ActivityId { get; set; }
+
         public string ModelName { get; set; }
+
         public decimal? ModelPrice { get; set; }
+
         public DateOnly? ModelDate { get; set; }
+
         public string ModelContent { get; set; }
     }
 }
