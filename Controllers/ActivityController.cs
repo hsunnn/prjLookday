@@ -24,6 +24,7 @@ namespace prjLookday.Controllers
         public IActionResult List(CKeywordViewModel vm, int? page, DateTime? startDate, DateTime? endDate)
         {
             var query = from activity in _context.Activities
+                        join city in _context.Cities on activity.CityId equals city.CityId
                         join album in _context.ActivitiesAlbums
                         on activity.ActivityId equals album.ActivityId into activityAlbumGroup
                         from activityAlbum in activityAlbumGroup.DefaultIfEmpty()
@@ -35,6 +36,7 @@ namespace prjLookday.Controllers
                             activity.Price,
                             activity.Date,
                             activity.CityId,
+                            activity.City.CityName,
                             activity.Remaining,
                             activity.HotelId
                         } into activityGroup
@@ -46,6 +48,7 @@ namespace prjLookday.Controllers
                             Price = (decimal)activityGroup.Key.Price,
                             Date = (DateOnly)activityGroup.Key.Date,
                             CityID = (int)activityGroup.Key.CityId,
+                            CityName =  activityGroup.Select(a=>a.activity.City.CityName).FirstOrDefault(),
                             Remaining = (int)activityGroup.Key.Remaining,
                             HotelID = (int)activityGroup.Key.HotelId,
                             Photo = activityGroup.Select(g => g.activityAlbum.Photo).FirstOrDefault(),

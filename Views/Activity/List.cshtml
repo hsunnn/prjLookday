@@ -47,8 +47,7 @@
                 <th style="width: 5%;">價格</th>
                 <th style="width: 8%;">日期</th>
                 <th style="width: 5%;">人數</th>
-                <th style="width: 3%;">城市ID</th>
-                <th style="width: 3%;">酒店ID</th>
+                <th style="width: 3%;">城市</th>
                 <th style="width: 10%;">功能</th>
             </tr>
         </thead>
@@ -73,8 +72,7 @@
                         <td>@($"${item.Price:N0}")</td>
                         <td>@item.Date</td>
                         <td>@item.Remaining</td>
-                        <td>@item.CityID</td>
-                        <td>@item.HotelID</td>
+                        <td>@item.CityName</td>
                         <td>
                             <button type="button" class="btn btn-warning btn-sm edit-button" data-id="@item.ActivityID">行程</button> |
                             <button type="button" class="btn btn-secondary btn-sm model-button" data-id="@item.ActivityID">方案</button>
