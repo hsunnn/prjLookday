@@ -3,16 +3,16 @@
 <div class="modal-body">
     @foreach (var mod in Model)
     {
-        <div class="model-item mb-3">
+        <div class="model-item mb-3 p-3 border rounded" style="border-color: orange; border-width: 2px;">
             <h5>@mod.ModelName</h5>
             <p><strong>價格:</strong> @($"${mod.ModelPrice:N0}")</p>
             <p><strong>日期:</strong> @mod.ModelDate</p>
             <p><strong>內容:</strong> @mod.ModelContent</p>
-            <hr />
         </div>
     }
 
     <!-- Add new model form -->
+    <hr />
     <h4>新增方案包</h4>
     <form id="addModelForm">
         <div class="form-group">
@@ -55,6 +55,7 @@
                         $.ajax({
                             url: '@Url.Action("GetActivityModels", "Activity")',
                             type: 'GET',
+                            data: { id: activityId },  // 添加活動 ID 作為參數
                             success: function (response) {
                                 $("#activityModelsModalBody").html(response);
                             },
