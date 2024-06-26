@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<prjLookday.ViewModels.CActivityModelViewModel>
 
 <div class="modal-body">
-
     @foreach (var mod in Model)
     {
         <div class="model-item mb-3">
@@ -12,6 +11,63 @@
             <hr />
         </div>
     }
+
+    <!-- Add new model form -->
+    <h4>新增方案包</h4>
+    <form id="addModelForm">
+        <div class="form-group">
+            <label for="ModelName">名稱</label>
+            <input type="text" class="form-control" id="ModelName" name="ModelName" required />
+        </div>
+        <div class="form-group">
+            <label for="ModelPrice">價格</label>
+            <input type="number" step="0.01" class="form-control" id="ModelPrice" name="ModelPrice" required />
+        </div>
+        <div class="form-group">
+            <label for="ModelDate">日期</label>
+            <input type="date" class="form-control" id="ModelDate" name="ModelDate" required />
+        </div>
+        <div class="form-group">
+            <label for="ModelContent">內容</label>
+            <textarea class="form-control" id="ModelContent" name="ModelContent" rows="3" required></textarea>
+        </div>
+        <input type="hidden" id="ActivityId" name="ActivityId" value="@ViewBag.ActivityId" />
+        <br />
+        <button type="submit" class="btn btn-primary">新增</button>
+    </form>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $("#addModelForm").submit(function (event) {
+            event.preventDefault();
 
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '@Url.Action("AddActivityModel", "Activity")',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        var activityId = $("#ActivityId").val();
+                        $.ajax({
+                            url: '@Url.Action("GetActivityModels", "Activity")',
+                            type: 'GET',
+                            success: function (response) {
+                                $("#activityModelsModalBody").html(response);
+                            },
+                            error: function () {
+                                alert("重新載入活動模型失敗");
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("新增過程中出錯: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

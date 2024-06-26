@@ -76,7 +76,6 @@ namespace prjLookday.Controllers
             return View(pagedList);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -245,7 +244,7 @@ namespace prjLookday.Controllers
         {
             var photos = await _context.ActivitiesAlbums
                 .Where(a => a.ActivityId == id)
-                .Select(a => new { a.Photo, a.PhotoDesc})
+                .Select(a => new { a.Photo, a.PhotoDesc })
                 .ToListAsync();
 
             return PartialView("_PhotoGalleryPartial", photos);
@@ -291,12 +290,38 @@ namespace prjLookday.Controllers
                     ModelName = m.ModelName,
                     ModelPrice = m.ModelPrice,
                     ModelDate = m.ModelDate,
-                    ModelContent = m.ModelContent
+                    ModelContent = m.ModelContent,
+                    ActivityId = id // 傳遞 ActivityId
                 })
                 .ToListAsync();
 
+            ViewBag.ActivityId = id; // 設置 ViewBag.ActivityId
             return PartialView("_ActivityModelsPartial", activityModels);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> AddActivityModel(CActivityModelViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var newModel = new ActivitiesModel
+                {
+                    ActivityId = model.ActivityId,
+                    ModelName = model.ModelName,
+                    ModelPrice = model.ModelPrice,
+                    ModelDate = model.ModelDate,
+                    ModelContent = model.ModelContent
+                };
+
+                _context.ActivitiesModels.Add(newModel);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "活動 Model 新增成功。" });
+            }
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return Json(new { success = false, message = "請填寫所有必填欄位.", errors = errors });
+        }
     }
 }

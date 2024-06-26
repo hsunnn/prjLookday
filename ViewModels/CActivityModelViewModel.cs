@@ -7,5 +7,7 @@
         public decimal? ModelPrice { get; set; }
         public DateOnly? ModelDate { get; set; }
         public string ModelContent { get; set; }
+
+        public int ActivityId { get; set; }
     }
 }
