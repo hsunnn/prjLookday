@@ -67,15 +67,15 @@
                 foreach (var bookings in Model)
                 {
                     count++;
-                                <tr id ="loading-indicator">
-                                    <td scope="row">@count</td>
-                                    <td scope="row">@bookings.BookingId</td>
-                                    <td scope="row">@bookings.BookingDate?.ToString("yyyy/M/d")</td>
-                                    <td scope="row">@bookings.UserName</td>
-                                    <td scope="row">@bookings.ActivityName</td>
-                                    <td scope="row">@bookings.Price</td>
-                                    <td scope="row">@bookings.bookingStatus</td>
-                                </tr>
+                                        <tr id ="loading-indicator">
+                                            <td scope="row">@count</td>
+                                            <td scope="row">@bookings.BookingId</td>
+                                            <td scope="row">@bookings.BookingDate?.ToString("yyyy/M/d")</td>
+                                            <td scope="row">@bookings.UserName</td>
+                                            <td scope="row">@bookings.ActivityName</td>
+                                            <td scope="row">@bookings.Price</td>
+                                            <td scope="row">@bookings.bookingStatus</td>
+                                        </tr>
                 
                 }
             } 
@@ -157,8 +157,10 @@
                     statusCell.style.color = "green";
                 } else if (data.bookingStatus === "收藏") {
                     statusCell.style.color = "red";
+                } else {
+                    statusCell.style.color = "blue";
                 }
-            });
+        });
         }
 
         function updatePageInfo() {
