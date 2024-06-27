@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace prjLookday.Controllers
 {
@@ -76,6 +77,9 @@ namespace prjLookday.Controllers
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = pagedList.PageCount;
 
+            var cities = _context.Cities.Select(c => new { c.CityId, c.CityName }).ToList();
+            ViewBag.Cities = new SelectList(cities, "CityId", "CityName");
+
             return View(pagedList);
         }
 
@@ -102,8 +106,14 @@ namespace prjLookday.Controllers
                 Photo = activityAlbum?.Photo,
                 PhotoDesc = activityAlbum?.PhotoDesc
             };
+
+            var cities = await _context.Cities.Select(c => new { c.CityId, c.CityName }).ToListAsync();
+            ViewBag.Cities = new SelectList(cities, "CityId", "CityName");
+
             return PartialView("_EditPartial", model);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Edit(CActivityAlbumViewModel model)
@@ -122,7 +132,7 @@ namespace prjLookday.Controllers
                 activity.Date = model.Date;
                 activity.CityId = model.CityID;
                 activity.Remaining = model.Remaining;
-                activity.HotelId = model.HotelID;
+                activity.HotelId = 3;
 
                 var existingPhoto = await _context.ActivitiesAlbums.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityID);
 
@@ -196,8 +206,13 @@ namespace prjLookday.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            var cities = _context.Cities.Select(c => new { c.CityId, c.CityName }).ToList();
+            ViewBag.Cities = new SelectList(cities, "CityId", "CityName");
             return PartialView("_CreatePartial", new CActivityAlbumViewModel());
         }
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> Create(CActivityAlbumViewModel vm)
@@ -212,7 +227,7 @@ namespace prjLookday.Controllers
                     Date = vm.Date,
                     CityId = vm.CityID,
                     Remaining = vm.Remaining,
-                    HotelId = vm.HotelID
+                    HotelId = 3
                 };
 
                 _context.Activities.Add(activity);

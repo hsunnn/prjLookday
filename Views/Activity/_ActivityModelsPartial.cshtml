@@ -1,15 +1,23 @@
 ﻿@model IEnumerable<prjLookday.ViewModels.CActivityModelViewModel>
 
 <div class="modal-body">
-    @foreach (var mod in Model)
+    @if (Model == null || !Model.Any())
     {
-        <div class="model-item mb-3 p-3 border rounded" style="border-color: orange; border-width: 2px;">
-            <h5>@mod.ModelName</h5>
+        <div class="alert alert-warning text-center" role="alert">
+            暫無方案包
+        </div>
+    }
+    else
+    {
+        @foreach (var mod in Model)
+        {
+            <div class="model-item mb-3 p-3 border rounded" style="border-color: orange; border-width: 2px;">
+                <h5>@mod.ModelName</h5>
             <p><strong>價格:</strong> @($"${mod.ModelPrice:N0}")</p>
             <p><strong>日期:</strong> @mod.ModelDate</p>
             <p><strong>內容:</strong> @mod.ModelContent</p>
         </div>
-    }
+    }}
 
     <!-- Add new model form -->
     <hr />
@@ -33,7 +41,9 @@
         </div>
         <input type="hidden" id="ActivityId" name="ActivityId" value="@ViewBag.ActivityId" />
         <br />
+        <div class="text-center">
         <button type="submit" class="btn btn-primary">新增</button>
+        </div>
     </form>
 </div>
 

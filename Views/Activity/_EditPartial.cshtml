@@ -2,6 +2,7 @@
 
 <div id="editForm">
     <form id="editActivityForm" action="/Activity/Edit" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
         <input type="hidden" id="ActivityID" name="ActivityID" value="@Model.ActivityID" autocomplete="off" />
         <div class="form-group">
             <div id="ActivityPicPreview" class="d-flex justify-content-center">
@@ -32,16 +33,12 @@
             <input type="date" class="form-control" id="Date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" autocomplete="off" />
         </div>
         <div class="form-group">
-            <label for="CityID">城市ID</label>
-            <input type="text" class="form-control" id="CityID" name="CityID" value="@Model.CityID" autocomplete="off" />
+            <label for="CityID">城市</label>
+            @Html.DropDownListFor(model => model.CityID, (SelectList)ViewBag.Cities, "請選擇城市", new { @class = "form-control", @required = "required" })
         </div>
         <div class="form-group">
             <label for="Remaining">人數</label>
             <input type="text" class="form-control" id="Remaining" name="Remaining" value="@Model.Remaining" autocomplete="off" />
-        </div>
-        <div class="form-group">
-            <label for="HotelID">酒店ID</label>
-            <input type="text" class="form-control" id="HotelID" name="HotelID" value="@Model.HotelID" autocomplete="off" />
         </div>
         <div class="form-group">
             <label for="PhotoFile">照片</label>
@@ -49,7 +46,7 @@
         </div>
         <br />
         <div class="form-group text-center">
-            <button type="submit" class="btn btn-primary btn-sm" id="editSave">修改</button> | 
+            <button type="submit" class="btn btn-primary btn-sm" id="editSave">修改</button> |
             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
         </div>
     </form>
