@@ -227,7 +227,7 @@ namespace prjLookday.Controllers
                     Date = vm.Date,
                     CityId = vm.CityID,
                     Remaining = vm.Remaining,
-                    HotelId = 3
+                    HotelId = 3 //設定成 3 因為預設為沒有飯店
                 };
 
                 _context.Activities.Add(activity);

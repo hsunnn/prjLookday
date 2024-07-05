@@ -147,7 +147,7 @@ namespace prjLookday.Controllers
             User user = db.Users.FirstOrDefault(u => u.UserId == id);
             if (user != null)
             {
-                user.RoleId = 9; // 停權
+                user.RoleId = 9; // 因資料表 user roleId 9 為停權
                 db.SaveChanges();
                 return Json(new { success = true, message = "會員已停權。" });
             }
