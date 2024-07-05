@@ -46,12 +46,6 @@ namespace prjLookday.Controllers
             return RedirectToAction("Login");
         }
 
-        //public IActionResult ForgetPassword(CForgetPwdViewModels vm)
-        //{
-        //    return View(ForgetPassword);
-        //}
-
-
         [HttpPost]
         public IActionResult Login(CLoginViewModel vm)
         {
@@ -65,9 +59,6 @@ namespace prjLookday.Controllers
             }
             return View();
         }
-
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
