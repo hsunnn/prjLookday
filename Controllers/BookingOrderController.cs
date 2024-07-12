@@ -29,8 +29,6 @@ namespace prjLookdayOrder.Controllers
             .Include(x => x.Activity)           
             .Include(x => x.BookingStates)
             .Include(x=>x.Payments)
-            //.ThenInclude 有兩層的關聯
-            //.ThenInclude(x=>x.)
         .Select(b => new BookingDTO
         {
             BookingId = b.BookingId,
@@ -75,9 +73,9 @@ namespace prjLookdayOrder.Controllers
             {
                 return NotFound();
             }
-
             return Ok(booking);
         }
+
         [HttpGet("ByUsername/{username}")]
         public async Task<ActionResult<BookingDTO>> GetBookingName(string username)
         {
